@@ -62,6 +62,33 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
           <table><thead><tr><th>BUSINESS</th><th>OWNER DETAILS</th><th>LOCATION</th><th>REGISTERED</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="shopsBody"><tr><td colspan="6" class="loading">डेटा लोड हो रहा है…</td></tr></tbody></table>
         </div>
       </section>
+      <section class="panel" style="margin-top:22px">
+        <div class="panel-head"><div><h2>Token Reports</h2><p>सभी दुकानों या किसी एक दुकान के ऐतिहासिक टोकन रिकॉर्ड</p></div></div>
+        <div style="padding:18px 21px">
+          <div class="tools" style="flex-wrap:wrap;margin-bottom:14px">
+            <select id="reportShop" class="filter" style="min-width:210px"><option value="">सभी दुकानें</option></select>
+            <input id="reportFrom" type="date" class="filter" aria-label="शुरुआती तारीख">
+            <input id="reportTo" type="date" class="filter" aria-label="अंतिम तारीख">
+            <button class="refresh" id="reportLoad">रिपोर्ट देखें</button>
+            <button class="action" id="reportCsv">Excel / CSV</button>
+            <button class="action" id="reportPdf">PDF / Print</button>
+          </div>
+          <div class="stats" style="margin-bottom:15px">
+            <div class="stat"><div class="stat-head">जारी टोकन</div><strong id="rIssued">0</strong></div>
+            <div class="stat"><div class="stat-head">पूरे</div><strong id="rCompleted">0</strong></div>
+            <div class="stat"><div class="stat-head">रद्द</div><strong id="rCancelled">0</strong></div>
+            <div class="stat"><div class="stat-head">छोड़े गए</div><strong id="rSkipped">0</strong></div>
+            <div class="stat"><div class="stat-head">प्रतीक्षा</div><strong id="rWaiting">0</strong></div>
+            <div class="stat"><div class="stat-head">बुलाए गए</div><strong id="rCalled">0</strong></div>
+            <div class="stat"><div class="stat-head">सेवा जारी</div><strong id="rServing">0</strong></div>
+          </div>
+          <div class="table-wrap"><table style="min-width:780px"><thead><tr><th>दुकान</th><th>तारीख</th><th>जारी</th><th>पूरे</th><th>रद्द</th><th>छोड़े</th><th>प्रतीक्षा</th><th>बुलाए</th><th>सेवा जारी</th></tr></thead><tbody id="reportDaily"><tr><td colspan="9" class="empty">रिपोर्ट देखने के लिए तारीख चुनें।</td></tr></tbody></table></div>
+          <div class="section-label">वर्तमान सक्रिय टोकन (बुलाए गए / सेवा जारी)</div><div id="reportLive" class="top-sub" style="margin:8px 0 15px">रिपोर्ट लोड होने पर यहाँ दिखेगा।</div>
+          <div class="section-label">TOKEN DETAILS</div>
+          <div class="table-wrap"><table style="min-width:850px"><thead><tr><th>दुकान</th><th>तारीख</th><th>टोकन</th><th>ग्राहक</th><th>स्थिति</th><th>जारी समय</th></tr></thead><tbody id="reportTokens"><tr><td colspan="6" class="empty">कोई रिकॉर्ड नहीं।</td></tr></tbody></table></div>
+          <p class="top-sub" style="margin-top:10px">सुरक्षा: रिपोर्ट केवल Platform Admin RPC से प्राप्त होती है। अधिकतम 366 दिन और 10,000 टोकन विवरण।</p>
+        </div>
+      </section>
       
 <div class="modal-backdrop" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
  <div class="modal"><div class="modal-head"><h2 id="detailsTitle">Shop Details</h2><button class="modal-close" data-close="detailsModal" aria-label="Close">×</button></div><div class="modal-body" id="detailsContent"><div class="loading">जानकारी लोड हो रही है…</div></div></div>
@@ -136,6 +163,34 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
       </tr>`;
     }).join("");
   }
+  let tokenReport = null;
+  function localToday(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}
+  function reportStatus(s){return ({waiting:"प्रतीक्षा में",called:"बुलाया गया",serving:"सेवा जारी",completed:"पूरा हुआ",cancelled:"रद्द",skipped:"छोड़ा गया"})[s]||s||"—";}
+  function reportTime(v){return v?new Date(v).toLocaleTimeString("hi-IN",{hour:"2-digit",minute:"2-digit"}):"—";}
+  function renderTokenReport(){
+    const rows=tokenReport?.daily||[],tokens=tokenReport?.tokens||[];
+    const sum=rows.reduce((a,r)=>{for(const k of ["issued","completed","cancelled","skipped","waiting","called","serving"])a[k]+=Number(r[k]||0);return a;},{issued:0,completed:0,cancelled:0,skipped:0,waiting:0,called:0,serving:0});
+    for(const [k,id] of Object.entries({issued:"rIssued",completed:"rCompleted",cancelled:"rCancelled",skipped:"rSkipped",waiting:"rWaiting",called:"rCalled",serving:"rServing"}))$(id).textContent=sum[k].toLocaleString("en-IN");
+    $("reportDaily").innerHTML=rows.length?rows.map(r=>`<tr><td>${escapeHTML(r.shop_name||"—")}</td><td>${escapeHTML(r.queue_date)}</td><td>${r.issued}</td><td>${r.completed}</td><td>${r.cancelled}</td><td>${r.skipped}</td><td>${r.waiting}</td><td>${r.called}</td><td>${r.serving}</td></tr>`).join(""):'<tr><td colspan="9" class="empty">कोई रिकॉर्ड नहीं मिला।</td></tr>';
+    const live=tokens.filter(r=>["called","serving"].includes(r.status));
+    $("reportLive").innerHTML=live.length?live.slice(0,20).map(r=>`<span class="status active" style="margin:3px">${escapeHTML(r.shop_name||"")} · ${escapeHTML(r.token_code||r.token_number)} · ${escapeHTML(reportStatus(r.status))}</span>`).join(""):"इस अवधि में कोई बुलाया गया / सेवा जारी टोकन नहीं है।";
+    $("reportTokens").innerHTML=tokens.length?tokens.map(r=>`<tr><td>${escapeHTML(r.shop_name||"—")}</td><td>${escapeHTML(r.queue_date)}</td><td><b>${escapeHTML(r.token_code||r.token_number)}</b></td><td>${escapeHTML(r.customer_name||"—")}</td><td>${escapeHTML(reportStatus(r.status))}</td><td>${escapeHTML(reportTime(r.created_at))}</td></tr>`).join(""):'<tr><td colspan="6" class="empty">कोई टोकन रिकॉर्ड नहीं मिला।</td></tr>';
+  }
+  async function loadTokenReport(){
+    const from=$("reportFrom").value,to=$("reportTo").value,shopId=$("reportShop").value||null;
+    if(!from||!to||to<from)throw new Error("सही शुरुआती और अंतिम तारीख चुनें।");
+    if((new Date(to+"T00:00:00")-new Date(from+"T00:00:00"))/86400000>365)throw new Error("अधिकतम 366 दिन चुनें।");
+    $("reportLoad").disabled=true;
+    try{const {data,error}=await db.rpc("admin_get_token_report",{p_shop_id:shopId,p_from_date:from,p_to_date:to});if(error)throw error;tokenReport=data;renderTokenReport();showMessage("Token Report अपडेट हो गई।","success");}
+    finally{$("reportLoad").disabled=false;}
+  }
+  function exportTokenCsv(){if(!tokenReport){showMessage("पहले Token Report देखें।","error");return;}const rows=[["Shop","Date","Token","Customer","Status","Created At","Called At","Completed At"],...(tokenReport.tokens||[]).map(r=>[r.shop_name,r.queue_date,r.token_code||r.token_number,r.customer_name,reportStatus(r.status),r.created_at||"",r.called_at||"",r.completed_at||""])];const csv="\ufeff"+rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");const a=document.createElement("a"),url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"}));a.href=url;a.download=`rp-token-admin-report-${$("reportFrom").value}-to-${$("reportTo").value}.csv`;a.click();URL.revokeObjectURL(url);}
+  function fillReportShops(){const sel=$("reportShop"),v=sel.value;sel.innerHTML='<option value="">सभी दुकानें</option>'+allShops.map(s=>`<option value="${escapeHTML(s.id)}">${escapeHTML(s.name||"Unnamed")}</option>`).join("");sel.value=v;}
+  $("reportFrom").value=localToday();$("reportTo").value=localToday();
+  $("reportLoad").addEventListener("click",()=>loadTokenReport().catch(e=>showMessage(e.message||"रिपोर्ट लोड नहीं हुई।","error")));
+  $("reportShop").addEventListener("change",()=>loadTokenReport().catch(e=>showMessage(e.message||"रिपोर्ट लोड नहीं हुई।","error")));
+  $("reportCsv").addEventListener("click",exportTokenCsv);$("reportPdf").addEventListener("click",()=>window.print());
+
   async function requireAdmin() {
     if (!db) throw new Error("Supabase config load नहीं हुआ। assets/js/config.js का path जाँचें।");
     const {data, error} = await db.auth.getSession();
@@ -165,6 +220,7 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
     $("inactiveShops").textContent = Number(stats.inactive_shops || 0).toLocaleString("en-IN");
     $("totalUsers").textContent = Number(stats.total_users || 0).toLocaleString("en-IN");
     renderShops();
+    fillReportShops();
   }
   $("shopsBody").addEventListener("click", async (event) => {
     const button = event.target.closest("button[data-shop-id]");
@@ -248,7 +304,7 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
   (async () => {
     try {
       const allowed = await requireAdmin();
-      if (allowed) await loadDashboard();
+      if (allowed) { await loadDashboard(); await loadTokenReport(); }
     } catch (error) {
       showMessage(error.message || "Admin Dashboard लोड नहीं हो पाया।", "error");
       $("shopsBody").innerHTML = '<tr><td colspan="6" class="empty">डेटा उपलब्ध नहीं है। Supabase SQL setup जाँचें।</td></tr>';
