@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn about RP TOKEN, a digital queue management platform designed to help businesses organize customer visits and manage queues.">
+  <meta name="robots" content="index, follow">
+  <title>About Us | RP TOKEN</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f8ff;
+      color: #17233b;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #09142c;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: #56c6ff;
+    }
+
+    .home-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #09142c, #173c72);
+      color: #fff;
+      padding: 65px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 44px);
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      color: #d5e5ff;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      background: #fff;
+      padding: 30px;
+      margin-bottom: 22px;
+      border-radius: 15px;
+      border: 1px solid #e5eaf3;
+      box-shadow: 0 5px 20px rgba(20,40,80,.04);
+    }
+
+    .section h2 {
+      font-size: 23px;
+      color: #102b53;
+      margin-bottom: 14px;
+    }
+
+    .section p {
+      color: #536078;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .feature {
+      background: #f5f8ff;
+      border: 1px solid #e6edf8;
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    .feature h3 {
+      color: #173c72;
+      font-size: 17px;
+      margin-bottom: 7px;
+    }
+
+    .feature p {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .notice {
+      background: #fff8e8;
+      border-left: 4px solid #e6a32c;
+      padding: 18px;
+      border-radius: 8px;
+      color: #69501d;
+      font-size: 14px;
+    }
+
+    footer {
+      background: #09142c;
+      color: #a9bad2;
+      padding: 44px max(5%,calc((100% - 1180px)/2)) 22px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 34px;
+      padding-bottom: 28px;
+    }
+
+    .footer-brand {
+      font-size: 23px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand span {
+      color: #56c6ff;
+    }
+
+    .footer-copy {
+      max-width: 360px;
+      line-height: 1.8;
+      color: #91a4c0;
+    }
+
+    .footer-col h4 {
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .footer-col a {
+      display: block;
+      color: #a9bad2;
+      text-decoration: none;
+      margin: 10px 0;
+    }
+
+    .footer-col a:hover {
+      color: #56c6ff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: #8295b2;
+    }
+
+    @media(max-width:700px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 18px;
+      }
+
+      .footer-grid>div:first-child {
+        grid-column: 1/-1;
+      }
+
+      .footer-copy {
+        max-width: 100%;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width:420px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid>div:first-child {
+        grid-column: auto;
+      }
+
+      .footer-bottom {
+        display: block;
+      }
+
+      .footer-bottom span {
+        display: block;
+        margin: 7px 0;
+      }
+
+      .section {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html" class="logo">RP <span>TOKEN</span></a>
+    <a href="index.html" class="home-link">Back to Home</a>
+  </header>
+
+  <section class="hero">
+    <h1>About RP TOKEN</h1>
+    <p>
+      Making customer queue management more organized,
+      accessible and convenient through digital technology.
+    </p>
+  </section>
+
+  <main class="container">
+
+    <section class="section">
+      <h2>Who We Are</h2>
+      <p>
+        RP TOKEN is a digital queue management platform
+        designed to help shops, clinics, salons and other
+        service-based businesses organize customer visits
+        and manage waiting queues.
+      </p>
+      <p>
+        The platform aims to provide a simple digital approach
+        to traditional queue management. It helps businesses
+        organize customer tokens and makes it easier for
+        customers to understand their place in a queue.
+      </p>
+      <p>
+        RP TOKEN is currently operated independently under
+        the platform name RP TOKEN. It is not represented as
+        a registered company, corporation or limited liability
+        entity.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Our Mission</h2>
+      <p>
+        Our mission is to make everyday customer management
+        simpler by providing practical digital tools that can
+        help businesses reduce confusion, organize waiting
+        lines and improve the overall customer experience.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What RP TOKEN Offers</h2>
+
+      <div class="features">
+
+        <div class="feature">
+          <h3>Digital Token Management</h3>
+          <p>
+            A digital way to organize customer tokens and
+            maintain queue order.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>Business Queue Organization</h3>
+          <p>
+            Tools designed to help participating businesses
+            manage customer waiting queues.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>Customer Convenience</h3>
+          <p>
+            A more organized process for customers waiting
+            to receive services.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>Digital Accessibility</h3>
+          <p>
+            An online platform intended to make queue
+            management easier to access and use.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Our Approach</h2>
+      <p>
+        We aim to keep the platform practical and user-friendly.
+        Our approach focuses on simplicity, responsible use of
+        technology, transparency and continuous improvement.
+      </p>
+      <p>
+        Features and services may change, be updated, suspended
+        or discontinued as the platform develops.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Important Information</h2>
+      <div class="notice">
+        RP TOKEN is an independently operated digital platform.
+        The name RP TOKEN is used as a platform and service name
+        and does not imply incorporation, government affiliation,
+        official certification or regulatory approval.
+      </div>
+      <p style="margin-top:15px;">
+        Use of the platform is subject to its Terms and Conditions
+        and Privacy Policy. Users and participating businesses
+        remain responsible for the accuracy of the information
+        they provide and for their own legal and regulatory
+        obligations.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Contact Us</h2>
+      <p>
+        For questions, support requests or general enquiries,
+        please visit our Contact Us page.
+      </p>
+      <p>
+        <a href="contact.html"
+           style="color:#1768b5;font-weight:bold;text-decoration:none;">
+          Contact RP TOKEN →
+        </a>
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+
+      <div>
+        <div class="footer-brand">RP <span>TOKEN</span></div>
+        <p class="footer-copy">
+          A smart queue management platform designed to help
+          shops, clinics, salons and service businesses organize
+          customer visits and manage queues digitally.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>PLATFORM</h4>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="index.html#account">Login / Register</a>
+        <a href="admin-login.html">Platform Admin</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>INFORMATION</h4>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="refund-policy.html">Refund & Cancellation</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <a href="cookie-policy.html">Cookie Policy</a>
+        <a href="data-deletion.html">Data Deletion</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 RP TOKEN. All rights reserved.</span>
+      <span>Smart Queue Management Platform</span>
+    </div>
+  </footer>
+
+</body>
+</html>
