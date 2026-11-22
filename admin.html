@@ -20,6 +20,11 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
 .footer{text-align:center;padding:25px;color:#98a2b3;font-size:9px}
 @media(max-width:1000px){.sidebar{width:210px}.main{margin-left:210px}.stats{grid-template-columns:repeat(2,1fr)}.content{padding:25px 20px}.topbar{padding:0 20px}}
 @media(max-width:680px){.sidebar{position:static;width:auto;height:auto;padding:13px 16px;display:block}.brand{padding:0}.sidebar .nav-label,.sidebar .nav-item,.sidebar-bottom{display:none}.main{margin-left:0}.topbar{height:64px;padding:0 16px}.admin-email{display:none}.content{padding:22px 14px}.welcome{align-items:flex-start;gap:12px}.welcome h1{font-size:21px}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:23px}.stat-head{font-size:9px}.panel-head{align-items:flex-start;flex-direction:column}.tools{width:100%}.search{width:100%;flex:1}.filter{min-width:95px}}
+
+.modal-backdrop{display:none;position:fixed;inset:0;background:#10182899;z-index:20;padding:22px;overflow:auto;align-items:flex-start;justify-content:center}
+.modal-backdrop.open{display:flex}.modal{background:#fff;width:min(900px,100%);border-radius:18px;box-shadow:0 20px 70px #0003;margin:auto;overflow:hidden}.modal-head{padding:19px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-head h2{margin:0;font-size:16px}.modal-close{border:0;background:#f2f4f7;border-radius:9px;width:34px;height:34px;font-size:20px;cursor:pointer}.modal-body{padding:22px}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.detail-card{border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}.detail-card h3{font-size:11px;margin:0 0 10px;color:#344054}.detail-card p,.detail-card li{font-size:10px;line-height:1.7;color:#475467;overflow-wrap:anywhere;margin:3px 0}.detail-card pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;color:#475467;margin:0;max-height:260px;overflow:auto}.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:10px;font-weight:800;color:#475467}.field input,.field textarea{width:100%;border:1px solid #d0d5dd;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;outline:none}.field textarea{min-height:78px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.btn-primary{border:0;background:#2563eb;color:#fff;border-radius:9px;padding:10px 15px;font-size:11px;font-weight:800;cursor:pointer}.btn-secondary{border:1px solid var(--line);background:#fff;color:#475467;border-radius:9px;padding:10px 15px;font-size:11px;font-weight:800;cursor:pointer}.row-actions{display:flex;gap:6px;flex-wrap:wrap}.action.details{color:#344054}.action.edit{color:#4338ca}.section-label{font-size:9px;letter-spacing:1px;font-weight:900;color:#667085;margin:18px 0 9px}
+@media(max-width:650px){.modal-backdrop{padding:8px}.modal-body{padding:14px}.detail-grid,.edit-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.modal-head{padding:15px}}
+
 </style>
 </head>
 <body>
@@ -57,6 +62,26 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
           <table><thead><tr><th>BUSINESS</th><th>OWNER DETAILS</th><th>LOCATION</th><th>REGISTERED</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="shopsBody"><tr><td colspan="6" class="loading">डेटा लोड हो रहा है…</td></tr></tbody></table>
         </div>
       </section>
+      
+<div class="modal-backdrop" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+ <div class="modal"><div class="modal-head"><h2 id="detailsTitle">Shop Details</h2><button class="modal-close" data-close="detailsModal" aria-label="Close">×</button></div><div class="modal-body" id="detailsContent"><div class="loading">जानकारी लोड हो रही है…</div></div></div>
+</div>
+<div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+ <div class="modal"><div class="modal-head"><h2 id="editTitle">दुकान की जानकारी Edit करें</h2><button class="modal-close" data-close="editModal" aria-label="Close">×</button></div>
+ <form class="modal-body" id="editForm"><input type="hidden" id="editShopId">
+  <div class="edit-grid">
+   <div class="field"><label for="editName">दुकान का नाम *</label><input id="editName" maxlength="120" required></div>
+   <div class="field"><label for="editSlug">Shop URL / Slug *</label><input id="editSlug" maxlength="40" pattern="[a-z0-9-]{3,40}" required><small>केवल छोटे English अक्षर, अंक और hyphen</small></div>
+   <div class="field"><label for="editPhone">फोन</label><input id="editPhone" maxlength="30"></div>
+   <div class="field"><label for="editCity">शहर</label><input id="editCity" maxlength="100"></div>
+   <div class="field"><label for="editState">राज्य</label><input id="editState" maxlength="100"></div>
+   <div class="field full"><label for="editAddress">पूरा पता</label><textarea id="editAddress" maxlength="1000"></textarea></div>
+   <div class="field full"><label for="editDescription">दुकान का विवरण</label><textarea id="editDescription" maxlength="2000"></textarea></div>
+  </div>
+  <div class="modal-actions"><button type="button" class="btn-secondary" data-close="editModal">रद्द करें</button><button type="submit" class="btn-primary" id="saveShopBtn">परिवर्तन Save करें</button></div>
+ </form></div>
+</div>
+
       <div class="footer">RP TOKEN · Platform Administration · Secure access only</div>
     </section>
   </main>
@@ -107,7 +132,7 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
         <td>${location}<small>${escapeHTML(shop.address || "")}</small></td>
         <td>${formatDate(shop.created_at)}</td>
         <td><span class="status ${active ? "active" : "off"}">${active ? "Active" : "Inactive"}</span></td>
-        <td><button class="action ${active ? "offbtn" : "onbtn"}" data-shop-id="${escapeHTML(shop.id)}" data-next="${active ? "false" : "true"}">${active ? "Deactivate" : "Activate"}</button></td>
+        <td><div class="row-actions"><button class="action details" data-action="details" data-shop-id="${escapeHTML(shop.id)}">Details</button><button class="action edit" data-action="edit" data-shop-id="${escapeHTML(shop.id)}">Edit</button><button class="action ${active ? "offbtn" : "onbtn"}" data-action="active" data-shop-id="${escapeHTML(shop.id)}" data-next="${active ? "false" : "true"}">${active ? "Deactivate" : "Activate"}</button></div></td>
       </tr>`;
     }).join("");
   }
@@ -146,8 +171,11 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
     if (!button) return;
     const shop = allShops.find(item => String(item.id) === button.dataset.shopId);
     if (!shop) return;
+    const action = button.dataset.action || "active";
+    if (action === "details") { await openShopDetails(shop); return; }
+    if (action === "edit") { openEditShop(shop); return; }
     const next = button.dataset.next === "true";
-    const action = next ? "Activate" : "Deactivate";
+    const actionName = next ? "Activate" : "Deactivate";
     if (!window.confirm(`${shop.name || "इस दुकान"} को ${next ? "Active" : "Inactive"} करना चाहते हैं?`)) return;
     button.disabled = true;
     try {
@@ -156,9 +184,55 @@ button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset
       showMessage(`दुकान "${shop.name}" अब ${next ? "Active" : "Inactive"} है।`, "success");
       await loadDashboard();
     } catch (error) {
-      showMessage(error.message || `${action} नहीं हो पाया।`, "error");
+      showMessage(error.message || `${actionName} नहीं हो पाया।`, "error");
       button.disabled = false;
     }
+  });
+  function openModal(id) { $(id).classList.add("open"); document.body.style.overflow="hidden"; }
+  function closeModal(id) { $(id).classList.remove("open"); document.body.style.overflow=""; }
+  document.querySelectorAll("[data-close]").forEach(btn => btn.addEventListener("click", () => closeModal(btn.dataset.close)));
+  document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", e => { if(e.target===backdrop) closeModal(backdrop.id); }));
+  function detailBlock(title, value) {
+    const safe = value == null || value === "" ? "—" : (typeof value === "string" ? escapeHTML(value) : `<pre>${escapeHTML(JSON.stringify(value,null,2))}</pre>`);
+    return `<div class="detail-card"><h3>${escapeHTML(title)}</h3>${typeof value === "string" || value == null ? `<p>${safe}</p>` : safe}</div>`;
+  }
+  async function openShopDetails(shop) {
+    $("detailsTitle").textContent = `${shop.name || "Shop"} · Details`;
+    $("detailsContent").innerHTML = '<div class="loading">दुकान की पूरी जानकारी लोड हो रही है…</div>';
+    openModal("detailsModal");
+    try {
+      const {data,error}=await db.rpc("platform_admin_get_shop_details",{p_shop_id:shop.id});
+      if(error) throw error;
+      const d=data||{}; const owner=d.owner||{};
+      const tokens=Array.isArray(d.recent_tokens)?d.recent_tokens:[];
+      const tokenRows=tokens.length ? `<ul>${tokens.map(t=>`<li>${escapeHTML(t.token_number ?? t.token_no ?? t.id ?? "Token")} · ${escapeHTML(t.status ?? "Status unavailable")} · ${escapeHTML(t.created_at ?? "")}</li>`).join("")}</ul>` : '<p>अभी कोई Token record उपलब्ध नहीं है।</p>';
+      $("detailsContent").innerHTML = `<div class="detail-grid">
+       ${detailBlock("दुकान",d.shop||shop)}${detailBlock("मालिक",owner)}
+       ${detailBlock("Services",d.services||[])}${detailBlock("Opening Hours",d.opening_hours||[])}
+       ${detailBlock("Shop Settings",d.settings||{})}
+       <div class="detail-card"><h3>Token स्थिति · हाल के रिकॉर्ड</h3>${tokenRows}<p>कुल उपलब्ध रिकॉर्ड: ${Number(d.token_count||0).toLocaleString("en-IN")}</p></div>
+      </div>`;
+    } catch(error) { $("detailsContent").innerHTML=`<div class="message error" style="display:block">${escapeHTML(error.message||"दुकान की जानकारी नहीं मिली।")}<p>SQL setup पूरा होने के बाद दोबारा प्रयास करें।</p></div>`; }
+  }
+  function openEditShop(shop) {
+    $("editShopId").value=shop.id; $("editName").value=shop.name||""; $("editSlug").value=shop.slug||"";
+    $("editPhone").value=shop.phone||""; $("editCity").value=shop.city||""; $("editState").value=shop.state||"";
+    $("editAddress").value=shop.address||""; $("editDescription").value=shop.description||"";
+    openModal("editModal");
+  }
+  $("editForm").addEventListener("submit",async e=>{
+    e.preventDefault(); const btn=$("saveShopBtn"); btn.disabled=true; btn.textContent="Saving…";
+    try {
+      const {data,error}=await db.rpc("platform_admin_update_shop",{
+        p_shop_id:$("editShopId").value,p_name:$("editName").value.trim(),p_slug:$("editSlug").value.trim(),
+        p_phone:$("editPhone").value.trim()||null,p_address:$("editAddress").value.trim()||null,
+        p_city:$("editCity").value.trim()||null,p_state:$("editState").value.trim()||null,
+        p_description:$("editDescription").value.trim()||null
+      });
+      if(error) throw error;
+      closeModal("editModal"); showMessage("दुकान की जानकारी सफलतापूर्वक अपडेट हो गई।","success"); await loadDashboard();
+    } catch(error) { showMessage(error.message||"दुकान अपडेट नहीं हुई।","error"); }
+    finally { btn.disabled=false; btn.textContent="परिवर्तन Save करें"; }
   });
   $("searchInput").addEventListener("input", renderShops);
   $("statusFilter").addEventListener("change", renderShops);
