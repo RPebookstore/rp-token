@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact RP TOKEN for platform support, enquiries, feedback and privacy-related requests.">
+  <meta name="robots" content="index, follow">
+  <title>Contact Us | RP TOKEN</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f8ff;
+      color: #17233b;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #09142c;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: 900;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: #56c6ff;
+    }
+
+    .home-link {
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #09142c, #173c72);
+      color: #fff;
+      padding: 65px 20px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 44px);
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      color: #d5e5ff;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      background: #fff;
+      padding: 30px;
+      margin-bottom: 22px;
+      border-radius: 15px;
+      border: 1px solid #e5eaf3;
+      box-shadow: 0 5px 20px rgba(20,40,80,.04);
+    }
+
+    .section h2 {
+      font-size: 23px;
+      color: #102b53;
+      margin-bottom: 14px;
+    }
+
+    .section p {
+      color: #536078;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .contact-card {
+      background: #f5f8ff;
+      border: 1px solid #e6edf8;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .contact-card h3 {
+      color: #173c72;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .contact-card a {
+      color: #1768b5;
+      text-decoration: none;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .contact-card a:hover {
+      text-decoration: underline;
+    }
+
+    .note {
+      background: #fff8e8;
+      border-left: 4px solid #e6a32c;
+      padding: 18px;
+      border-radius: 8px;
+      color: #69501d;
+      font-size: 14px;
+    }
+
+    footer {
+      background: #09142c;
+      color: #a9bad2;
+      padding: 44px max(5%,calc((100% - 1180px)/2)) 22px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 34px;
+      padding-bottom: 28px;
+    }
+
+    .footer-brand {
+      font-size: 23px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .footer-brand span {
+      color: #56c6ff;
+    }
+
+    .footer-copy {
+      max-width: 360px;
+      line-height: 1.8;
+      color: #91a4c0;
+    }
+
+    .footer-col h4 {
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    .footer-col a {
+      display: block;
+      color: #a9bad2;
+      text-decoration: none;
+      margin: 10px 0;
+    }
+
+    .footer-col a:hover {
+      color: #56c6ff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: #8295b2;
+    }
+
+    @media(max-width:700px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 18px;
+      }
+
+      .footer-grid>div:first-child {
+        grid-column: 1/-1;
+      }
+
+      .footer-copy {
+        max-width: 100%;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width:420px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid>div:first-child {
+        grid-column: auto;
+      }
+
+      .footer-bottom {
+        display: block;
+      }
+
+      .footer-bottom span {
+        display: block;
+        margin: 7px 0;
+      }
+
+      .section {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="index.html" class="logo">RP <span>TOKEN</span></a>
+    <a href="index.html" class="home-link">Back to Home</a>
+  </header>
+
+  <section class="hero">
+    <h1>Contact Us</h1>
+    <p>
+      Have a question, need assistance or want to share feedback?
+      Get in touch with RP TOKEN.
+    </p>
+  </section>
+
+  <main class="container">
+
+    <section class="section">
+      <h2>Get in Touch</h2>
+      <p>
+        For general enquiries, technical support, account-related
+        questions, feedback or privacy-related requests, you can
+        contact the RP TOKEN support contact using the details below.
+      </p>
+
+      <div class="contact-grid">
+
+        <div class="contact-card">
+          <h3>Contact Person</h3>
+          <p>Pankaj Rawat</p>
+        </div>
+
+        <div class="contact-card">
+          <h3>Platform Name</h3>
+          <p>RP TOKEN</p>
+        </div>
+
+        <div class="contact-card">
+          <h3>Email Support</h3>
+          <a href="mailto:Pankajrawat8888@gmail.com">
+            Pankajrawat8888@gmail.com
+          </a>
+        </div>
+
+        <div class="contact-card">
+          <h3>WhatsApp Support</h3>
+          <a href="https://wa.me/918081140784"
+             target="_blank"
+             rel="noopener noreferrer">
+            +91 8081140784
+          </a>
+        </div>
+
+        <div class="contact-card">
+          <h3>Contact Number</h3>
+          <a href="tel:+919519949372">
+            +91 9519949372
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Support and Enquiries</h2>
+      <p>
+        When contacting us about a technical issue, please
+        describe the problem clearly. If relevant, include
+        the page name, approximate time of the issue and
+        non-sensitive details that can help us investigate.
+      </p>
+      <p>
+        Please do not send passwords, OTPs, payment card details,
+        authentication codes or other confidential credentials
+        through email or WhatsApp.
+      </p>
+      <p>
+        We will make reasonable efforts to review and respond
+        to genuine enquiries. Response times may vary depending
+        on the nature and volume of requests.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Privacy and Data Requests</h2>
+      <p>
+        For requests concerning personal information, account
+        data, correction or deletion, please contact us using
+        the email address listed above.
+      </p>
+      <p>
+        To help us identify the relevant account, you may be
+        asked to provide reasonable verification information.
+        Do not share your password or OTP for verification.
+      </p>
+      <p>
+        Please visit our
+        <a href="privacy-policy.html">Privacy Policy</a>
+        and
+        <a href="data-deletion.html">Data Deletion</a>
+        pages for further information.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Platform Information</h2>
+      <div class="note">
+        RP TOKEN is an independently operated platform name.
+        It is not presented as a registered company or as an
+        official government service. Contact details on this
+        page are provided for platform-related communication.
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-grid">
+
+      <div>
+        <div class="footer-brand">RP <span>TOKEN</span></div>
+        <p class="footer-copy">
+          A smart queue management platform designed to help
+          shops, clinics, salons and service businesses organize
+          customer visits and manage queues digitally.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>PLATFORM</h4>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="index.html#account">Login / Register</a>
+        <a href="admin-login.html">Platform Admin</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>INFORMATION</h4>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="refund-policy.html">Refund & Cancellation</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <a href="cookie-policy.html">Cookie Policy</a>
+        <a href="data-deletion.html">Data Deletion</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 RP TOKEN. All rights reserved.</span>
+      <span>Smart Queue Management Platform</span>
+    </div>
+  </footer>
+
+</body>
+</html>
