@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>RP TOKEN | Platform Admin</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap');
+:root{--navy:#101827;--blue:#2563eb;--purple:#6d5ce8;--ink:#182230;--muted:#667085;--line:#e8edf4;--bg:#f5f7fb;--green:#079455;--red:#d92d20}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,'Noto Sans Devanagari',Arial,sans-serif}
+button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:248px;background:linear-gradient(180deg,#101827,#172554);color:#fff;padding:25px 18px;display:flex;flex-direction:column;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 7px 30px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#06b6d4,#2563eb);display:grid;place-items:center;font-weight:900;font-size:21px}.brand b{font-size:19px;letter-spacing:.4px}.brand b span{color:#38bdf8}.brand small{display:block;color:#9fb2d8;font-size:9px;letter-spacing:1.7px;margin-top:3px}
+.nav-label{font-size:9px;color:#8394b8;letter-spacing:1.8px;font-weight:800;padding:0 11px 10px}.nav-item{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:11px;color:#c6d2e8;font-size:12px;font-weight:700;margin-bottom:5px}.nav-item.active{background:#ffffff16;color:#fff}.nav-item .ico{width:19px;text-align:center;font-size:15px}.sidebar-bottom{margin-top:auto;border-top:1px solid #ffffff20;padding:18px 8px 0;color:#9fb0cf;font-size:10px;line-height:1.8}
+.main{margin-left:248px;min-height:100vh}.topbar{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:3}.top-title{font-weight:800;font-size:17px}.top-sub{font-size:10px;color:var(--muted);margin-top:4px}.admin-chip{display:flex;align-items:center;gap:10px}.avatar{width:35px;height:35px;border-radius:12px;background:#e0e7ff;color:#3730a3;display:grid;place-items:center;font-weight:900}.admin-email{font-size:11px;font-weight:700;max-width:220px;overflow:hidden;text-overflow:ellipsis}.logout{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:800;color:#475467;cursor:pointer}
+.content{padding:30px 34px;max-width:1500px;margin:auto}.welcome{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px}.eyebrow{font-size:9px;font-weight:900;letter-spacing:2px;color:#4f46e5}.welcome h1{font-size:25px;letter-spacing:-.8px;margin:8px 0 5px}.welcome p{font-size:11px;color:var(--muted);margin:0}.refresh{border:0;border-radius:10px;background:#eef2ff;color:#3730a3;padding:11px 15px;font-size:11px;font-weight:800;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:25px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:19px 18px;box-shadow:0 3px 12px #10182805}.stat-head{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;font-weight:700}.stat-icon{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:15px}.stat strong{display:block;font-size:27px;letter-spacing:-1px;margin-top:13px}.stat small{font-size:9px;color:#98a2b3}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 3px 12px #10182805;overflow:hidden}.panel-head{padding:19px 21px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}.panel-head h2{font-size:14px;margin:0}.panel-head p{font-size:10px;color:var(--muted);margin:5px 0 0}.tools{display:flex;gap:9px;align-items:center}.search{height:37px;width:230px;border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:11px;outline:none}.search:focus{border-color:#93a5ff}.filter{height:37px;border:1px solid var(--line);border-radius:9px;background:#fff;padding:0 10px;font-size:10px;color:#475467}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:850px}th{text-align:left;background:#fbfcfe;color:#667085;font-size:9px;letter-spacing:.6px;padding:13px 17px;font-weight:900;white-space:nowrap}td{padding:15px 17px;border-top:1px solid #f0f2f6;font-size:10px;vertical-align:middle}td b{font-size:11px}td small{display:block;color:#98a2b3;margin-top:4px;font-size:9px}.shop-name{display:flex;align-items:center;gap:10px}.shop-icon{width:34px;height:34px;border-radius:11px;background:#eef2ff;color:#4338ca;display:grid;place-items:center;font-weight:900}.status{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 8px;font-size:9px;font-weight:800}.status.active{background:#ecfdf3;color:#027a48}.status.off{background:#fff1f0;color:#b42318}.status:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}.action{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 10px;font-size:9px;font-weight:800;cursor:pointer}.action.offbtn{color:#b42318}.action.onbtn{color:#027a48}.empty,.loading{padding:45px 20px;text-align:center;color:#98a2b3;font-size:11px}.message{display:none;padding:12px 14px;border-radius:10px;margin-bottom:16px;font-size:11px;line-height:1.6}.message.error{display:block;background:#fef3f2;color:#b42318}.message.success{display:block;background:#ecfdf3;color:#067647}
+.footer{text-align:center;padding:25px;color:#98a2b3;font-size:9px}
+@media(max-width:1000px){.sidebar{width:210px}.main{margin-left:210px}.stats{grid-template-columns:repeat(2,1fr)}.content{padding:25px 20px}.topbar{padding:0 20px}}
+@media(max-width:680px){.sidebar{position:static;width:auto;height:auto;padding:13px 16px;display:block}.brand{padding:0}.sidebar .nav-label,.sidebar .nav-item,.sidebar-bottom{display:none}.main{margin-left:0}.topbar{height:64px;padding:0 16px}.admin-email{display:none}.content{padding:22px 14px}.welcome{align-items:flex-start;gap:12px}.welcome h1{font-size:21px}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:23px}.stat-head{font-size:9px}.panel-head{align-items:flex-start;flex-direction:column}.tools{width:100%}.search{width:100%;flex:1}.filter{min-width:95px}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo">R</div><div><b>RP <span>TOKEN</span></b><small>PLATFORM CONTROL</small></div></div>
+    <div class="nav-label">ADMINISTRATION</div>
+    <div class="nav-item active"><span class="ico">▦</span> Overview</div>
+    <div class="nav-item"><span class="ico">▣</span> Registered Shops</div>
+    <div class="sidebar-bottom">🔒 Secure Admin Area<br>केवल अधिकृत Platform Admin के लिए</div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div><div class="top-title">Platform Overview</div><div class="top-sub">RP TOKEN · Smart Queue Management</div></div>
+      <div class="admin-chip"><div class="avatar">A</div><div class="admin-email" id="adminEmail">Admin</div><button class="logout" id="logoutBtn">LOG OUT ↗</button></div>
+    </header>
+    <section class="content">
+      <div class="welcome">
+        <div><div class="eyebrow">CONTROL CENTER</div><h1>नमस्ते, Admin 👋</h1><p>अपने पूरे प्लेटफॉर्म की स्थिति यहाँ देखें और दुकानों को नियंत्रित करें।</p></div>
+        <button class="refresh" id="refreshBtn">↻ Refresh Data</button>
+      </div>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <div class="stats">
+        <div class="stat"><div class="stat-head">कुल दुकानें <span class="stat-icon">▣</span></div><strong id="totalShops">—</strong><small>Registered businesses</small></div>
+        <div class="stat"><div class="stat-head">Active दुकानें <span class="stat-icon">✓</span></div><strong id="activeShops">—</strong><small>Currently enabled</small></div>
+        <div class="stat"><div class="stat-head">Inactive दुकानें <span class="stat-icon">Ⅱ</span></div><strong id="inactiveShops">—</strong><small>Currently disabled</small></div>
+        <div class="stat"><div class="stat-head">कुल यूजर <span class="stat-icon">♙</span></div><strong id="totalUsers">—</strong><small>Registered accounts</small></div>
+      </div>
+      <section class="panel">
+        <div class="panel-head">
+          <div><h2>Registered Shops</h2><p>सभी रजिस्टर्ड दुकानों की जानकारी और Active / Deactivate नियंत्रण</p></div>
+          <div class="tools"><input id="searchInput" class="search" type="search" placeholder="दुकान, मालिक, ईमेल या शहर खोजें…"><select id="statusFilter" class="filter"><option value="all">सभी दुकानें</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>BUSINESS</th><th>OWNER DETAILS</th><th>LOCATION</th><th>REGISTERED</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="shopsBody"><tr><td colspan="6" class="loading">डेटा लोड हो रहा है…</td></tr></tbody></table>
+        </div>
+      </section>
+      <div class="footer">RP TOKEN · Platform Administration · Secure access only</div>
+    </section>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script>
+(() => {
+  "use strict";
+  const db = window.supabaseClient;
+  const $ = (id) => document.getElementById(id);
+  let allShops = [];
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+  function showMessage(text, type) {
+    $("message").textContent = text;
+    $("message").className = "message " + type;
+  }
+  function formatDate(value) {
+    if (!value) return "—";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "—";
+    return date.toLocaleDateString("en-IN", {day:"2-digit", month:"short", year:"numeric"});
+  }
+  function renderShops() {
+    const query = $("searchInput").value.trim().toLowerCase();
+    const filter = $("statusFilter").value;
+    const rows = allShops.filter(shop => {
+      const isActive = shop.is_active === true;
+      if (filter === "active" && !isActive) return false;
+      if (filter === "inactive" && isActive) return false;
+      const haystack = [shop.name, shop.slug, shop.owner_name, shop.owner_email, shop.owner_phone, shop.city, shop.state, shop.business_type].join(" ").toLowerCase();
+      return haystack.includes(query);
+    });
+    if (!rows.length) {
+      $("shopsBody").innerHTML = '<tr><td colspan="6" class="empty">कोई दुकान नहीं मिली।</td></tr>';
+      return;
+    }
+    $("shopsBody").innerHTML = rows.map(shop => {
+      const active = shop.is_active === true;
+      const owner = [shop.owner_name, shop.owner_email, shop.owner_phone].filter(Boolean).map(escapeHTML);
+      const location = [shop.city, shop.state].filter(Boolean).map(escapeHTML).join(", ") || "—";
+      return `<tr>
+        <td><div class="shop-name"><div class="shop-icon">${escapeHTML((shop.name || "S").trim().charAt(0).toUpperCase())}</div><div><b>${escapeHTML(shop.name || "Unnamed shop")}</b><small>/${escapeHTML(shop.slug || "")} · ${escapeHTML(shop.business_type || "other")}</small></div></div></td>
+        <td><b>${owner[0] || "Owner details unavailable"}</b><small>${owner[1] || ""}${owner[2] ? " · " + owner[2] : ""}</small></td>
+        <td>${location}<small>${escapeHTML(shop.address || "")}</small></td>
+        <td>${formatDate(shop.created_at)}</td>
+        <td><span class="status ${active ? "active" : "off"}">${active ? "Active" : "Inactive"}</span></td>
+        <td><button class="action ${active ? "offbtn" : "onbtn"}" data-shop-id="${escapeHTML(shop.id)}" data-next="${active ? "false" : "true"}">${active ? "Deactivate" : "Activate"}</button></td>
+      </tr>`;
+    }).join("");
+  }
+  async function requireAdmin() {
+    if (!db) throw new Error("Supabase config load नहीं हुआ। assets/js/config.js का path जाँचें।");
+    const {data, error} = await db.auth.getSession();
+    if (error) throw error;
+    if (!data.session) {
+      window.location.replace("admin-login.html");
+      return false;
+    }
+    $("adminEmail").textContent = data.session.user.email || "Platform Admin";
+    const {data: allowed, error: adminError} = await db.rpc("is_platform_admin");
+    if (adminError) throw adminError;
+    if (allowed !== true) {
+      await db.auth.signOut();
+      window.location.replace("admin-login.html");
+      return false;
+    }
+    return true;
+  }
+  async function loadDashboard() {
+    $("shopsBody").innerHTML = '<tr><td colspan="6" class="loading">डेटा लोड हो रहा है…</td></tr>';
+    const {data, error} = await db.rpc("get_platform_admin_dashboard");
+    if (error) throw error;
+    const stats = data && data.stats ? data.stats : {};
+    allShops = Array.isArray(data && data.shops) ? data.shops : [];
+    $("totalShops").textContent = Number(stats.total_shops || 0).toLocaleString("en-IN");
+    $("activeShops").textContent = Number(stats.active_shops || 0).toLocaleString("en-IN");
+    $("inactiveShops").textContent = Number(stats.inactive_shops || 0).toLocaleString("en-IN");
+    $("totalUsers").textContent = Number(stats.total_users || 0).toLocaleString("en-IN");
+    renderShops();
+  }
+  $("shopsBody").addEventListener("click", async (event) => {
+    const button = event.target.closest("button[data-shop-id]");
+    if (!button) return;
+    const shop = allShops.find(item => String(item.id) === button.dataset.shopId);
+    if (!shop) return;
+    const next = button.dataset.next === "true";
+    const action = next ? "Activate" : "Deactivate";
+    if (!window.confirm(`${shop.name || "इस दुकान"} को ${next ? "Active" : "Inactive"} करना चाहते हैं?`)) return;
+    button.disabled = true;
+    try {
+      const {error} = await db.rpc("platform_admin_set_shop_active", {p_shop_id: shop.id, p_is_active: next});
+      if (error) throw error;
+      showMessage(`दुकान "${shop.name}" अब ${next ? "Active" : "Inactive"} है।`, "success");
+      await loadDashboard();
+    } catch (error) {
+      showMessage(error.message || `${action} नहीं हो पाया।`, "error");
+      button.disabled = false;
+    }
+  });
+  $("searchInput").addEventListener("input", renderShops);
+  $("statusFilter").addEventListener("change", renderShops);
+  $("refreshBtn").addEventListener("click", async () => {
+    try { await loadDashboard(); showMessage("डेटा अपडेट हो गया।", "success"); }
+    catch (error) { showMessage(error.message || "डेटा लोड नहीं हुआ।", "error"); }
+  });
+  $("logoutBtn").addEventListener("click", async () => {
+    if (!window.confirm("क्या आप Admin Panel से Logout करना चाहते हैं?")) return;
+    await db.auth.signOut();
+    window.location.replace("admin-login.html");
+  });
+  (async () => {
+    try {
+      const allowed = await requireAdmin();
+      if (allowed) await loadDashboard();
+    } catch (error) {
+      showMessage(error.message || "Admin Dashboard लोड नहीं हो पाया।", "error");
+      $("shopsBody").innerHTML = '<tr><td colspan="6" class="empty">डेटा उपलब्ध नहीं है। Supabase SQL setup जाँचें।</td></tr>';
+    }
+  })();
+})();
+</script>
+</body>
+</html>
