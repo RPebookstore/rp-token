@@ -516,6 +516,7 @@ input::placeholder{color:#a0aec0}
 <script src="assets/js/config.js"></script>
 
 <script>
+
 (() => {
 "use strict";
 
@@ -531,13 +532,13 @@ if (!db) {
 }
 
 function showMessage(text,type) {
- message.textContent=text;
- message.className="message "+type;
+ message.textContent = text;
+ message.className = "message " + type;
 }
 
 function clearMessage() {
- message.textContent="";
- message.className="message";
+ message.textContent = "";
+ message.className = "message";
 }
 
 function makeSlug(value) {
@@ -547,188 +548,365 @@ function makeSlug(value) {
   .slice(0,40);
 }
 
+function formatDate(value) {
+ if (!value) return "Not available";
+ const date = new Date(value);
+ if (Number.isNaN(date.getTime())) return "Not available";
+ return date.toLocaleDateString("en-IN", {
+  day:"2-digit", month:"short", year:"numeric"
+ });
+}
+
+function getSubscriptionInfo(row) {
+ const now = Date.now();
+ const start = row.start_date ? new Date(row.start_date).getTime() : null;
+ const expiry = row.expiry_date ? new Date(row.expiry_date).getTime() : null;
+
+ if (!row.subscription_status || row.subscription_status === "not_subscribed") {
+  return {key:"not_subscribed", label:"Not Subscribed", active:false};
+ }
+
+ if (row.subscription_status === "inactive") {
+  return {key:"inactive", label:"Inactive", active:false};
+ }
+
+ if (row.subscription_status === "expired" || (expiry && expiry <= now)) {
+  return {key:"expired", label:"Expired", active:false};
+ }
+
+ if (start && start > now) {
+  return {key:"upcoming", label:"Upcoming", active:false};
+ }
+
+ if (row.subscription_status === "active" && start && expiry && start <= now && expiry > now) {
+  return {key:"active", label:"Active", active:true};
+ }
+
+ return {key:"inactive", label:"Inactive", active:false};
+}
+
+function statusColor(key) {
+ return {
+  active:"#166534",
+  expired:"#b91c1c",
+  inactive:"#92400e",
+  upcoming:"#1d4ed8",
+  not_subscribed:"#64748b"
+ }[key] || "#64748b";
+}
+
+function addText(parent, tag, text, style) {
+ const el = document.createElement(tag);
+ el.textContent = text;
+ if (style) el.style.cssText = style;
+ parent.appendChild(el);
+ return el;
+}
+
 document.getElementById("todayDate").textContent =
- new Date().toLocaleDateString("en-IN",{
-  day:"numeric",month:"long",year:"numeric"
+ new Date().toLocaleDateString("en-IN", {
+  day:"numeric", month:"long", year:"numeric"
  });
 
 document.getElementById("shopName").addEventListener("input",event=>{
- const slugInput=document.getElementById("shopSlug");
- if(!slugInput.dataset.edited) slugInput.value=makeSlug(event.target.value);
+ const slugInput = document.getElementById("shopSlug");
+ if (!slugInput.dataset.edited) {
+  slugInput.value = makeSlug(event.target.value);
+ }
 });
 
 document.getElementById("shopSlug").addEventListener("input",event=>{
- event.target.dataset.edited="true";
- event.target.value=event.target.value.toLowerCase().replace(/[^a-z0-9-]/g,"");
+ event.target.dataset.edited = "true";
+ event.target.value = event.target.value.toLowerCase()
+  .replace(/[^a-z0-9-]/g,"");
 });
 
 async function loadShops() {
  shopList.replaceChildren();
 
- const {data,error}=await db.from("shops")
+ const {data:shops,error:shopsError} = await db.from("shops")
   .select("id,name,slug,business_type,city,phone,address,state,description,is_active,created_at")
   .order("created_at",{ascending:false});
 
- if(error) {
-  shopList.textContent="Unable to load businesses: "+error.message;
+ if (shopsError) {
+  shopList.textContent = "Unable to load businesses: " + shopsError.message;
   return;
  }
 
- if(!data || data.length===0) {
-  const empty=document.createElement("div");
-  empty.className="empty";
-  empty.innerHTML='<div class="empty-icon">🏪</div>No shops have been created yet.<br>Add your first business using the form.';
+ if (!shops || shops.length === 0) {
+  const empty = document.createElement("div");
+  empty.className = "empty";
+  empty.textContent = "No businesses have been created yet. Add your first business using the form.";
   shopList.appendChild(empty);
+  updateQuickAccess(false);
   return;
  }
 
- data.forEach(shop=>{
-  const item=document.createElement("div");
-  item.className="shop-item";
+ // Fail closed: if subscription information cannot be verified,
+ // operational access is not shown as active.
+ const {data:subscriptionRows,error:subscriptionError} =
+  await db.rpc("owner_get_my_business_subscriptions");
 
-  const top=document.createElement("div");
-  top.className="shop-top";
+ if (subscriptionError) {
+  showMessage(
+   "Subscription information could not be verified. Please contact Support. " +
+   subscriptionError.message,
+   "error"
+  );
+  updateQuickAccess(false);
+  renderShops(shops, [], true);
+  return;
+ }
 
-  const title=document.createElement("div");
-  title.className="shop-title";
-  title.textContent=shop.name;
+ renderShops(shops, subscriptionRows || [], false);
+}
 
-  const mark=document.createElement("div");
-  mark.className="shop-mark";
-  mark.textContent="🏪";
+function updateQuickAccess(hasActiveBusiness) {
+ const operationalLinks = [
+  "manage-queue.html",
+  "reports.html",
+  "services.html",
+  "qr-code.html",
+  "shop-settings.html"
+ ];
+
+ document.querySelectorAll(".menu-item").forEach(link => {
+  const href = link.getAttribute("href") || "";
+  if (!operationalLinks.some(item => href.startsWith(item))) return;
+
+  if (!hasActiveBusiness) {
+   link.style.opacity = ".45";
+   link.style.pointerEvents = "none";
+   link.setAttribute("aria-disabled","true");
+   link.title = "An active business subscription is required.";
+  } else {
+   link.style.opacity = "";
+   link.style.pointerEvents = "";
+   link.removeAttribute("aria-disabled");
+   link.removeAttribute("title");
+  }
+ });
+}
+
+function renderShops(shops, subscriptionRows, verificationFailed) {
+ shopList.replaceChildren();
+
+ let hasActiveBusiness = false;
+
+ shops.forEach(shop => {
+  const item = document.createElement("div");
+  item.className = "shop-item";
+
+  const top = document.createElement("div");
+  top.className = "shop-top";
+
+  const title = document.createElement("div");
+  title.className = "shop-title";
+  title.textContent = shop.name || "Unnamed Business";
+
+  const mark = document.createElement("div");
+  mark.className = "shop-mark";
+  mark.textContent = "▣";
 
   top.append(title,mark);
+  item.appendChild(top);
 
-  const details=document.createElement("div");
-  details.className="shop-details";
-  details.textContent="Type: "+(shop.business_type || "Other")+
-   (shop.city ? "  •  City: "+shop.city : "");
+  const details = document.createElement("div");
+  details.className = "shop-details";
+  details.textContent =
+   "Type: " + (shop.business_type || "Other Business") +
+   (shop.city ? "  •  City: " + shop.city : "");
+  item.appendChild(details);
 
-  const url=document.createElement("div");
-  url.className="shop-url";
-  url.textContent="URL: "+shop.slug;
+  const url = document.createElement("div");
+  url.className = "shop-url";
+  url.textContent = "Business URL: " + (shop.slug || "Not available");
+  item.appendChild(url);
 
-  const actions=document.createElement("div");
-  actions.className="shop-actions";
+  const subscription = subscriptionRows.find(row => row.shop_id === shop.id);
+  const info = verificationFailed
+   ? {key:"unverified",label:"Unable to Verify",active:false}
+   : getSubscriptionInfo(subscription || {subscription_status:"not_subscribed"});
 
-  if(shop.is_active){
-   const openBtn=document.createElement("a");
-   openBtn.className="shop-action shop-open";
-   openBtn.textContent="↗ Open Dashboard";
-   openBtn.href="shop-dashboard.html?shop="+encodeURIComponent(shop.id);
-   actions.appendChild(openBtn);
-  } else {
-   const inactive=document.createElement("span");
-   inactive.className="shop-inactive";
-   inactive.textContent="Inactive";
-   actions.appendChild(inactive);
+  const panel = document.createElement("div");
+  panel.style.cssText =
+   "margin-top:13px;padding:13px;border-radius:10px;" +
+   "background:#f8fafc;border:1px solid #e2e8f0;";
+
+  const badge = addText(
+   panel, "div",
+   "SUBSCRIPTION: " + info.label.toUpperCase(),
+   "font-size:11px;font-weight:900;color:" +
+   (info.key === "unverified" ? "#b91c1c" : statusColor(info.key))
+  );
+
+  if (subscription) {
+   addText(panel,"div",
+    "Plan: " + (subscription.plan_name || "Not specified"),
+    "font-size:11px;color:#475569;margin-top:8px;"
+   );
+
+   addText(panel,"div",
+    "Start Date: " + formatDate(subscription.start_date),
+    "font-size:11px;color:#64748b;margin-top:5px;"
+   );
+
+   addText(panel,"div",
+    "Expiry Date: " + formatDate(subscription.expiry_date),
+    "font-size:11px;color:#64748b;margin-top:5px;"
+   );
   }
 
-  const editBtn=document.createElement("button");
-  editBtn.type="button";
-  editBtn.className="shop-action shop-edit";
-  editBtn.textContent="✎ Edit";
+  if (shop.is_active === false) {
+   addText(panel,"div",
+    "Business Status: Inactive",
+    "font-size:11px;font-weight:800;color:#b91c1c;margin-top:9px;"
+   );
+  } else {
+   addText(panel,"div",
+    "Business Status: Active",
+    "font-size:11px;color:#166534;margin-top:9px;"
+   );
+  }
+
+  if (!info.active || shop.is_active === false) {
+   const notice = document.createElement("div");
+   notice.style.cssText =
+    "font-size:11px;line-height:1.6;color:#475569;margin-top:10px;";
+   notice.textContent = verificationFailed
+    ? "Subscription status could not be verified. Business operations remain unavailable until verification succeeds."
+    : "इस व्यवसाय के लिए कोई सक्रिय Subscription उपलब्ध नहीं है। व्यवसाय प्रबंधन एवं संचालन की सुविधाएँ Subscription सक्रिय होने तक उपलब्ध नहीं रहेंगी।";
+   panel.appendChild(notice);
+  } else {
+   hasActiveBusiness = true;
+  }
+
+  item.appendChild(panel);
+
+  const actions = document.createElement("div");
+  actions.className = "shop-actions";
+
+  if (info.active && shop.is_active !== false && !verificationFailed) {
+   const openBtn = document.createElement("a");
+   openBtn.className = "shop-action shop-open";
+   openBtn.textContent = "↗ Open Dashboard";
+   openBtn.href = "shop-dashboard.html?shop=" + encodeURIComponent(shop.id);
+   actions.appendChild(openBtn);
+  }
+
+  const settingsBtn = document.createElement("a");
+  settingsBtn.className = "shop-action shop-edit";
+  settingsBtn.textContent = "Subscription & Settings";
+  settingsBtn.href = "shop-settings.html?shop=" + encodeURIComponent(shop.id);
+  actions.appendChild(settingsBtn);
+
+  const editBtn = document.createElement("button");
+  editBtn.type = "button";
+  editBtn.className = "shop-action shop-edit";
+  editBtn.textContent = "✎ Edit Details";
   editBtn.addEventListener("click",()=>openEditShop(shop));
   actions.appendChild(editBtn);
 
-  if(shop.is_active){
-   const offBtn=document.createElement("button");
-   offBtn.type="button";
-   offBtn.className="shop-action shop-deactivate";
-   offBtn.textContent="Deactivate";
+  if (shop.is_active !== false) {
+   const offBtn = document.createElement("button");
+   offBtn.type = "button";
+   offBtn.className = "shop-action shop-deactivate";
+   offBtn.textContent = "Deactivate";
    offBtn.addEventListener("click",()=>deactivateShop(shop));
    actions.appendChild(offBtn);
   }
 
-  item.append(top,details,url,actions);
+  item.appendChild(actions);
   shopList.appendChild(item);
  });
+
+ updateQuickAccess(hasActiveBusiness);
 }
 
-function openEditShop(shop){
- document.getElementById("editShopId").value=shop.id;
- document.getElementById("editName").value=shop.name||"";
- document.getElementById("editSlug").value=shop.slug||"";
- document.getElementById("editType").value=shop.business_type||"other";
- document.getElementById("editPhone").value=shop.phone||"";
- document.getElementById("editCity").value=shop.city||"";
- document.getElementById("editState").value=shop.state||"";
- document.getElementById("editAddress").value=shop.address||"";
- document.getElementById("editDescription").value=shop.description||"";
+function openEditShop(shop) {
+ document.getElementById("editShopId").value = shop.id;
+ document.getElementById("editName").value = shop.name || "";
+ document.getElementById("editSlug").value = shop.slug || "";
+ document.getElementById("editType").value = shop.business_type || "other";
+ document.getElementById("editPhone").value = shop.phone || "";
+ document.getElementById("editCity").value = shop.city || "";
+ document.getElementById("editState").value = shop.state || "";
+ document.getElementById("editAddress").value = shop.address || "";
+ document.getElementById("editDescription").value = shop.description || "";
  document.getElementById("editModal").classList.add("show");
 }
 
-function closeEditShop(){
+function closeEditShop() {
  document.getElementById("editModal").classList.remove("show");
 }
 
 document.getElementById("cancelEdit").addEventListener("click",closeEditShop);
 
 document.getElementById("editModal").addEventListener("click",e=>{
- if(e.target.id==="editModal") closeEditShop();
+ if (e.target.id === "editModal") closeEditShop();
 });
 
 document.getElementById("editShopForm").addEventListener("submit",async e=>{
  e.preventDefault();
 
- const id=document.getElementById("editShopId").value;
- const name=document.getElementById("editName").value.trim();
- const slug=document.getElementById("editSlug").value.trim().toLowerCase();
+ const id = document.getElementById("editShopId").value;
+ const name = document.getElementById("editName").value.trim();
+ const slug = document.getElementById("editSlug").value.trim().toLowerCase();
 
- if(name.length<2 || !/^[a-z0-9-]{3,40}$/.test(slug)){
-  showMessage("Please enter a valid shop name and URL.","error");
+ if (name.length < 2 || !/^[a-z0-9-]{3,40}$/.test(slug)) {
+  showMessage("Please enter a valid business name and URL.","error");
   return;
  }
 
- const btn=document.getElementById("saveEdit");
- btn.disabled=true;
- btn.textContent="Saving...";
+ const btn = document.getElementById("saveEdit");
+ btn.disabled = true;
+ btn.textContent = "Saving...";
 
- try{
-  const {error}=await db.from("shops").update({
+ try {
+  const {error} = await db.from("shops").update({
    name,slug,
    business_type:document.getElementById("editType").value,
-   phone:document.getElementById("editPhone").value.trim()||null,
-   city:document.getElementById("editCity").value.trim()||null,
-   state:document.getElementById("editState").value.trim()||null,
-   address:document.getElementById("editAddress").value.trim()||null,
-   description:document.getElementById("editDescription").value.trim()||null
+   phone:document.getElementById("editPhone").value.trim() || null,
+   city:document.getElementById("editCity").value.trim() || null,
+   state:document.getElementById("editState").value.trim() || null,
+   address:document.getElementById("editAddress").value.trim() || null,
+   description:document.getElementById("editDescription").value.trim() || null
   }).eq("id",id);
 
-  if(error) throw error;
+  if (error) throw error;
 
   closeEditShop();
-  showMessage("Shop details updated successfully.","success");
+  showMessage("Business details updated successfully.","success");
   await loadShops();
 
- }catch(err){
-  showMessage("Unable to update shop: "+(err.message||"Unknown error"),"error");
- }finally{
-  btn.disabled=false;
-  btn.textContent="Save Changes";
+ } catch(err) {
+  showMessage("Unable to update business: " + (err.message || "Unknown error"),"error");
+ } finally {
+  btn.disabled = false;
+  btn.textContent = "Save Changes";
  }
 });
 
-async function deactivateShop(shop){
- const answer=confirm(
-  "Are you sure you want to deactivate '"+shop.name+
-  "'? The shop will not be deleted, but normal shop operations may stop."
+async function deactivateShop(shop) {
+ const answer = confirm(
+  "Are you sure you want to deactivate '" + shop.name +
+  "'? The business will not be deleted."
  );
 
- if(!answer)return;
+ if (!answer) return;
 
- try{
-  const {error}=await db.from("shops")
+ try {
+  const {error} = await db.from("shops")
    .update({is_active:false})
    .eq("id",shop.id);
 
-  if(error) throw error;
+  if (error) throw error;
 
-  showMessage("Shop deactivated successfully. Its data has not been deleted.","success");
+  showMessage("Business deactivated. Its data has not been deleted.","success");
   await loadShops();
 
- }catch(err){
-  showMessage("Unable to deactivate shop: "+(err.message||"Unknown error"),"error");
+ } catch(err) {
+  showMessage("Unable to deactivate business: " + (err.message || "Unknown error"),"error");
  }
 }
 
@@ -736,64 +914,68 @@ form.addEventListener("submit",async event=>{
  event.preventDefault();
  clearMessage();
 
- const name=document.getElementById("shopName").value.trim();
- const slug=document.getElementById("shopSlug").value.trim();
- const type=document.getElementById("businessType").value;
- const city=document.getElementById("city").value.trim();
+ const name = document.getElementById("shopName").value.trim();
+ const slug = document.getElementById("shopSlug").value.trim();
+ const type = document.getElementById("businessType").value;
+ const city = document.getElementById("city").value.trim();
 
- if(name.length<2) {
+ if (name.length < 2) {
   showMessage("Please enter a valid business name.","error");
   return;
  }
 
- if(!/^[a-z0-9-]{3,40}$/.test(slug)) {
+ if (!/^[a-z0-9-]{3,40}$/.test(slug)) {
   showMessage("The URL must be 3 to 40 characters and contain only a-z, 0-9 and hyphens.","error");
   return;
  }
 
- createBtn.disabled=true;
- createBtn.textContent="Creating Shop...";
+ createBtn.disabled = true;
+ createBtn.textContent = "Creating Business...";
 
  try {
-  const {data,error}=await db.rpc("create_shop",{
+  const {data,error} = await db.rpc("create_shop",{
    p_name:name,
    p_slug:slug,
    p_business_type:type,
    p_city:city || null
   });
 
-  if(error) throw error;
-  if(!data || !data.success) throw new Error("Shop creation could not be confirmed.");
+  if (error) throw error;
+  if (!data || !data.success) throw new Error("Business creation could not be confirmed.");
 
-  showMessage("Congratulations! Your shop has been created successfully.","success");
+  showMessage(
+   "Business created successfully. Please activate a Subscription to start operations.",
+   "success"
+  );
+
   form.reset();
-  document.getElementById("shopSlug").dataset.edited="";
+  document.getElementById("shopSlug").dataset.edited = "";
   await loadShops();
 
  } catch(error) {
-  showMessage(error.message || "Unable to create shop.","error");
+  showMessage(error.message || "Unable to create business.","error");
  } finally {
-  createBtn.disabled=false;
-  createBtn.textContent="＋ Create Shop";
+  createBtn.disabled = false;
+  createBtn.textContent = "＋ Create Shop";
  }
 });
 
 document.getElementById("logoutBtn").addEventListener("click",async()=>{
- const {error}=await db.auth.signOut();
+ const {error} = await db.auth.signOut();
 
- if(error) {
+ if (error) {
   showMessage(error.message,"error");
   return;
  }
 
- window.location.href="index.html";
+ window.location.href = "index.html";
 });
 
 async function initialize() {
- const {data,error}=await db.auth.getSession();
+ const {data,error} = await db.auth.getSession();
 
- if(error || !data.session) {
-  window.location.href="index.html";
+ if (error || !data.session) {
+  window.location.href = "index.html";
   return;
  }
 
@@ -802,6 +984,7 @@ async function initialize() {
 
 initialize();
 })();
+
 </script>
 </body>
 </html>
