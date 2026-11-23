@@ -7,6 +7,7 @@
 <title>RP TOKEN - Queue Management</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f3f5f9;color:#172033;font-family:Arial,sans-serif}
@@ -45,8 +46,10 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .error{background:#fef2f2;color:#b91c1c}
 .empty{text-align:center;color:#64748b;padding:25px 10px}
 .small{font-size:12px;color:#64748b}
+
 @media(max-width:500px){
-.stats{gap:6px}.stat{padding:11px 5px}
+.stats{gap:6px}
+.stat{padding:11px 5px}
 .stat strong{font-size:21px}
 .token-top{align-items:flex-start}
 }
@@ -55,6 +58,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .back-dashboard:hover{background:#ffffff30}
 </style>
 </head>
+
 <body>
 
 <header>
@@ -64,6 +68,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </header>
 
 <main>
+
 <div class="card">
 <label for="shopSelect">अपनी दुकान चुनें</label>
 <select id="shopSelect">
@@ -78,10 +83,12 @@ button:disabled{opacity:.45;cursor:not-allowed}
 <strong id="waitingCount">0</strong>
 <span>Waiting</span>
 </div>
+
 <div class="stat">
 <strong id="calledCount">0</strong>
 <span>Called</span>
 </div>
+
 <div class="stat">
 <strong id="servingCount">0</strong>
 <span>Serving</span>
@@ -114,7 +121,9 @@ button:disabled{opacity:.45;cursor:not-allowed}
 हर 5 सेकंड में Queue अपने-आप अपडेट होती है।
 <br><span id="lastUpdated"></span>
 </div>
+
 <div id="message" class="notice" style="display:none;margin-bottom:20px"></div>
+
 </main>
 
 <script>
@@ -284,6 +293,7 @@ async function selectShop() {
 
 async function loadQueue() {
     if (!currentShop || refreshing) return;
+
     refreshing = true;
 
     try {
@@ -300,6 +310,7 @@ async function loadQueue() {
 
         tokens = data || [];
         renderQueue();
+
         $("lastUpdated").textContent =
             "अंतिम अपडेट: " + new Date().toLocaleTimeString("hi-IN");
 
@@ -363,11 +374,14 @@ function tokenCard(t, finished=false) {
             <span class="token-code">${escapeText(t.token_code)}</span>
             <span class="badge ${statusClass(t.status)}">${escapeText(statusText(t.status))}</span>
         </div>
+
         <div class="customer">${escapeText(t.customer_name)}</div>
+
         <div class="meta">
             टोकन नंबर: ${escapeText(t.token_number)}
             ${t.created_at ? " | समय: " + escapeText(timeText(t.created_at)) : ""}
         </div>
+
         <div class="actions">${buttons}</div>
     </div>`;
 }
@@ -407,16 +421,13 @@ async function callNext() {
     }
 }
 
-window.changeStatus = async function(tokenId,newStatus) {
+/* Token status update - No confirmation alert */
+
+window.changeStatus = async function(tokenId, newStatus) {
     if (!currentShop) return;
 
     const token = tokens.find(t => t.id === tokenId);
     if (!token) return;
-
-    const label = statusText(newStatus);
-    if (!confirm("क्या आप इस टोकन की स्थिति '" + label + "' करना चाहते हैं?")) {
-        return;
-    }
 
     try {
         const {data,error} = await db.rpc("update_queue_token_status", {
@@ -426,6 +437,7 @@ window.changeStatus = async function(tokenId,newStatus) {
         });
 
         if (error) throw error;
+
         if (data && data.success === false) {
             throw new Error(data.message || "स्थिति अपडेट नहीं हुई।");
         }
@@ -449,5 +461,6 @@ setInterval(() => {
 
 })();
 </script>
+
 </body>
 </html>
