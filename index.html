@@ -1,597 +1,1104 @@
 
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101827">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#991b1b">
 
-  <title>RP TOKEN | Smart Queue Management</title>
+<title>RP TOKEN | Smart Queue Management</title>
+<meta name="description" content="RP TOKEN - Smart QR Token and Queue Management System for shops, clinics, salons and service businesses.">
 
-  <meta name="description" content="RP TOKEN - दुकानों, क्लीनिक, सैलून और अन्य व्यवसायों के लिए स्मार्ट QR Token और Queue Management System.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+:root{
+ --red:#dc2626;
+ --red-dark:#991b1b;
+ --navy:#102344;
+ --blue:#2563eb;
+ --cyan:#38bdf8;
+ --ink:#14213d;
+ --muted:#64748b;
+ --line:#e5eaf3;
+ --white:#ffffff;
+ --bg:#f5f7fb;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ font-family:Inter,Arial,sans-serif;
+ background:var(--bg);
+ color:var(--ink);
+ min-height:100vh;
+}
+button,input,select{font:inherit}
+a{text-decoration:none}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f3f6fb;
-      color: #182338;
-      min-height: 100vh;
-    }
+/* HEADER */
+header{
+ position:sticky;
+ top:0;
+ z-index:50;
+ width:100%;
+ background:rgba(10,22,45,.97);
+ backdrop-filter:blur(12px);
+ border-bottom:1px solid rgba(255,255,255,.1);
+ padding:12px max(4%,calc((100% - 1180px)/2));
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:20px;
+}
+.brand{
+ font-size:22px;
+ font-weight:900;
+ letter-spacing:.5px;
+ color:#fff;
+ white-space:nowrap;
+}
+.brand span{color:#61c9ff}
+.top-nav{
+ display:flex;
+ align-items:center;
+ gap:20px;
+}
+.top-nav a{
+ color:#dbeafe;
+ font-size:11px;
+ font-weight:700;
+ transition:.2s;
+}
+.top-nav a:hover{color:#fff}
+.top-nav .nav-cta{
+ background:#fff;
+ color:#991b1b;
+ padding:9px 13px;
+ border-radius:8px;
+ font-weight:900;
+}
+.header-tag{
+ color:#fff;
+ background:linear-gradient(110deg,#991b1b,#dc2626,#f43f5e);
+ padding:10px 15px;
+ border-radius:7px;
+ font-size:9px;
+ letter-spacing:1.3px;
+ font-weight:900;
+ box-shadow:0 5px 15px #dc262644;
+ white-space:nowrap;
+}
 
-    header {
-      background: #101827;
-      color: white;
-      padding: 18px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+/* HERO */
+.hero-shell{
+ max-width:1160px;
+ margin:auto;
+ padding:42px 22px 38px;
+ display:grid;
+ grid-template-columns:minmax(0,1fr) minmax(320px,390px);
+ gap:35px;
+ align-items:center;
+}
+.hero{padding:0;text-align:left}
+.eyebrow{
+ display:inline-flex;
+ align-items:center;
+ gap:8px;
+ padding:7px 11px;
+ border:1px solid #d9e8ff;
+ background:#edf5ff;
+ border-radius:30px;
+ color:#2456a5;
+ font-size:9px;
+ font-weight:900;
+ letter-spacing:1px;
+ margin-bottom:17px;
+}
+.eyebrow:before{
+ content:"";
+ width:7px;height:7px;
+ border-radius:50%;
+ background:#16b981;
+}
+.token-photo{
+ display:inline-flex;
+ align-items:center;
+ gap:13px;
+ padding:11px 16px;
+ margin-bottom:15px;
+ background:linear-gradient(120deg,#fff,#fff1f2);
+ border:1px solid #fecaca;
+ border-radius:12px;
+ box-shadow:0 7px 20px #991b1b12;
+}
+.token-photo-icon{
+ width:44px;height:44px;
+ display:grid;place-items:center;
+ border-radius:11px;
+ background:linear-gradient(135deg,#991b1b,#ef4444);
+ color:#fff;
+ font-size:23px;
+}
+.token-photo-title{
+ font-size:8px;
+ letter-spacing:1.4px;
+ font-weight:900;
+ color:#991b1b;
+}
+.token-photo-number{
+ font-size:22px;
+ font-weight:900;
+ color:#172554;
+ line-height:1.35;
+}
+.token-photo-status{
+ font-size:8px;
+ font-weight:800;
+ color:#64748b;
+ letter-spacing:.6px;
+}
+.hero h1{
+ font-size:clamp(25px,3.2vw,39px);
+ line-height:1.2;
+ letter-spacing:-1px;
+ color:#101d3b;
+ margin-bottom:12px;
+}
+.hero h1 span{
+ color:#2475df;
+}
+.hero p{
+ max-width:560px;
+ color:#64748b;
+ font-size:12px;
+ line-height:1.8;
+}
+.features{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ margin-top:17px;
+}
+.feature{
+ background:#fff;
+ border:1px solid #e2eaf5;
+ padding:8px 11px;
+ border-radius:30px;
+ font-size:10px;
+ font-weight:700;
+ color:#334155;
+ box-shadow:0 4px 12px #142d5a08;
+}
+.hero-actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:9px;
+ margin-top:20px;
+}
+.hero-btn{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:8px;
+ padding:11px 15px;
+ border-radius:9px;
+ font-size:11px;
+ font-weight:800;
+ transition:.2s;
+}
+.hero-btn:hover{transform:translateY(-2px)}
+.hero-btn.primary{
+ background:linear-gradient(120deg,#dc2626,#991b1b);
+ color:#fff;
+ box-shadow:0 7px 18px #dc262633;
+}
+.hero-btn.secondary{
+ background:#fff;
+ color:#19345e;
+ border:1px solid #dce5f1;
+}
+.hero-note{
+ margin-top:12px;
+ font-size:9px;
+ color:#8492a8;
+ line-height:1.6;
+}
 
-    .brand {
-      font-size: 25px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
+/* TOKEN PREVIEW */
+.hero-visual{
+ position:relative;
+ min-height:310px;
+ border-radius:21px;
+ padding:19px;
+ background:
+ radial-gradient(circle at 80% 10%,rgba(80,177,255,.35),transparent 34%),
+ linear-gradient(145deg,#0c1b3b,#173c70 58%,#126a91);
+ box-shadow:0 20px 45px rgba(19,54,105,.18);
+ overflow:hidden;
+}
+.hero-visual:before,.hero-visual:after{
+ content:"";
+ position:absolute;
+ border:1px solid rgba(255,255,255,.13);
+ border-radius:50%;
+ width:260px;height:260px;
+ right:-100px;top:-110px;
+}
+.hero-visual:after{
+ width:180px;height:180px;
+ right:-55px;top:-65px;
+}
+.visual-top{
+ position:relative;
+ z-index:1;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ color:#dbeafe;
+ font-size:9px;
+ letter-spacing:1.2px;
+ font-weight:900;
+}
+.live-pill{
+ padding:6px 9px;
+ border-radius:30px;
+ background:rgba(16,185,129,.18);
+ color:#a7f3d0;
+ font-size:9px;
+ letter-spacing:0;
+}
+.queue-card{
+ position:relative;
+ z-index:1;
+ background:#fff;
+ border-radius:15px;
+ padding:17px;
+ margin-top:22px;
+ box-shadow:0 15px 35px #0003;
+}
+.queue-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ margin-bottom:13px;
+}
+.queue-head strong{font-size:12px;color:#14213d}
+.queue-head span{
+ font-size:9px;
+ color:#0d9b6c;
+ background:#e9fbf3;
+ border-radius:30px;
+ padding:5px 8px;
+ font-weight:800;
+}
+.token-current{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ background:#f0f6ff;
+ border:1px solid #dceaff;
+ border-radius:11px;
+ padding:12px;
+ margin-bottom:9px;
+}
+.token-current small{
+ display:block;
+ color:#71819a;
+ font-size:9px;
+ margin-bottom:4px;
+}
+.token-current b{font-size:24px;color:#1e5fc5}
+.token-current em{
+ font-style:normal;
+ font-size:9px;
+ color:#0d9b6c;
+ font-weight:800;
+}
+.queue-row{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:9px 2px;
+ border-bottom:1px solid #eef2f7;
+ font-size:10px;
+ color:#53647e;
+}
+.queue-row:last-child{border:0}
+.queue-row b{color:#253a5e}
+.queue-row span{
+ color:#0e9f6e;
+ font-weight:700;
+ font-size:9px;
+}
+.visual-caption{
+ position:relative;
+ z-index:1;
+ text-align:center;
+ color:#c7ddf8;
+ font-size:9px;
+ margin-top:13px;
+}
 
-    .brand span {
-      color: #38bdf8;
-    }
+/* LOGIN / REGISTER */
+.main{
+ width:100%;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+}
+.auth-card{
+ width:100%;
+ max-width:370px;
+ background:#fff;
+ border:1px solid #e4ebf5;
+ border-radius:16px;
+ padding:19px;
+ box-shadow:0 15px 38px rgba(20,45,90,.10);
+}
+.tabs{
+ display:flex;
+ background:#edf2f8;
+ padding:4px;
+ border-radius:9px;
+ margin-bottom:14px;
+}
+.tab{
+ width:50%;
+ border:0;
+ padding:9px;
+ border-radius:7px;
+ font-size:11px;
+ font-weight:800;
+ cursor:pointer;
+ background:transparent;
+ color:#64748b;
+}
+.tab.active{
+ background:#fff;
+ color:#145fc3;
+ box-shadow:0 2px 7px #00000012;
+}
+.form-title{
+ font-size:17px;
+ margin-bottom:5px;
+ color:#172b4d;
+}
+.form-subtitle{
+ color:#64748b;
+ font-size:10px;
+ margin-bottom:13px;
+ line-height:1.6;
+}
+.field{margin-bottom:11px}
+label{
+ display:block;
+ font-size:10px;
+ font-weight:800;
+ margin-bottom:5px;
+ color:#334155;
+}
+input,select{
+ width:100%;
+ padding:10px 11px;
+ border:1px solid #d8e0ea;
+ border-radius:8px;
+ outline:none;
+ font-size:11px;
+ background:#fff;
+ color:#182338;
+}
+input:focus,select:focus{
+ border-color:#0788cf;
+ box-shadow:0 0 0 3px #0788cf18;
+}
+input::placeholder{color:#9aa6b8}
+.admin-link{
+ display:inline-block;
+ color:#0b75b7;
+ font-size:9px;
+ font-weight:800;
+ text-decoration:none;
+}
+.admin-link:hover{text-decoration:underline}
+.form-section-title{
+ font-size:11px;
+ color:#087fc4;
+ font-weight:900;
+ margin:15px 0 10px;
+ padding-bottom:6px;
+ border-bottom:1px solid #e8edf4;
+}
+.field-hint{
+ margin-top:5px;
+ color:#94a3b8;
+ font-size:9px;
+ line-height:1.5;
+}
+.submit-btn{
+ width:100%;
+ background:linear-gradient(120deg,#dc2626,#991b1b);
+ color:#fff;
+ border:0;
+ padding:11px;
+ border-radius:8px;
+ font-size:11px;
+ font-weight:900;
+ cursor:pointer;
+ margin-top:4px;
+ box-shadow:0 6px 15px #dc26262b;
+ transition:.2s;
+}
+.submit-btn:hover{filter:brightness(.94)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed}
+.message{
+ display:none;
+ padding:9px;
+ border-radius:8px;
+ margin-bottom:12px;
+ font-size:10px;
+ line-height:1.6;
+ overflow-wrap:anywhere;
+}
+.message.success{display:block;background:#e9f9ef;color:#166534}
+.message.error{display:block;background:#fff0f0;color:#b42318}
+.hidden{display:none!important}
+.session-box{
+ background:#f0f9ff;
+ border:1px solid #bae6fd;
+ border-radius:10px;
+ padding:13px;
+ margin-top:14px;
+}
+.session-box h3{
+ font-size:13px;
+ margin-bottom:7px;
+ color:#075985;
+}
+.session-email{
+ font-size:10px;
+ color:#475569;
+ overflow-wrap:anywhere;
+ margin-bottom:10px;
+}
+.logout-btn{
+ background:#dc2626;
+ color:#fff;
+ border:0;
+ padding:8px 13px;
+ border-radius:7px;
+ cursor:pointer;
+ font-size:10px;
+ font-weight:800;
+}
+.info{
+ text-align:center;
+ color:#94a3b8;
+ font-size:9px;
+ margin-top:13px;
+ line-height:1.6;
+}
 
-    .header-tag {
-      font-size: 12px;
-      color: #cbd5e1;
-    }
+/* INFORMATION SECTIONS */
+.content-section{
+ max-width:1160px;
+ margin:auto;
+ padding:52px 22px;
+}
+.section-kicker{
+ text-align:center;
+ color:#dc2626;
+ font-size:9px;
+ font-weight:900;
+ letter-spacing:1.8px;
+}
+.section-title{
+ text-align:center;
+ font-size:25px;
+ letter-spacing:-.5px;
+ color:#14213d;
+ margin:9px 0;
+}
+.section-desc{
+ text-align:center;
+ max-width:620px;
+ margin:0 auto 25px;
+ color:#718096;
+ font-size:11px;
+ line-height:1.8;
+}
+.steps-grid,.benefit-grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:13px;
+}
+.info-card{
+ background:#fff;
+ border:1px solid #e6edf6;
+ border-radius:14px;
+ padding:19px;
+ box-shadow:0 7px 20px #16305708;
+}
+.info-icon{
+ width:36px;height:36px;
+ border-radius:10px;
+ background:#fff0f0;
+ color:#dc2626;
+ display:grid;
+ place-items:center;
+ font-size:17px;
+ margin-bottom:12px;
+}
+.info-card h3{
+ font-size:12px;
+ margin-bottom:7px;
+ color:#172b4d;
+}
+.info-card p{
+ font-size:10px;
+ line-height:1.7;
+ color:#718096;
+}
+.step-no{
+ font-size:9px;
+ font-weight:900;
+ color:#dc2626;
+ letter-spacing:1px;
+ margin-bottom:8px;
+}
+.audience-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:11px;
+}
+.audience-card{
+ text-align:center;
+ background:#fff;
+ border:1px solid #e6edf6;
+ border-radius:12px;
+ padding:16px 10px;
+ color:#334b70;
+ font-size:10px;
+ font-weight:800;
+}
+.audience-card span{
+ display:block;
+ font-size:21px;
+ margin-bottom:7px;
+}
 
-    .hero {
-      text-align: center;
-      padding: 55px 20px 35px;
-    }
+/* CTA */
+.cta-band{
+ max-width:1116px;
+ margin:0 auto 48px;
+ padding:27px 30px;
+ border-radius:17px;
+ background:linear-gradient(110deg,#991b1b,#dc2626,#be123c);
+ color:#fff;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:20px;
+ box-shadow:0 15px 30px #991b1b24;
+}
+.cta-band h2{font-size:18px;margin-bottom:6px}
+.cta-band p{
+ font-size:10px;
+ color:#fee2e2;
+ line-height:1.7;
+}
+.cta-band .hero-btn{
+ background:#fff;
+ color:#991b1b;
+ white-space:nowrap;
+}
 
-    .hero h1 {
-      font-size: 36px;
-      margin-bottom: 14px;
-      color: #101827;
-    }
+/* FOOTER */
+footer{
+ background:#09142c;
+ color:#a9bad2;
+ padding:35px max(5%,calc((100% - 1160px)/2)) 18px;
+ text-align:left;
+ font-size:10px;
+}
+.footer-grid{
+ display:grid;
+ grid-template-columns:1.5fr 1fr 1fr;
+ gap:25px;
+ padding-bottom:22px;
+}
+.footer-brand{
+ font-size:20px;
+ font-weight:900;
+ color:#fff;
+ margin-bottom:9px;
+}
+.footer-brand span{color:#56c6ff}
+.footer-copy{
+ max-width:340px;
+ line-height:1.8;
+ color:#91a4c0;
+ font-size:10px;
+}
+.footer-col h4{
+ color:#fff;
+ font-size:10px;
+ letter-spacing:1px;
+ margin-bottom:11px;
+}
+.footer-col a{
+ display:block;
+ color:#a9bad2;
+ text-decoration:none;
+ margin:8px 0;
+ font-size:10px;
+}
+.footer-col a:hover{color:#7dd3fc}
+.footer-bottom{
+ border-top:1px solid #ffffff1c;
+ padding-top:14px;
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ flex-wrap:wrap;
+ color:#8295b2;
+ font-size:9px;
+}
 
-    .hero h1 span {
-      color: #087fc4;
-    }
+/* TABLET */
+@media(max-width:900px){
+ .hero-shell{
+  grid-template-columns:1fr;
+  gap:22px;
+  padding-top:30px;
+ }
+ .hero-visual{
+  max-width:480px;
+  width:100%;
+  margin:auto;
+ }
+ .main{padding:0 14px}
+ .auth-card{max-width:410px}
+ .cta-band{margin:0 16px 40px}
+ .audience-grid{grid-template-columns:repeat(2,1fr)}
+}
 
-    .hero p {
-      max-width: 620px;
-      margin: auto;
-      line-height: 1.7;
-      color: #64748b;
-      font-size: 15px;
-    }
-
-    .features {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 25px;
-    }
-
-    .feature {
-      background: white;
-      border: 1px solid #e2e8f0;
-      padding: 10px 16px;
-      border-radius: 30px;
-      font-size: 13px;
-      color: #334155;
-    }
-
-    .main {
-      max-width: 560px;
-      margin: 10px auto 50px;
-      padding: 0 16px;
-    }
-
-    .auth-card {
-      background: white;
-      border-radius: 18px;
-      padding: 28px;
-      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.07);
-      border: 1px solid #e8edf4;
-    }
-
-    .tabs {
-      display: flex;
-      background: #edf2f8;
-      padding: 5px;
-      border-radius: 10px;
-      margin-bottom: 25px;
-    }
-
-    .tab {
-      width: 50%;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      background: transparent;
-      color: #64748b;
-    }
-
-    .tab.active {
-      background: #ffffff;
-      color: #087fc4;
-      box-shadow: 0 2px 7px rgba(0,0,0,0.07);
-    }
-
-    .form-title {
-      font-size: 23px;
-      margin-bottom: 7px;
-    }
-
-    .form-subtitle {
-      color: #64748b;
-      font-size: 13px;
-      margin-bottom: 23px;
-      line-height: 1.5;
-    }
-
-    .field {
-      margin-bottom: 17px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #334155;
-    }
-
-    input {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid #d8e0ea;
-      border-radius: 9px;
-      outline: none;
-      font-size: 14px;
-      background: #fff;
-    }
-
-    input:focus, select:focus {
-      border-color: #0788cf;
-      box-shadow: 0 0 0 3px rgba(8, 136, 207, 0.1);
-    }
-
-    select {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid #d8e0ea;
-      border-radius: 9px;
-      outline: none;
-      font-size: 14px;
-      background: #fff;
-      color: #182338;
-    }
-
-    .admin-link {
-      display: inline-block;
-      margin-top: 13px;
-      color: #0b75b7;
-      font-size: 12px;
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .admin-link:hover { text-decoration: underline; }
-
-    .form-section-title {
-      font-size: 14px;
-      color: #087fc4;
-      font-weight: 800;
-      margin: 20px 0 13px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #e8edf4;
-    }
-
-    .field-hint {
-      margin-top: 6px;
-      color: #94a3b8;
-      font-size: 11px;
-      line-height: 1.5;
-    }
-
-    .submit-btn {
-      width: 100%;
-      background: #087fc4;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 9px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-
-    .submit-btn:hover {
-      background: #0669a5;
-    }
-
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .message {
-      display: none;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 17px;
-      font-size: 13px;
-      line-height: 1.5;
-      overflow-wrap: anywhere;
-    }
-
-    .message.success {
-      display: block;
-      background: #e9f9ef;
-      color: #166534;
-    }
-
-    .message.error {
-      display: block;
-      background: #fff0f0;
-      color: #b42318;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .session-box {
-      background: #f0f9ff;
-      border: 1px solid #bae6fd;
-      border-radius: 12px;
-      padding: 18px;
-      margin-top: 20px;
-    }
-
-    .session-box h3 {
-      margin-bottom: 9px;
-      color: #075985;
-    }
-
-    .session-email {
-      font-size: 13px;
-      color: #475569;
-      overflow-wrap: anywhere;
-      margin-bottom: 15px;
-    }
-
-    .logout-btn {
-      background: #dc2626;
-      color: white;
-      border: none;
-      padding: 10px 17px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .info {
-      text-align: center;
-      color: #94a3b8;
-      font-size: 12px;
-      margin-top: 22px;
-      line-height: 1.6;
-    }
-
-    footer {
-      background: #101827;
-      color: #94a3b8;
-      padding: 22px;
-      text-align: center;
-      font-size: 12px;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 16px 5%;
-      }
-
-      .hero {
-        padding-top: 38px;
-      }
-
-      .hero h1 {
-        font-size: 29px;
-      }
-
-      .auth-card {
-        padding: 22px 18px;
-      }
-    }
-
-    /* RP TOKEN premium landing page refresh */
-    :root{--navy:#0b1530;--navy2:#12264b;--blue:#2563eb;--cyan:#38bdf8;--ink:#14213d;--muted:#64748b;--line:#e5eaf3;--surface:#ffffff}
-    html{scroll-behavior:smooth}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:#f5f8fd;color:var(--ink)}
-    header{position:sticky;top:0;z-index:50;padding:15px max(5%,calc((100% - 1180px)/2));background:rgba(9,20,44,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.1);gap:20px}
-    .brand{font-size:24px;letter-spacing:.4px}.brand span{color:#61c9ff}.header-tag{font-size:10px;letter-spacing:2px;font-weight:800}
-    .top-nav{display:flex;align-items:center;gap:22px}.top-nav a{color:#dbeafe;text-decoration:none;font-size:13px;font-weight:650}.top-nav a:hover{color:#7dd3fc}.top-nav .nav-cta{padding:10px 16px;border-radius:999px;background:#fff;color:#12305b}
-    .hero-shell{max-width:1180px;margin:0 auto;padding:64px 22px 54px;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.82fr);gap:48px;align-items:center;scroll-margin-top:90px}
-    .hero{padding:0;text-align:left}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border:1px solid #d9e8ff;background:#edf5ff;border-radius:999px;color:#2456a5;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:22px}.eyebrow:before{content:"";width:7px;height:7px;border-radius:50%;background:#16b981;box-shadow:0 0 0 4px #d1fae5}
-    .hero h1{font-size:clamp(38px,5vw,60px);line-height:1.12;letter-spacing:-2px;color:#101d3b;margin-bottom:20px}.hero h1 span{color:#2475df;background:linear-gradient(100deg,#2563eb,#06a6c8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}.hero p{max-width:590px;margin:0;color:#64748b;font-size:16px;line-height:1.85}
-    .features{justify-content:flex-start;gap:10px;margin-top:26px}.feature{border:1px solid #e2eaf5;background:#fff;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:700;box-shadow:0 5px 15px rgba(20,45,90,.04)}
-    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.hero-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;border-radius:12px;padding:14px 20px;font-size:14px;font-weight:800;transition:.2s;box-shadow:0 9px 22px rgba(37,99,235,.16)}.hero-btn.primary{background:linear-gradient(135deg,#2563eb,#087fc4);color:white}.hero-btn.secondary{background:#fff;color:#19345e;border:1px solid #dce5f1;box-shadow:none}.hero-btn:hover{transform:translateY(-2px)}
-    .hero-note{margin-top:18px;font-size:11px;color:#8492a8}.hero-visual{position:relative;min-height:410px;border-radius:28px;padding:26px;background:radial-gradient(circle at 80% 10%,rgba(80,177,255,.35),transparent 34%),linear-gradient(145deg,#0c1b3b,#173c70 58%,#126a91);box-shadow:0 28px 70px rgba(19,54,105,.22);overflow:hidden}.hero-visual:before,.hero-visual:after{content:"";position:absolute;border:1px solid rgba(255,255,255,.13);border-radius:50%;width:330px;height:330px;right:-110px;top:-130px}.hero-visual:after{width:230px;height:230px;right:-55px;top:-80px}
-    .visual-top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;color:#dbeafe;font-size:11px;letter-spacing:1.4px;font-weight:800}.live-pill{padding:7px 10px;border-radius:99px;background:rgba(16,185,129,.18);color:#a7f3d0;letter-spacing:0}.queue-card{position:relative;z-index:1;background:#fff;border:1px solid rgba(255,255,255,.55);border-radius:20px;padding:22px;margin-top:28px;box-shadow:0 20px 45px rgba(0,0,0,.16)}.queue-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.queue-head strong{font-size:16px;color:#14213d}.queue-head span{font-size:10px;color:#0d9b6c;background:#e9fbf3;border-radius:99px;padding:6px 9px;font-weight:800}.token-current{display:flex;align-items:center;justify-content:space-between;background:#f0f6ff;border:1px solid #dceaff;border-radius:14px;padding:15px;margin-bottom:12px}.token-current small{display:block;color:#71819a;font-size:10px;margin-bottom:5px}.token-current b{font-size:28px;color:#1e5fc5}.token-current em{font-style:normal;font-size:11px;color:#0d9b6c;font-weight:800}.queue-row{display:flex;align-items:center;justify-content:space-between;padding:12px 3px;border-bottom:1px solid #eef2f7;font-size:12px;color:#53647e}.queue-row:last-child{border:0}.queue-row b{color:#253a5e}.queue-row span{color:#0e9f6e;font-weight:700;font-size:10px}.visual-caption{position:relative;z-index:1;text-align:center;color:#c7ddf8;font-size:11px;margin-top:17px}
-    .main{max-width:none;width:100%;margin:0;padding:0;display:flex;justify-content:center;align-items:center}.auth-card{position:relative;z-index:2;width:min(100%,480px);padding:30px;border-radius:22px;box-shadow:0 22px 65px rgba(20,45,90,.12);border:1px solid #e4ebf5}.tabs{border-radius:12px}.tab{border-radius:9px}.tab.active{color:#145fc3}.submit-btn{background:linear-gradient(135deg,#2563eb,#087fc4);border-radius:11px;box-shadow:0 9px 22px rgba(37,99,235,.18);transition:.2s}.submit-btn:hover{background:linear-gradient(135deg,#1d4ed8,#0669a5);transform:translateY(-1px)}input,select{border-radius:11px;padding:14px 15px}input:focus,select:focus{border-color:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.11)}
-    .content-section{max-width:1180px;margin:0 auto;padding:68px 22px}.section-kicker{text-align:center;color:#2563eb;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase}.section-title{text-align:center;font-size:clamp(27px,3vw,38px);letter-spacing:-1px;color:#14213d;margin:12px 0}.section-desc{text-align:center;max-width:650px;margin:0 auto 34px;color:#718096;font-size:14px;line-height:1.8}.steps-grid,.benefit-grid,.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.info-card{background:#fff;border:1px solid #e6edf6;border-radius:18px;padding:24px;box-shadow:0 10px 28px rgba(22,48,87,.045)}.info-icon{width:44px;height:44px;border-radius:13px;background:#edf5ff;color:#2563eb;display:grid;place-items:center;font-size:20px;margin-bottom:17px}.info-card h3{font-size:16px;margin-bottom:9px;color:#172b4d}.info-card p{font-size:13px;line-height:1.75;color:#718096}.step-no{font-size:11px;font-weight:900;color:#2563eb;letter-spacing:1px;margin-bottom:10px}.audience-grid{grid-template-columns:repeat(4,1fr)}.audience-card{text-align:center;background:#fff;border:1px solid #e6edf6;border-radius:15px;padding:20px 12px;color:#334b70;font-size:13px;font-weight:800}.audience-card span{display:block;font-size:24px;margin-bottom:9px}
-    .cta-band{max-width:1136px;margin:0 auto 70px;padding:38px 42px;border-radius:24px;background:linear-gradient(120deg,#10234a,#155b91);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:24px;box-shadow:0 22px 45px rgba(17,61,111,.17)}.cta-band h2{font-size:25px;margin-bottom:8px}.cta-band p{font-size:13px;color:#c7dcf5;line-height:1.7}.cta-band .hero-btn{background:#fff;color:#16417b;white-space:nowrap}
-    footer{background:#09142c;color:#a9bad2;padding:44px max(5%,calc((100% - 1180px)/2)) 22px;text-align:left;font-size:12px}.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:34px;padding-bottom:28px}.footer-brand{font-size:23px;font-weight:900;color:#fff;margin-bottom:12px}.footer-brand span{color:#56c6ff}.footer-copy{max-width:360px;line-height:1.8;color:#91a4c0}.footer-col h4{color:#fff;font-size:12px;letter-spacing:1px;margin-bottom:14px}.footer-col a{display:block;color:#a9bad2;text-decoration:none;margin:10px 0}.footer-col a:hover{color:#7dd3fc}.footer-bottom{border-top:1px solid rgba(255,255,255,.12);padding-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#8295b2}
-    @media(max-width:900px){.hero-shell{grid-template-columns:1fr;gap:30px;padding-top:42px}.hero-visual{max-width:600px;width:100%;margin:auto}.main{padding:0 16px}.auth-card{width:100%;max-width:560px}.cta-band{margin:0 18px 55px}.audience-grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:600px){header{padding:14px 5%}.top-nav{gap:10px}.top-nav a{font-size:11px}.top-nav a:not(.nav-cta){display:none}.header-tag{display:none}.hero-shell{padding:38px 17px 42px}.hero h1{font-size:39px;letter-spacing:-1.5px}.hero p{font-size:14px}.hero-visual{min-height:360px;padding:18px}.queue-card{padding:17px;margin-top:22px}.auth-card{padding:23px 18px}.content-section{padding:52px 17px}.steps-grid,.benefit-grid{grid-template-columns:1fr}.audience-grid{grid-template-columns:repeat(2,1fr);gap:10px}.cta-band{display:block;padding:28px 23px}.cta-band .hero-btn{margin-top:18px}.footer-grid{grid-template-columns:1fr 1fr;gap:25px}.footer-grid>div:first-child{grid-column:1/-1}.footer-bottom{font-size:11px}}
-
-  </style>
+/* MOBILE */
+@media(max-width:600px){
+ header{
+  padding:11px 14px;
+  flex-wrap:wrap;
+  gap:10px;
+ }
+ .brand{font-size:19px}
+ .top-nav{
+  margin-left:auto;
+  gap:7px;
+ }
+ .top-nav a{font-size:9px}
+ .top-nav a:not(.nav-cta){display:none}
+ .top-nav .nav-cta{padding:8px 10px}
+ .header-tag{
+  width:100%;
+  text-align:center;
+  padding:7px 10px;
+  font-size:8px;
+  letter-spacing:1.3px;
+ }
+ .hero-shell{
+  padding:24px 14px 28px;
+  gap:19px;
+ }
+ .hero h1{font-size:27px}
+ .hero p{font-size:11px}
+ .features{gap:6px}
+ .feature{font-size:9px;padding:7px 9px}
+ .hero-actions{gap:7px}
+ .hero-btn{padding:10px 12px;font-size:10px}
+ .token-photo{padding:9px 12px}
+ .token-photo-icon{width:39px;height:39px;font-size:20px}
+ .token-photo-number{font-size:20px}
+ .hero-visual{
+  min-height:280px;
+  padding:14px;
+  border-radius:16px;
+ }
+ .queue-card{padding:13px;margin-top:17px}
+ .auth-card{
+  max-width:100%;
+  padding:16px 14px;
+  border-radius:13px;
+ }
+ .content-section{padding:39px 14px}
+ .section-title{font-size:21px}
+ .section-desc{font-size:10px;margin-bottom:19px}
+ .steps-grid,.benefit-grid{grid-template-columns:1fr;gap:10px}
+ .info-card{padding:15px}
+ .audience-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+ .audience-card{padding:13px 7px;font-size:9px}
+ .cta-band{
+  display:block;
+  margin:0 12px 30px;
+  padding:20px 17px;
+ }
+ .cta-band h2{font-size:16px}
+ .cta-band .hero-btn{margin-top:13px}
+ .footer-grid{
+  grid-template-columns:1fr 1fr;
+  gap:17px;
+ }
+ .footer-grid>div:first-child{grid-column:1/-1}
+ footer{padding:28px 17px 15px}
+ .footer-bottom{font-size:8px}
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="brand">RP <span>TOKEN</span></div>
-  <nav class="top-nav" aria-label="मुख्य नेविगेशन">
-    <a href="#features">फीचर्स</a>
-    <a href="#how-it-works">कैसे काम करता है</a>
-    <a href="#businesses">व्यवसाय</a>
-    <a class="nav-cta" href="#account">Login / Register ↗</a>
-  </nav>
-  <div class="header-tag">SMART QUEUE MANAGEMENT</div>
+ <div class="brand">RP <span>TOKEN</span></div>
+
+ <nav class="top-nav" aria-label="Main Navigation">
+  <a href="#features">Features</a>
+  <a href="#how-it-works">How It Works</a>
+  <a href="#businesses">Businesses</a>
+  <a class="nav-cta" href="#account">Login / Register ↗</a>
+ </nav>
+
+ <div class="header-tag">SMART QUEUE MANAGEMENT</div>
 </header>
 
 <div class="hero-shell">
-  <section class="hero">
-    <div class="eyebrow">SMARTER QUEUES. BETTER EXPERIENCES.</div>
-    <h1>अब लाइन में नहीं,<br><span>स्मार्ट कतार में।</span></h1>
-    <p>अपने व्यवसाय की कतार को डिजिटल बनाइए। QR Token जारी करें, ग्राहकों को उनकी बारी की जानकारी दें और अपने पूरे Queue System को एक आसान Dashboard से मैनेज करें।</p>
-    <div class="features">
-      <div class="feature">✓ QR आधारित टोकन</div>
-      <div class="feature">✓ Live Queue Status</div>
-      <div class="feature">✓ Daily Reports</div>
-    </div>
-    <div class="hero-actions">
-      <a class="hero-btn primary" href="#account">अपना अकाउंट बनाएँ <span>→</span></a>
-      <a class="hero-btn secondary" href="#how-it-works">कैसे काम करता है</a>
-    </div>
-    <div class="hero-note">दुकान, क्लिनिक, सैलून और सर्विस व्यवसायों के लिए डिजिटल Queue Management</div>
-  </section>
-  <main class="main" id="account">
+
+ <section class="hero">
+
+  <div class="eyebrow">SMARTER QUEUES. BETTER EXPERIENCES.</div>
+
+  <div class="token-photo">
+   <div class="token-photo-icon">🎟</div>
+   <div>
+    <div class="token-photo-title">DIGITAL TOKEN</div>
+    <div class="token-photo-number">A-024</div>
+    <div class="token-photo-status">YOUR TURN IS COMING</div>
+   </div>
+  </div>
+
+  <h1>Smart Queue.<br><span>Better Business.</span></h1>
+
+  <p>
+   Digitize your business queue. Issue QR tokens, keep customers
+   informed and manage your entire queue system from one simple dashboard.
+  </p>
+
+  <div class="features">
+   <div class="feature">✓ QR Token System</div>
+   <div class="feature">✓ Live Queue Status</div>
+   <div class="feature">✓ Daily Reports</div>
+  </div>
+
+  <div class="hero-actions">
+   <a class="hero-btn primary" href="#account">Create Your Account →</a>
+   <a class="hero-btn secondary" href="#how-it-works">How It Works</a>
+  </div>
+
+  <div class="hero-note">
+   Designed for shops, clinics, salons and service businesses.
+  </div>
+
+ </section>
+
+ <div class="main" id="account">
   <div class="auth-card">
 
-    <div class="tabs">
-      <button class="tab active" id="loginTab" type="button">
-        Login
-      </button>
+   <div class="tabs">
+    <button class="tab active" id="loginTab" type="button">Login</button>
+    <button class="tab" id="registerTab" type="button">Register</button>
+   </div>
 
-      <button class="tab" id="registerTab" type="button">
-        Register
-      </button>
+   <div style="text-align:right;margin-top:-5px;margin-bottom:12px">
+    <a class="admin-link" href="admin-login.html">Platform Admin Login →</a>
+   </div>
+
+   <div id="messageBox" class="message" role="status" aria-live="polite"></div>
+
+   <!-- LOGIN FORM -->
+   <form id="loginForm">
+
+    <h2 class="form-title">Welcome Back!</h2>
+    <p class="form-subtitle">Login to your RP TOKEN account.</p>
+
+    <div class="field">
+     <label for="loginEmail">Email Address</label>
+     <input type="email" id="loginEmail"
+      placeholder="Enter your email address"
+      autocomplete="email" required>
     </div>
 
-    <div style="text-align:right;margin-top:-15px;margin-bottom:16px;">
-      <a class="admin-link" href="admin-login.html">Platform Admin Login →</a>
+    <div class="field">
+     <label for="loginPassword">Password</label>
+     <input type="password" id="loginPassword"
+      placeholder="Enter your password"
+      autocomplete="current-password" required>
     </div>
 
-    <div id="messageBox" class="message" role="status" aria-live="polite"></div>
+    <button class="submit-btn" id="loginButton" type="submit">Login</button>
+   </form>
 
-    <!-- LOGIN FORM -->
-    <form id="loginForm">
+   <!-- REGISTER FORM -->
+   <form id="registerForm" class="hidden">
 
-      <h2 class="form-title">Welcome Back!</h2>
-
-      <p class="form-subtitle">
-        अपने RP TOKEN अकाउंट में लॉगिन करें।
-      </p>
-
-      <div class="field">
-        <label for="loginEmail">Email Address</label>
-        <input
-          type="email"
-          id="loginEmail"
-          placeholder="अपना Email दर्ज करें"
-          autocomplete="email"
-          required
-        >
-      </div>
-
-      <div class="field">
-        <label for="loginPassword">Password</label>
-        <input
-          type="password"
-          id="loginPassword"
-          placeholder="अपना Password दर्ज करें"
-          autocomplete="current-password"
-          required
-        >
-      </div>
-
-      <button class="submit-btn" id="loginButton" type="submit">
-        Login करें
-      </button>
-
-    </form>
-
-    <!-- REGISTER FORM: ACCOUNT + FIRST BUSINESS -->
-    <form id="registerForm" class="hidden">
-
-      <h2 class="form-title">Create Your Business Account</h2>
-      <p class="form-subtitle">
-        एक ही Registration में अपना अकाउंट और पहली दुकान / क्लिनिक जोड़ें।
-      </p>
-
-      <div class="form-section-title">व्यक्तिगत जानकारी</div>
-
-      <div class="field">
-        <label for="fullName">पूरा नाम *</label>
-        <input type="text" id="fullName" placeholder="अपना पूरा नाम लिखें"
-          autocomplete="name" minlength="2" maxlength="80" required>
-      </div>
-
-      <div class="field">
-        <label for="phone">मोबाइल नंबर *</label>
-        <input type="tel" id="phone" placeholder="10 अंकों का मोबाइल नंबर"
-          autocomplete="tel" inputmode="tel" minlength="10" maxlength="15" required>
-      </div>
-
-      <div class="field">
-        <label for="registerEmail">Email Address *</label>
-        <input type="email" id="registerEmail" placeholder="अपना Email दर्ज करें"
-          autocomplete="email" required>
-      </div>
-
-      <div class="field">
-        <label for="registerPassword">Password *</label>
-        <input type="password" id="registerPassword" placeholder="कम से कम 8 अक्षर"
-          minlength="8" autocomplete="new-password" required>
-      </div>
-
-      <div class="form-section-title">व्यवसाय की जानकारी</div>
-
-      <div class="field">
-        <label for="shopName">दुकान / क्लिनिक / व्यवसाय का नाम *</label>
-        <input type="text" id="shopName" placeholder="जैसे: Rawat Hair Salon"
-          minlength="2" maxlength="100" required>
-      </div>
-
-      <div class="field">
-        <label for="shopSlug">Business URL नाम *</label>
-        <input type="text" id="shopSlug" placeholder="rawat-hair-salon"
-          minlength="3" maxlength="40" pattern="[a-z0-9-]{3,40}" required>
-        <p class="field-hint">यह URL अलग और unique होना चाहिए। केवल छोटे English अक्षर, नंबर और hyphen।</p>
-      </div>
-
-      <div class="field">
-        <label for="businessType">व्यवसाय का प्रकार *</label>
-        <select id="businessType" required>
-          <option value="other">अन्य व्यवसाय</option>
-          <option value="barber">Barber / Hair Salon</option>
-          <option value="salon">Beauty Salon / Spa</option>
-          <option value="clinic">Clinic / Doctor</option>
-          <option value="hospital">Hospital</option>
-          <option value="garage">Garage / Workshop</option>
-          <option value="service_center">Service Center</option>
-          <option value="restaurant">Restaurant / Cafe</option>
-          <option value="retail">Retail Shop</option>
-          <option value="office">Office / Consultancy</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="shopAddress">पूरा पता</label>
-        <input type="text" id="shopAddress" placeholder="मकान / सड़क / मोहल्ला"
-          autocomplete="street-address" maxlength="250">
-      </div>
-
-      <div class="field">
-        <label for="shopCity">शहर / कस्बा *</label>
-        <input type="text" id="shopCity" placeholder="जैसे: Kanpur"
-          autocomplete="address-level2" maxlength="80" required>
-      </div>
-
-      <div class="field">
-        <label for="shopState">राज्य *</label>
-        <input type="text" id="shopState" placeholder="जैसे: Uttar Pradesh"
-          autocomplete="address-level1" maxlength="80" required>
-      </div>
-
-      <button class="submit-btn" id="registerButton" type="submit">
-        अकाउंट और व्यवसाय बनाएँ
-      </button>
-
-      <p class="field-hint" style="margin-top:12px;">
-        Registration के बाद Email Verification जरूरी हो सकता है। Verify करके Login करने पर आपका व्यवसाय अपने-आप तैयार होगा।
-      </p>
-    </form>
-
-    <!-- LOGGED IN SESSION -->
-    <div id="sessionBox" class="session-box hidden">
-
-      <h3>आप Login हैं!</h3>
-
-      <p class="session-email" id="sessionEmail"></p>
-
-      <p class="form-subtitle">
-        आपका अकाउंट सफलतापूर्वक जुड़ गया है।
-        आपका Business Workspace तैयार है।
-      </p>
-
-      <button class="logout-btn" id="logoutButton" type="button">
-        Logout
-      </button>
-
-    </div>
-
-    <p class="info">
-      Secure Authentication powered by Supabase.<br>
-      RP TOKEN © 2026. All Rights Reserved.
+    <h2 class="form-title">Create Your Business Account</h2>
+    <p class="form-subtitle">
+     Create your account and add your first business in one registration.
     </p>
 
+    <div class="form-section-title">Personal Information</div>
+
+    <div class="field">
+     <label for="fullName">Full Name *</label>
+     <input type="text" id="fullName"
+      placeholder="Enter your full name"
+      autocomplete="name" minlength="2" maxlength="80" required>
+    </div>
+
+    <div class="field">
+     <label for="phone">Mobile Number *</label>
+     <input type="tel" id="phone"
+      placeholder="Enter mobile number"
+      autocomplete="tel" inputmode="tel"
+      minlength="10" maxlength="15" required>
+    </div>
+
+    <div class="field">
+     <label for="registerEmail">Email Address *</label>
+     <input type="email" id="registerEmail"
+      placeholder="Enter your email address"
+      autocomplete="email" required>
+    </div>
+
+    <div class="field">
+     <label for="registerPassword">Password *</label>
+     <input type="password" id="registerPassword"
+      placeholder="At least 8 characters"
+      minlength="8" autocomplete="new-password" required>
+    </div>
+
+    <div class="form-section-title">Business Information</div>
+
+    <div class="field">
+     <label for="shopName">Business / Shop Name *</label>
+     <input type="text" id="shopName"
+      placeholder="e.g. Rawat Hair Salon"
+      minlength="2" maxlength="100" required>
+    </div>
+
+    <div class="field">
+     <label for="shopSlug">Business URL / Slug *</label>
+     <input type="text" id="shopSlug"
+      placeholder="rawat-hair-salon"
+      minlength="3" maxlength="40"
+      pattern="[a-z0-9-]{3,40}" required>
+     <p class="field-hint">
+      Use lowercase English letters, numbers and hyphens only.
+      This URL must be unique.
+     </p>
+    </div>
+
+    <div class="field">
+     <label for="businessType">Business Type *</label>
+     <select id="businessType" required>
+      <option value="other">Other Business</option>
+      <option value="barber">Barber / Hair Salon</option>
+      <option value="salon">Beauty Salon / Spa</option>
+      <option value="clinic">Clinic / Doctor</option>
+      <option value="hospital">Hospital</option>
+      <option value="garage">Garage / Workshop</option>
+      <option value="service_center">Service Center</option>
+      <option value="restaurant">Restaurant / Cafe</option>
+      <option value="retail">Retail Shop</option>
+      <option value="office">Office / Consultancy</option>
+     </select>
+    </div>
+
+    <div class="field">
+     <label for="shopAddress">Full Address</label>
+     <input type="text" id="shopAddress"
+      placeholder="House number, street or area"
+      autocomplete="street-address" maxlength="250">
+    </div>
+
+    <div class="field">
+     <label for="shopCity">City / Town *</label>
+     <input type="text" id="shopCity"
+      placeholder="e.g. Kanpur"
+      autocomplete="address-level2" maxlength="80" required>
+    </div>
+
+    <div class="field">
+     <label for="shopState">State *</label>
+     <input type="text" id="shopState"
+      placeholder="e.g. Uttar Pradesh"
+      autocomplete="address-level1" maxlength="80" required>
+    </div>
+
+    <button class="submit-btn" id="registerButton" type="submit">
+     Create Account & Business
+    </button>
+
+    <p class="field-hint" style="margin-top:10px">
+     Email verification may be required. After verification, login with
+     the same email and password to complete your business setup.
+    </p>
+   </form>
+
+   <!-- LOGGED IN SESSION -->
+   <div id="sessionBox" class="session-box hidden">
+    <h3>You are logged in!</h3>
+    <p class="session-email" id="sessionEmail"></p>
+    <p class="form-subtitle">
+     Your account is connected. Your Business Workspace is ready.
+    </p>
+    <button class="logout-btn" id="logoutButton" type="button">Logout</button>
+   </div>
+
+   <p class="info">
+    Secure Authentication powered by Supabase.<br>
+    RP TOKEN © 2026. All Rights Reserved.
+   </p>
+
   </div>
-  </main>
+ </div>
 
+</div>
 
-
+<!-- HOW IT WORKS -->
 <section class="content-section" id="how-it-works">
-  <div class="section-kicker">SIMPLE WORKFLOW</div>
-  <h2 class="section-title">शुरू करना बेहद आसान है</h2>
-  <p class="section-desc">अपने व्यवसाय की डिजिटल कतार कुछ आसान चरणों में शुरू करें और रोज़मर्रा के टोकन प्रबंधन को व्यवस्थित बनाएँ।</p>
-  <div class="steps-grid">
-    <article class="info-card"><div class="step-no">STEP 01</div><div class="info-icon">＋</div><h3>अकाउंट और दुकान बनाएँ</h3><p>अपनी जानकारी और व्यवसाय का विवरण देकर RP TOKEN पर अकाउंट बनाएँ।</p></article>
-    <article class="info-card"><div class="step-no">STEP 02</div><div class="info-icon">▦</div><h3>सेवाएँ और QR साझा करें</h3><p>अपने व्यवसाय की सेवाएँ सेट करें और ग्राहकों तक टोकन लेने का लिंक या QR पहुँचाएँ।</p></article>
-    <article class="info-card"><div class="step-no">STEP 03</div><div class="info-icon">✓</div><h3>कतार मैनेज करें</h3><p>Dashboard से टोकन की स्थिति संभालें और रिपोर्ट के माध्यम से रिकॉर्ड देखें।</p></article>
-  </div>
+ <div class="section-kicker">SIMPLE WORKFLOW</div>
+ <h2 class="section-title">Get Started in Three Easy Steps</h2>
+ <p class="section-desc">
+  Start your digital queue in a few simple steps and make everyday
+  token management easier.
+ </p>
+
+ <div class="steps-grid">
+  <article class="info-card">
+   <div class="step-no">STEP 01</div>
+   <div class="info-icon">＋</div>
+   <h3>Create Your Account & Shop</h3>
+   <p>Add your personal details and business information to RP TOKEN.</p>
+  </article>
+
+  <article class="info-card">
+   <div class="step-no">STEP 02</div>
+   <div class="info-icon">▦</div>
+   <h3>Set Services & Share QR</h3>
+   <p>Configure your business services and share your token link or QR code with customers.</p>
+  </article>
+
+  <article class="info-card">
+   <div class="step-no">STEP 03</div>
+   <div class="info-icon">✓</div>
+   <h3>Manage Your Queue</h3>
+   <p>Manage token status from your dashboard and review your business records.</p>
+  </article>
+ </div>
 </section>
 
-<section class="content-section" id="features" style="padding-top:12px">
-  <div class="section-kicker">BUILT FOR DAILY OPERATIONS</div>
-  <h2 class="section-title">आपके व्यवसाय के लिए उपयोगी सुविधाएँ</h2>
-  <p class="section-desc">एक ही प्लेटफॉर्म पर टोकन जारी करने से लेकर कतार और दैनिक रिकॉर्ड देखने तक की सुविधाएँ।</p>
-  <div class="benefit-grid">
-    <article class="info-card"><div class="info-icon">▦</div><h3>QR Token System</h3><p>ग्राहकों को डिजिटल तरीके से टोकन लेने की सुविधा दें।</p></article>
-    <article class="info-card"><div class="info-icon">◷</div><h3>Queue Management</h3><p>Waiting, Called, Serving और Completed जैसे स्टेटस के साथ कतार व्यवस्थित करें।</p></article>
-    <article class="info-card"><div class="info-icon">▤</div><h3>Reports & History</h3><p>दैनिक और पुराने टोकन रिकॉर्ड देखें तथा उपलब्ध रिपोर्ट एक्सपोर्ट करें।</p></article>
-  </div>
+<!-- FEATURES -->
+<section class="content-section" id="features" style="padding-top:10px">
+ <div class="section-kicker">BUILT FOR DAILY OPERATIONS</div>
+ <h2 class="section-title">Powerful Features for Your Business</h2>
+ <p class="section-desc">
+  Manage tokens, queues and daily business records from one platform.
+ </p>
+
+ <div class="benefit-grid">
+  <article class="info-card">
+   <div class="info-icon">▦</div>
+   <h3>QR Token System</h3>
+   <p>Allow customers to get digital tokens quickly and conveniently.</p>
+  </article>
+
+  <article class="info-card">
+   <div class="info-icon">◷</div>
+   <h3>Queue Management</h3>
+   <p>Organize your queue with Waiting, Called, Serving and Completed statuses.</p>
+  </article>
+
+  <article class="info-card">
+   <div class="info-icon">▤</div>
+   <h3>Reports & History</h3>
+   <p>Review daily and previous token records and export available reports.</p>
+  </article>
+ </div>
 </section>
 
+<!-- BUSINESSES -->
 <section class="content-section" id="businesses" style="padding-top:10px">
-  <div class="section-kicker">MADE FOR YOUR BUSINESS</div>
-  <h2 class="section-title">कई तरह के व्यवसायों के लिए</h2>
-  <p class="section-desc">जहाँ ग्राहकों की बारी और सेवा का क्रम महत्वपूर्ण है, वहाँ डिजिटल कतार उपयोगी हो सकती है।</p>
-  <div class="audience-grid">
-    <div class="audience-card"><span>✂️</span>Hair Salon & Barber</div>
-    <div class="audience-card"><span>✚</span>Clinic & Hospital</div>
-    <div class="audience-card"><span>🛠️</span>Service Centre</div>
-    <div class="audience-card"><span>🏪</span>Retail & अन्य व्यवसाय</div>
-  </div>
+ <div class="section-kicker">MADE FOR YOUR BUSINESS</div>
+ <h2 class="section-title">Built for Different Businesses</h2>
+ <p class="section-desc">
+  Digital queues can help wherever customer turns and service order matter.
+ </p>
+
+ <div class="audience-grid">
+  <div class="audience-card"><span>✂️</span>Hair Salon & Barber</div>
+  <div class="audience-card"><span>✚</span>Clinic & Hospital</div>
+  <div class="audience-card"><span>🛠️</span>Service Centre</div>
+  <div class="audience-card"><span>🏪</span>Retail & Other Businesses</div>
+ </div>
 </section>
 
+<!-- CALL TO ACTION -->
 <section class="cta-band">
-  <div><h2>अपनी कतार को आज ही डिजिटल बनाइए</h2><p>RP TOKEN पर अपना व्यवसाय जोड़ें और आसान Queue Management की शुरुआत करें।</p></div>
-  <a class="hero-btn" href="#account">Get Started ↗</a>
+ <div>
+  <h2>Make Your Queue Digital Today</h2>
+  <p>Add your business to RP TOKEN and start managing your queue with ease.</p>
+ </div>
+ <a class="hero-btn" href="#account">Get Started ↗</a>
 </section>
 
+<!-- FOOTER -->
 <footer>
-  <div class="footer-grid">
-    <div><div class="footer-brand">RP <span>TOKEN</span></div><p class="footer-copy">दुकानों, क्लीनिक, सैलून और सेवा व्यवसायों के लिए Smart Queue Management Platform। ग्राहकों की बारी को व्यवस्थित और प्रबंधन को आसान बनाने का डिजिटल तरीका।</p></div>
-    <div class="footer-col"><h4>PLATFORM</h4><a href="#features">मुख्य सुविधाएँ</a><a href="#how-it-works">कैसे काम करता है</a><a href="#account">Login / Register</a><a href="admin-login.html">Platform Admin</a></div>
-    <div class="footer-col"><h4>INFORMATION</h4><a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="privacy-policy.html">Privacy Policy</a><a href="terms.html">Terms & Conditions</a><a href="refund-policy.html">Refund & Cancellation</a><a href="disclaimer.html">Disclaimer</a><a href="cookie-policy.html">Cookie Policy</a><a href="data-deletion.html">Data Deletion</a></div>
+ <div class="footer-grid">
+
+  <div>
+   <div class="footer-brand">RP <span>TOKEN</span></div>
+   <p class="footer-copy">
+    Smart Queue Management Platform for shops, clinics, salons and service businesses.
+    Organize customer turns and simplify daily queue operations.
+   </p>
   </div>
-  <div class="footer-bottom"><span>© 2026 RP TOKEN. All rights reserved.</span><span>Smart Queue Management Platform</span></div>
+
+  <div class="footer-col">
+   <h4>PLATFORM</h4>
+   <a href="#features">Features</a>
+   <a href="#how-it-works">How It Works</a>
+   <a href="#account">Login / Register</a>
+   <a href="admin-login.html">Platform Admin</a>
+  </div>
+
+  <div class="footer-col">
+   <h4>INFORMATION</h4>
+   <a href="about.html">About Us</a>
+   <a href="contact.html">Contact Us</a>
+   <a href="privacy-policy.html">Privacy Policy</a>
+   <a href="terms.html">Terms & Conditions</a>
+   <a href="refund-policy.html">Refund & Cancellation</a>
+   <a href="disclaimer.html">Disclaimer</a>
+   <a href="cookie-policy.html">Cookie Policy</a>
+   <a href="data-deletion.html">Data Deletion</a>
+  </div>
+
+ </div>
+
+ <div class="footer-bottom">
+  <span>© 2026 RP TOKEN. All rights reserved.</span>
+  <span>Smart Queue Management Platform</span>
+ </div>
 </footer>
 
 <!-- SUPABASE LIBRARY -->
@@ -602,264 +1109,301 @@
 
 <script>
 (() => {
-  "use strict";
+ "use strict";
 
-  const client = window.supabaseClient;
-  const loginTab = document.getElementById("loginTab");
-  const registerTab = document.getElementById("registerTab");
-  const loginForm = document.getElementById("loginForm");
-  const registerForm = document.getElementById("registerForm");
-  const messageBox = document.getElementById("messageBox");
-  const loginButton = document.getElementById("loginButton");
-  const registerButton = document.getElementById("registerButton");
+ const client = window.supabaseClient;
+ const loginTab = document.getElementById("loginTab");
+ const registerTab = document.getElementById("registerTab");
+ const loginForm = document.getElementById("loginForm");
+ const registerForm = document.getElementById("registerForm");
+ const messageBox = document.getElementById("messageBox");
+ const loginButton = document.getElementById("loginButton");
+ const registerButton = document.getElementById("registerButton");
 
-  function showMessage(message, type) {
-    messageBox.textContent = message;
-    messageBox.className = "message " + type;
+ function showMessage(message,type){
+  messageBox.textContent=message;
+  messageBox.className="message "+type;
+ }
+
+ function clearMessage(){
+  messageBox.textContent="";
+  messageBox.className="message";
+ }
+
+ function setLoading(button,loading,normalText){
+  button.disabled=loading;
+  button.textContent=loading?"Please wait...":normalText;
+ }
+
+ function showTab(tab){
+  clearMessage();
+  const isLogin=tab==="login";
+  loginTab.classList.toggle("active",isLogin);
+  registerTab.classList.toggle("active",!isLogin);
+  loginForm.classList.toggle("hidden",!isLogin);
+  registerForm.classList.toggle("hidden",isLogin);
+ }
+
+ function makeSlug(value){
+  return value.toLowerCase().trim()
+   .replace(/[^a-z0-9]+/g,"-")
+   .replace(/^-+|-+$/g,"")
+   .slice(0,40);
+ }
+
+ function getBusinessMetadata(user){
+  const meta=(user&&user.user_metadata)||{};
+  if(meta.rp_token_registration_pending!==true)return null;
+
+  return {
+   full_name:meta.full_name||"",
+   phone:meta.phone||"",
+   shop_name:meta.rp_token_shop_name||"",
+   slug:meta.rp_token_shop_slug||"",
+   business_type:meta.rp_token_business_type||"other",
+   address:meta.rp_token_address||"",
+   city:meta.rp_token_city||"",
+   state:meta.rp_token_state||""
+  };
+ }
+
+ // Complete first business after email verification and login.
+ async function finishBusinessRegistration(user){
+  const business=getBusinessMetadata(user);
+  if(!business)return;
+
+  const {data:existingShops,error:checkError}=await client
+   .from("shops")
+   .select("id")
+   .eq("owner_id",user.id)
+   .limit(1);
+
+  if(checkError)throw checkError;
+  if(existingShops&&existingShops.length>0)return;
+
+  const baseSlug=makeSlug(business.slug||business.shop_name)||"business";
+  let data=null;
+  let lastError=null;
+  let finalSlug="";
+
+  for(let attempt=1;attempt<=20;attempt++){
+   const suffix=attempt===1?"":"-"+attempt;
+   const candidate=baseSlug.slice(0,40-suffix.length)
+    .replace(/-+$/g,"")+suffix;
+
+   const result=await client.rpc("complete_business_registration",{
+    p_full_name:business.full_name,
+    p_phone:business.phone,
+    p_shop_name:business.shop_name,
+    p_slug:candidate,
+    p_business_type:business.business_type,
+    p_address:business.address||null,
+    p_city:business.city||null,
+    p_state:business.state||null
+   });
+
+   if(!result.error){
+    data=result.data;
+    finalSlug=candidate;
+    break;
+   }
+
+   lastError=result.error;
+   const duplicateSlug=/shops_slug_key|duplicate key value/i.test(
+    result.error.message||""
+   );
+   if(!duplicateSlug)break;
   }
 
-  function clearMessage() {
-    messageBox.textContent = "";
-    messageBox.className = "message";
+  if(lastError&&!data){
+   throw new Error(
+    "Your login was successful, but business setup was not completed: "+
+    lastError.message
+   );
   }
 
-  function setLoading(button, loading, normalText) {
-    button.disabled = loading;
-    button.textContent = loading ? "कृपया प्रतीक्षा करें..." : normalText;
+  if(!data||data.success!==true){
+   throw new Error("Business setup could not be confirmed. Please login again.");
   }
 
-  function showTab(tab) {
-    clearMessage();
-    const isLogin = tab === "login";
-    loginTab.classList.toggle("active", isLogin);
-    registerTab.classList.toggle("active", !isLogin);
-    loginForm.classList.toggle("hidden", !isLogin);
-    registerForm.classList.toggle("hidden", isLogin);
-  }
+  console.info("RP TOKEN business URL:",finalSlug);
 
-  function makeSlug(value) {
-    return value.toLowerCase().trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 40);
-  }
-
-  function getBusinessMetadata(user) {
-    const meta = (user && user.user_metadata) || {};
-    if (meta.rp_token_registration_pending !== true) return null;
-    return {
-      full_name: meta.full_name || "",
-      phone: meta.phone || "",
-      shop_name: meta.rp_token_shop_name || "",
-      slug: meta.rp_token_shop_slug || "",
-      business_type: meta.rp_token_business_type || "other",
-      address: meta.rp_token_address || "",
-      city: meta.rp_token_city || "",
-      state: meta.rp_token_state || ""
-    };
-  }
-
-  // Email verification ke baad login par bhi business metadata auth account me available rahega.
-  async function finishBusinessRegistration(user) {
-    const business = getBusinessMetadata(user);
-    if (!business) return;
-
-    // Existing owners ke shops ko dobara create karne se bachata hai.
-    const { data: existingShops, error: checkError } = await client
-      .from("shops")
-      .select("id")
-      .eq("owner_id", user.id)
-      .limit(1);
-
-    if (checkError) throw checkError;
-    if (existingShops && existingShops.length > 0) return;
-
-    // URL नाम अपने-आप बनेगा। यदि वह पहले से मौजूद है तो -2, -3... लगाकर
-    // अगला उपलब्ध नाम आजमाएँ। Unique constraint अंतिम सुरक्षा देता है।
-    const baseSlug = makeSlug(business.slug || business.shop_name) || "business";
-    let data = null;
-    let lastError = null;
-    let finalSlug = "";
-
-    for (let attempt = 1; attempt <= 20; attempt++) {
-      const suffix = attempt === 1 ? "" : "-" + attempt;
-      const candidate = baseSlug.slice(0, 40 - suffix.length).replace(/-+$/g, "") + suffix;
-      const result = await client.rpc("complete_business_registration", {
-        p_full_name: business.full_name,
-        p_phone: business.phone,
-        p_shop_name: business.shop_name,
-        p_slug: candidate,
-        p_business_type: business.business_type,
-        p_address: business.address || null,
-        p_city: business.city || null,
-        p_state: business.state || null
-      });
-
-      if (!result.error) {
-        data = result.data;
-        finalSlug = candidate;
-        break;
-      }
-
-      lastError = result.error;
-      const duplicateSlug = /shops_slug_key|duplicate key value/i.test(result.error.message || "");
-      if (!duplicateSlug) break;
-    }
-
-    if (lastError && !data) {
-      throw new Error("आपका Login हो गया है, लेकिन Business Setup पूरा नहीं हुआ: " + lastError.message);
-    }
-    if (!data || data.success !== true) {
-      throw new Error("Business Setup की पुष्टि नहीं मिली। कृपया दोबारा Login करें।");
-    }
-    console.info("RP TOKEN business URL:", finalSlug);
-
-    // Pending flag हटाएँ; दुकान बन जाने के बाद इसे दोबारा चलाने की जरूरत नहीं।
-    const { error: metadataError } = await client.auth.updateUser({
-      data: { rp_token_registration_pending: false }
-    });
-    if (metadataError) {
-      console.warn("Business बना है, लेकिन metadata flag update नहीं हुआ:", metadataError.message);
-    }
-  }
-
-  if (!client) {
-    showMessage("Supabase कनेक्शन नहीं हुआ। config.js जाँचें।", "error");
-    loginButton.disabled = true;
-    registerButton.disabled = true;
-    return;
-  }
-
-  loginTab.addEventListener("click", () => showTab("login"));
-  registerTab.addEventListener("click", () => showTab("register"));
-
-  const shopNameInput = document.getElementById("shopName");
-  const shopSlugInput = document.getElementById("shopSlug");
-  let slugWasEdited = false;
-
-  shopNameInput.addEventListener("input", () => {
-    if (!slugWasEdited) shopSlugInput.value = makeSlug(shopNameInput.value);
-  });
-  shopSlugInput.addEventListener("input", () => {
-    slugWasEdited = true;
-    shopSlugInput.value = shopSlugInput.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+  const {error:metadataError}=await client.auth.updateUser({
+   data:{rp_token_registration_pending:false}
   });
 
-  // REGISTER: auth account create; verified login ke baad RPC se shop create.
-  registerForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    clearMessage();
+  if(metadataError){
+   console.warn("Business created, but metadata flag was not updated:",metadataError.message);
+  }
+ }
 
-    const fullName = document.getElementById("fullName").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const email = document.getElementById("registerEmail").value.trim();
-    const password = document.getElementById("registerPassword").value;
-    const shopName = shopNameInput.value.trim();
-    const slug = shopSlugInput.value.trim();
-    const businessType = document.getElementById("businessType").value;
-    const address = document.getElementById("shopAddress").value.trim();
-    const city = document.getElementById("shopCity").value.trim();
-    const state = document.getElementById("shopState").value.trim();
+ if(!client){
+  showMessage("Supabase connection failed. Please check config.js.","error");
+  loginButton.disabled=true;
+  registerButton.disabled=true;
+  return;
+ }
 
-    const digits = phone.replace(/\D/g, "");
-    if (fullName.length < 2) return showMessage("कृपया अपना सही नाम दर्ज करें।", "error");
-    if (digits.length < 10 || digits.length > 15) return showMessage("कृपया सही मोबाइल नंबर दर्ज करें।", "error");
-    if (shopName.length < 2) return showMessage("व्यवसाय का सही नाम दर्ज करें।", "error");
-    if (!/^[a-z0-9-]{3,40}$/.test(slug)) return showMessage("Business URL 3 से 40 अक्षरों का होना चाहिए।", "error");
-    if (!city || !state) return showMessage("शहर और राज्य दर्ज करना जरूरी है।", "error");
+ loginTab.addEventListener("click",()=>showTab("login"));
+ registerTab.addEventListener("click",()=>showTab("register"));
 
-    setLoading(registerButton, true, "अकाउंट और व्यवसाय बनाएँ");
+ const shopNameInput=document.getElementById("shopName");
+ const shopSlugInput=document.getElementById("shopSlug");
+ let slugWasEdited=false;
 
-    try {
-      const { data, error } = await client.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-            phone: phone,
-            rp_token_registration_pending: true,
-            rp_token_shop_name: shopName,
-            rp_token_shop_slug: slug,
-            rp_token_business_type: businessType,
-            rp_token_address: address,
-            rp_token_city: city,
-            rp_token_state: state
-          }
-        }
-      });
+ shopNameInput.addEventListener("input",()=>{
+  if(!slugWasEdited){
+   shopSlugInput.value=makeSlug(shopNameInput.value);
+  }
+ });
 
-      if (error) throw error;
+ shopSlugInput.addEventListener("input",()=>{
+  slugWasEdited=true;
+  shopSlugInput.value=shopSlugInput.value
+   .toLowerCase().replace(/[^a-z0-9-]/g,"");
+ });
 
-      if (data.session && data.user) {
-        await finishBusinessRegistration(data.user);
-        showMessage("अकाउंट और व्यवसाय सफलतापूर्वक बन गए! Dashboard खोला जा रहा है।", "success");
-        window.location.href = "dashboard.html";
-      } else {
-        showMessage(
-          "Registration सफल! अपने Email Inbox में Verification लिंक खोलें। इसके बाद इसी Email और Password से Login करें। Login पर आपका व्यवसाय अपने-आप बन जाएगा।",
-          "success"
-        );
-        registerForm.reset();
-        slugWasEdited = false;
-      }
-    } catch (error) {
-      showMessage(error.message || "Registration नहीं हो सका।", "error");
-    } finally {
-      setLoading(registerButton, false, "अकाउंट और व्यवसाय बनाएँ");
+ // REGISTER
+ registerForm.addEventListener("submit",async event=>{
+  event.preventDefault();
+  clearMessage();
+
+  const fullName=document.getElementById("fullName").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const email=document.getElementById("registerEmail").value.trim();
+  const password=document.getElementById("registerPassword").value;
+  const shopName=shopNameInput.value.trim();
+  const slug=shopSlugInput.value.trim();
+  const businessType=document.getElementById("businessType").value;
+  const address=document.getElementById("shopAddress").value.trim();
+  const city=document.getElementById("shopCity").value.trim();
+  const state=document.getElementById("shopState").value.trim();
+
+  const digits=phone.replace(/\D/g,"");
+
+  if(fullName.length<2)
+   return showMessage("Please enter your full name.","error");
+
+  if(digits.length<10||digits.length>15)
+   return showMessage("Please enter a valid mobile number.","error");
+
+  if(shopName.length<2)
+   return showMessage("Please enter a valid business name.","error");
+
+  if(!/^[a-z0-9-]{3,40}$/.test(slug))
+   return showMessage("Business URL must be 3 to 40 characters.","error");
+
+  if(!city||!state)
+   return showMessage("City and State are required.","error");
+
+  setLoading(registerButton,true,"Create Account & Business");
+
+  try{
+   const {data,error}=await client.auth.signUp({
+    email,
+    password,
+    options:{
+     data:{
+      full_name:fullName,
+      phone:phone,
+      rp_token_registration_pending:true,
+      rp_token_shop_name:shopName,
+      rp_token_shop_slug:slug,
+      rp_token_business_type:businessType,
+      rp_token_address:address,
+      rp_token_city:city,
+      rp_token_state:state
+     }
     }
+   });
+
+   if(error)throw error;
+
+   if(data.session&&data.user){
+    await finishBusinessRegistration(data.user);
+    showMessage("Account and business created successfully! Opening dashboard...","success");
+    window.location.href="dashboard.html";
+   }else{
+    showMessage(
+     "Registration successful! Please open the verification link sent to your email. Then login with the same email and password to complete your business setup.",
+     "success"
+    );
+    registerForm.reset();
+    slugWasEdited=false;
+   }
+
+  }catch(error){
+   showMessage(error.message||"Registration failed.","error");
+  }finally{
+   setLoading(registerButton,false,"Create Account & Business");
+  }
+ });
+
+ // LOGIN
+ loginForm.addEventListener("submit",async event=>{
+  event.preventDefault();
+  clearMessage();
+
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
+
+  setLoading(loginButton,true,"Login");
+
+  try{
+   const {data,error}=await client.auth.signInWithPassword({
+    email,password
+   });
+
+   if(error)throw error;
+
+   if(!data.session||!data.user){
+    throw new Error("Login session not found. Please try again.");
+   }
+
+   await finishBusinessRegistration(data.user);
+   showMessage("Login successful! Opening dashboard...","success");
+   window.location.href="dashboard.html";
+
+  }catch(error){
+   showMessage(error.message||"Login failed.","error");
+   setLoading(loginButton,false,"Login");
+  }
+ });
+
+ // LOGOUT
+ const logoutButton=document.getElementById("logoutButton");
+
+ if(logoutButton){
+  logoutButton.addEventListener("click",async()=>{
+   const {error}=await client.auth.signOut();
+
+   if(error)showMessage(error.message,"error");
+   else window.location.reload();
   });
+ }
 
-  // LOGIN: old users normal dashboard; pending new registrations complete their first shop.
-  loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    clearMessage();
-
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
-    setLoading(loginButton, true, "Login करें");
-
-    try {
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (!data.session || !data.user) throw new Error("Login session नहीं मिली। दोबारा प्रयास करें।");
-
-      await finishBusinessRegistration(data.user);
-      showMessage("Login सफल! Dashboard खोला जा रहा है।", "success");
-      window.location.href = "dashboard.html";
-    } catch (error) {
-      showMessage(error.message || "Login नहीं हो सका।", "error");
-      setLoading(loginButton, false, "Login करें");
-    }
-  });
-
-  const logoutButton = document.getElementById("logoutButton");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", async () => {
-      const { error } = await client.auth.signOut();
-      if (error) showMessage(error.message, "error");
-      else window.location.reload();
-    });
+ // EXISTING SESSION CHECK
+ client.auth.getSession().then(async({data,error})=>{
+  if(error){
+   showMessage(error.message,"error");
+   return;
   }
 
-  // Existing active session check; complete pending registration if required.
-  client.auth.getSession().then(async ({ data, error }) => {
-    if (error) {
-      showMessage(error.message, "error");
-      return;
-    }
-    if (data.session && data.session.user) {
-      try {
-        await finishBusinessRegistration(data.session.user);
-        window.location.href = "dashboard.html";
-      } catch (setupError) {
-        showMessage(setupError.message || "Business Setup पूरा नहीं हुआ।", "error");
-      }
-    }
-  });
+  if(data.session&&data.session.user){
+   try{
+    await finishBusinessRegistration(data.session.user);
+    window.location.href="dashboard.html";
+   }catch(setupError){
+    showMessage(
+     setupError.message||"Business setup could not be completed.",
+     "error"
+    );
+   }
+  }
+ });
+
 })();
 </script>
-
 
 </body>
 </html>
