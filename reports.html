@@ -1,10 +1,416 @@
-<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RP TOKEN | Token Reports</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><style>
-*{box-sizing:border-box}body{margin:0;background:#f3f5f9;color:#172033;font-family:Arial,sans-serif}header{background:#172554;color:white;padding:18px 16px}header h2{margin:0;font-size:21px}header p{margin:6px 0 0;color:#cbd5e1;font-size:13px}header a{display:inline-block;margin-top:12px;color:white;text-decoration:none;font-size:13px}main{max-width:1200px;margin:22px auto;padding:0 14px}.card{background:#fff;border-radius:14px;padding:17px;margin-bottom:15px;box-shadow:0 3px 14px #0000000b}.filters{display:grid;grid-template-columns:2fr 1fr 1fr auto auto;gap:10px;align-items:end}label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}select,input{width:100%;padding:11px;border:1px solid #d8deea;border-radius:9px;background:white;font-size:14px}button{border:0;border-radius:9px;padding:11px 14px;font-size:12px;font-weight:bold;cursor:pointer}.primary{background:#2563eb;color:white}.gray{background:#e2e8f0;color:#172033}.stats{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.stat{background:#f8fafc;border:1px solid #e5eaf2;border-radius:10px;padding:12px;text-align:center}.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:#64748b}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:780px}th,td{text-align:left;padding:11px 10px;border-bottom:1px solid #edf0f5;font-size:12px;white-space:nowrap}th{background:#f8fafc;color:#475569}.title{font-size:16px;margin:0 0 12px}.muted{font-size:12px;color:#64748b}.message{display:none;padding:11px;border-radius:9px;background:#eff6ff;color:#1e40af;font-size:13px;margin-bottom:12px}.message.error{background:#fef2f2;color:#b91c1c}.pill{padding:4px 8px;border-radius:20px;background:#e2e8f0;font-size:11px}.empty{text-align:center;padding:24px;color:#64748b}@media(max-width:850px){.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(4,1fr)}}@media(max-width:480px){.filters{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}
-@media print{header a,.filters button{display:none!important}body{background:#fff}.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}main{max-width:none;margin:0}.table-wrap{overflow:visible}table{min-width:0}th,td{font-size:9px;padding:6px}}
-</style></head><body><header><h2>RP TOKEN · Token Reports</h2><p>दुकान के दैनिक और ऐतिहासिक टोकन रिकॉर्ड</p><a href="dashboard.html">← Dashboard पर वापस जाएँ</a></header><main>
-<div id="message" class="message"></div><section class="card"><div class="filters"><div><label for="shopSelect">दुकान चुनें</label><select id="shopSelect"><option value="">दुकान लोड हो रही है…</option></select></div><div><label for="fromDate">शुरुआती तारीख</label><input id="fromDate" type="date"></div><div><label for="toDate">अंतिम तारीख</label><input id="toDate" type="date"></div><button id="loadBtn" class="primary">रिपोर्ट देखें</button><button id="csvBtn" class="gray">Excel / CSV</button><button id="pdfBtn" class="gray">PDF / Print</button></div><p class="muted">एक बार में अधिकतम 366 दिन। CSV को Excel में खोला जा सकता है। PDF के लिए Print में “Save as PDF” चुनें।</p></section>
-<section class="card"><h3 class="title">वर्तमान सक्रिय टोकन (बुलाए गए / सेवा जारी)</h3><div id="liveTokens" class="muted">रिपोर्ट लोड होने पर यहाँ दिखेगा।</div></section>
-<section class="card"><h3 class="title">चुनी गई अवधि का सारांश</h3><div class="stats"><div class="stat"><b id="issued">0</b><span>जारी टोकन</span></div><div class="stat"><b id="completed">0</b><span>पूरे</span></div><div class="stat"><b id="cancelled">0</b><span>रद्द</span></div><div class="stat"><b id="skipped">0</b><span>छोड़े गए</span></div><div class="stat"><b id="waiting">0</b><span>प्रतीक्षा</span></div><div class="stat"><b id="called">0</b><span>बुलाए गए</span></div><div class="stat"><b id="serving">0</b><span>सेवा जारी</span></div></div></section>
-<section class="card"><h3 class="title">दिनवार रिपोर्ट</h3><div class="table-wrap"><table><thead><tr><th>तारीख</th><th>जारी</th><th>पूरे</th><th>रद्द</th><th>छोड़े</th><th>प्रतीक्षा</th><th>बुलाए</th><th>सेवा जारी</th></tr></thead><tbody id="dailyBody"><tr><td colspan="8" class="empty">रिपोर्ट देखने के लिए तारीख चुनें।</td></tr></tbody></table></div></section>
-<section class="card"><h3 class="title">टोकन विवरण</h3><div class="table-wrap"><table><thead><tr><th>तारीख</th><th>टोकन</th><th>ग्राहक</th><th>स्थिति</th><th>जारी समय</th><th>बुलाने का समय</th><th>पूरा समय</th></tr></thead><tbody id="tokenBody"><tr><td colspan="7" class="empty">कोई रिकॉर्ड नहीं।</td></tr></tbody></table></div></section></main>
-<script>(()=>{'use strict';const db=window.supabaseClient,$=id=>document.getElementById(id);let report=null,shopList=[];const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());$('fromDate').value=today();$('toDate').value=today();function msg(t,e=false){$('message').textContent=t;$('message').className='message'+(e?' error':'');$('message').style.display='block'}function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function status(s){return ({waiting:'प्रतीक्षा में',called:'बुलाया गया',serving:'सेवा जारी',completed:'पूरा हुआ',cancelled:'रद्द',skipped:'छोड़ा गया'})[s]||s||'—'}function fmt(v){return v?new Date(v).toLocaleTimeString('hi-IN',{hour:'2-digit',minute:'2-digit'}):'—'}async function init(){if(!db)throw Error('Supabase config.js नहीं मिला');const {data:{session},error}=await db.auth.getSession();if(error)throw error;if(!session){location.href='index.html';return}const m=await db.from('shop_members').select('shop_id').eq('user_id',session.user.id).eq('is_active',true);if(m.error)throw m.error;const o=await db.from('shops').select('id,name,timezone').eq('owner_id',session.user.id).eq('is_active',true);if(o.error)throw o.error;const ids=[...new Set([...(m.data||[]).map(x=>x.shop_id),...(o.data||[]).map(x=>x.id)])];if(!ids.length){$('shopSelect').innerHTML='<option value="">कोई सक्रिय दुकान नहीं</option>';return}const s=await db.from('shops').select('id,name,timezone').in('id',ids).eq('is_active',true);if(s.error)throw s.error;shopList=s.data||[];$('shopSelect').innerHTML=shopList.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('');await load()}function sums(rows){return rows.reduce((a,r)=>{for(const k of ['issued','completed','cancelled','skipped','waiting','called','serving'])a[k]+=Number(r[k]||0);return a},{issued:0,completed:0,cancelled:0,skipped:0,waiting:0,called:0,serving:0})}async function load(){const id=$('shopSelect').value,from=$('fromDate').value,to=$('toDate').value;if(!id||!from||!to)throw Error('दुकान और दोनों तारीख चुनें');if(to<from)throw Error('अंतिम तारीख शुरुआती तारीख से पहले नहीं हो सकती');if((new Date(to+'T00:00:00')-new Date(from+'T00:00:00'))/86400000>365)throw Error('अधिकतम 366 दिन चुनें');$('loadBtn').disabled=true;try{const {data,error}=await db.rpc('owner_get_token_report',{p_shop_id:id,p_from_date:from,p_to_date:to});if(error)throw error;report=data;render();msg('रिपोर्ट अपडेट हो गई।')}finally{$('loadBtn').disabled=false}}function render(){const d=report?.daily||[],t=report?.tokens||[],s=sums(d);const live=t.filter(x=>['called','serving'].includes(x.status));$('liveTokens').innerHTML=live.length?live.slice(0,12).map(x=>`<span class=\"pill\" style=\"display:inline-block;margin:3px\">${esc(x.token_code||x.token_number)} · ${esc(x.customer_name||'ग्राहक')} · ${esc(status(x.status))}</span>`).join(''):'इस अवधि में कोई बुलाया गया / सेवा जारी टोकन नहीं है।';for(const k of Object.keys(s))$(k).textContent=s[k].toLocaleString('en-IN');$('dailyBody').innerHTML=d.length?d.map(r=>`<tr><td>${esc(r.queue_date)}</td><td>${r.issued}</td><td>${r.completed}</td><td>${r.cancelled}</td><td>${r.skipped}</td><td>${r.waiting}</td><td>${r.called}</td><td>${r.serving}</td></tr>`).join(''):'<tr><td colspan="8" class="empty">इस अवधि में कोई टोकन रिकॉर्ड नहीं मिला।</td></tr>';$('tokenBody').innerHTML=t.length?t.map(r=>`<tr><td>${esc(r.queue_date)}</td><td><b>${esc(r.token_code||r.token_number)}</b></td><td>${esc(r.customer_name||'—')}</td><td><span class="pill">${esc(status(r.status))}</span></td><td>${esc(fmt(r.created_at))}</td><td>${esc(fmt(r.called_at))}</td><td>${esc(fmt(r.completed_at))}</td></tr>`).join(''):'<tr><td colspan="7" class="empty">इस अवधि में कोई टोकन रिकॉर्ड नहीं मिला।</td></tr>'}function csv(){if(!report)return msg('पहले रिपोर्ट देखें।',true);const rows=[['तारीख','टोकन','ग्राहक','स्थिति','जारी समय','बुलाने का समय','पूरा समय'],...(report.tokens||[]).map(r=>[r.queue_date,r.token_code||r.token_number,r.customer_name,status(r.status),r.created_at||'',r.called_at||'',r.completed_at||''])];const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.href=url;a.download='rp-token-report-'+$('fromDate').value+'-to-'+$('toDate').value+'.csv';a.click();URL.revokeObjectURL(url)}$('loadBtn').addEventListener('click',()=>load().catch(e=>msg(e.message,true)));$('shopSelect').addEventListener('change',()=>load().catch(e=>msg(e.message,true)));$('csvBtn').addEventListener('click',csv);$('pdfBtn').addEventListener('click',()=>window.print());init().catch(e=>msg(e.message||'रिपोर्ट पेज लोड नहीं हुआ।',true));})();</script></body></html>
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RP TOKEN | Token Reports</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f5f9;color:#172033;font-family:Arial,sans-serif}
+header{background:#172554;color:white;padding:18px 16px}
+header h2{margin:0;font-size:21px}
+header p{margin:6px 0 0;color:#cbd5e1;font-size:13px}
+header a{display:inline-block;margin-top:12px;color:white;text-decoration:none;font-size:13px}
+main{max-width:1200px;margin:22px auto;padding:0 14px}
+.card{background:#fff;border-radius:14px;padding:17px;margin-bottom:15px;box-shadow:0 3px 14px #0000000b}
+.filters{display:grid;grid-template-columns:2fr 1fr 1fr auto auto;gap:10px;align-items:end}
+label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
+select,input{width:100%;padding:11px;border:1px solid #d8deea;border-radius:9px;background:white;font-size:14px}
+button{border:0;border-radius:9px;padding:11px 14px;font-size:12px;font-weight:bold;cursor:pointer}
+.primary{background:#2563eb;color:white}
+.gray{background:#e2e8f0;color:#172033}
+.stats{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.stat{background:#f8fafc;border:1px solid #e5eaf2;border-radius:10px;padding:12px;text-align:center}
+.stat b{display:block;font-size:22px}
+.stat span{font-size:11px;color:#64748b}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:780px}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid #edf0f5;font-size:12px;white-space:nowrap}
+th{background:#f8fafc;color:#475569}
+.title{font-size:16px;margin:0 0 12px}
+.muted{font-size:12px;color:#64748b}
+.message{display:none;padding:11px;border-radius:9px;background:#eff6ff;color:#1e40af;font-size:13px;margin-bottom:12px}
+.message.error{background:#fef2f2;color:#b91c1c}
+.pill{padding:4px 8px;border-radius:20px;background:#e2e8f0;font-size:11px}
+.empty{text-align:center;padding:24px;color:#64748b}
+.phone-link{color:#2563eb;text-decoration:none;font-weight:bold}
+@media(max-width:850px){
+.filters{grid-template-columns:1fr 1fr}
+.stats{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:480px){
+.filters{grid-template-columns:1fr}
+.stats{grid-template-columns:repeat(2,1fr)}
+}
+@media print{
+header a,.filters button{display:none!important}
+body{background:#fff}
+.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+main{max-width:none;margin:0}
+.table-wrap{overflow:visible}
+table{min-width:0}
+th,td{font-size:9px;padding:6px}
+.phone-link{color:#000;text-decoration:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h2>RP TOKEN · Token Reports</h2>
+<p>दुकान के दैनिक और ऐतिहासिक टोकन रिकॉर्ड</p>
+<a href="dashboard.html">← Dashboard पर वापस जाएँ</a>
+</header>
+
+<main>
+<div id="message" class="message"></div>
+
+<section class="card">
+<div class="filters">
+<div>
+<label for="shopSelect">दुकान चुनें</label>
+<select id="shopSelect"><option value="">दुकान लोड हो रही है…</option></select>
+</div>
+<div>
+<label for="fromDate">शुरुआती तारीख</label>
+<input id="fromDate" type="date">
+</div>
+<div>
+<label for="toDate">अंतिम तारीख</label>
+<input id="toDate" type="date">
+</div>
+<button id="loadBtn" class="primary">रिपोर्ट देखें</button>
+<button id="csvBtn" class="gray">Excel / CSV</button>
+<button id="pdfBtn" class="gray">PDF / Print</button>
+</div>
+<p class="muted">एक बार में अधिकतम 366 दिन। CSV को Excel में खोला जा सकता है। PDF के लिए Print में “Save as PDF” चुनें।</p>
+</section>
+
+<section class="card">
+<h3 class="title">वर्तमान सक्रिय टोकन (बुलाए गए / सेवा जारी)</h3>
+<div id="liveTokens" class="muted">रिपोर्ट लोड होने पर यहाँ दिखेगा।</div>
+</section>
+
+<section class="card">
+<h3 class="title">चुनी गई अवधि का सारांश</h3>
+<div class="stats">
+<div class="stat"><b id="issued">0</b><span>जारी टोकन</span></div>
+<div class="stat"><b id="completed">0</b><span>पूरे</span></div>
+<div class="stat"><b id="cancelled">0</b><span>रद्द</span></div>
+<div class="stat"><b id="skipped">0</b><span>छोड़े गए</span></div>
+<div class="stat"><b id="waiting">0</b><span>प्रतीक्षा</span></div>
+<div class="stat"><b id="called">0</b><span>बुलाए गए</span></div>
+<div class="stat"><b id="serving">0</b><span>सेवा जारी</span></div>
+</div>
+</section>
+
+<section class="card">
+<h3 class="title">दिनवार रिपोर्ट</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>तारीख</th><th>जारी</th><th>पूरे</th><th>रद्द</th>
+<th>छोड़े</th><th>प्रतीक्षा</th><th>बुलाए</th><th>सेवा जारी</th>
+</tr>
+</thead>
+<tbody id="dailyBody">
+<tr><td colspan="8" class="empty">रिपोर्ट देखने के लिए तारीख चुनें।</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="card">
+<h3 class="title">टोकन विवरण</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>तारीख</th>
+<th>टोकन</th>
+<th>ग्राहक</th>
+<th>मोबाइल नंबर</th>
+<th>स्थिति</th>
+<th>जारी समय</th>
+<th>बुलाने का समय</th>
+<th>पूरा समय</th>
+</tr>
+</thead>
+<tbody id="tokenBody">
+<tr><td colspan="8" class="empty">कोई रिकॉर्ड नहीं।</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+
+<script>
+(()=>{
+'use strict';
+
+const db=window.supabaseClient;
+const $=id=>document.getElementById(id);
+let report=null,shopList=[];
+
+const today=()=>new Intl.DateTimeFormat('en-CA',{
+timeZone:'Asia/Kolkata',
+year:'numeric',
+month:'2-digit',
+day:'2-digit'
+}).format(new Date());
+
+$('fromDate').value=today();
+$('toDate').value=today();
+
+function msg(t,e=false){
+$('message').textContent=t;
+$('message').className='message'+(e?' error':'');
+$('message').style.display='block';
+}
+
+function esc(v){
+return String(v??'').replace(/[&<>"']/g,c=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[c]));
+}
+
+function status(s){
+return ({
+waiting:'प्रतीक्षा में',
+called:'बुलाया गया',
+serving:'सेवा जारी',
+completed:'पूरा हुआ',
+cancelled:'रद्द',
+skipped:'छोड़ा गया'
+})[s]||s||'—';
+}
+
+function fmt(v){
+return v?new Date(v).toLocaleTimeString('hi-IN',{
+hour:'2-digit',
+minute:'2-digit'
+}):'—';
+}
+
+function phoneDisplay(v){
+const phone=String(v??'').trim();
+if(!phone)return '—';
+
+const safe=esc(phone);
+const digits=phone.replace(/[^\d+]/g,'');
+
+if(!digits)return safe;
+
+return `<a class="phone-link" href="tel:${esc(digits)}">${safe}</a>`;
+}
+
+async function init(){
+if(!db)throw Error('Supabase config.js नहीं मिला');
+
+const {data:{session},error}=await db.auth.getSession();
+if(error)throw error;
+
+if(!session){
+location.href='index.html';
+return;
+}
+
+const m=await db.from('shop_members')
+.select('shop_id')
+.eq('user_id',session.user.id)
+.eq('is_active',true);
+
+if(m.error)throw m.error;
+
+const o=await db.from('shops')
+.select('id,name,timezone')
+.eq('owner_id',session.user.id)
+.eq('is_active',true);
+
+if(o.error)throw o.error;
+
+const ids=[...new Set([
+...(m.data||[]).map(x=>x.shop_id),
+...(o.data||[]).map(x=>x.id)
+])];
+
+if(!ids.length){
+$('shopSelect').innerHTML='<option value="">कोई सक्रिय दुकान नहीं</option>';
+return;
+}
+
+const s=await db.from('shops')
+.select('id,name,timezone')
+.in('id',ids)
+.eq('is_active',true);
+
+if(s.error)throw s.error;
+
+shopList=s.data||[];
+
+$('shopSelect').innerHTML=shopList.map(x=>
+`<option value="${esc(x.id)}">${esc(x.name)}</option>`
+).join('');
+
+await load();
+}
+
+function sums(rows){
+return rows.reduce((a,r)=>{
+for(const k of [
+'issued','completed','cancelled','skipped',
+'waiting','called','serving'
+]){
+a[k]+=Number(r[k]||0);
+}
+return a;
+},{
+issued:0,completed:0,cancelled:0,skipped:0,
+waiting:0,called:0,serving:0
+});
+}
+
+async function load(){
+const id=$('shopSelect').value;
+const from=$('fromDate').value;
+const to=$('toDate').value;
+
+if(!id||!from||!to)throw Error('दुकान और दोनों तारीख चुनें');
+if(to<from)throw Error('अंतिम तारीख शुरुआती तारीख से पहले नहीं हो सकती');
+
+if((new Date(to+'T00:00:00')-new Date(from+'T00:00:00'))/86400000>365){
+throw Error('अधिकतम 366 दिन चुनें');
+}
+
+$('loadBtn').disabled=true;
+
+try{
+const {data,error}=await db.rpc('owner_get_token_report',{
+p_shop_id:id,
+p_from_date:from,
+p_to_date:to
+});
+
+if(error)throw error;
+
+report=data;
+render();
+msg('रिपोर्ट अपडेट हो गई।');
+}finally{
+$('loadBtn').disabled=false;
+}
+}
+
+function render(){
+const d=report?.daily||[];
+const t=report?.tokens||[];
+const s=sums(d);
+
+const live=t.filter(x=>['called','serving'].includes(x.status));
+
+$('liveTokens').innerHTML=live.length
+?live.slice(0,12).map(x=>
+`<span class="pill" style="display:inline-block;margin:3px">
+${esc(x.token_code||x.token_number)} ·
+${esc(x.customer_name||'ग्राहक')} ·
+${esc(status(x.status))}
+</span>`
+).join('')
+:'इस अवधि में कोई बुलाया गया / सेवा जारी टोकन नहीं है।';
+
+for(const k of Object.keys(s)){
+$(k).textContent=s[k].toLocaleString('en-IN');
+}
+
+$('dailyBody').innerHTML=d.length
+?d.map(r=>`<tr>
+<td>${esc(r.queue_date)}</td>
+<td>${r.issued}</td>
+<td>${r.completed}</td>
+<td>${r.cancelled}</td>
+<td>${r.skipped}</td>
+<td>${r.waiting}</td>
+<td>${r.called}</td>
+<td>${r.serving}</td>
+</tr>`).join('')
+:'<tr><td colspan="8" class="empty">इस अवधि में कोई टोकन रिकॉर्ड नहीं मिला।</td></tr>';
+
+$('tokenBody').innerHTML=t.length
+?t.map(r=>`<tr>
+<td>${esc(r.queue_date)}</td>
+<td><b>${esc(r.token_code||r.token_number)}</b></td>
+<td>${esc(r.customer_name||'—')}</td>
+<td>${phoneDisplay(r.customer_phone)}</td>
+<td><span class="pill">${esc(status(r.status))}</span></td>
+<td>${esc(fmt(r.created_at))}</td>
+<td>${esc(fmt(r.called_at))}</td>
+<td>${esc(fmt(r.completed_at))}</td>
+</tr>`).join('')
+:'<tr><td colspan="8" class="empty">इस अवधि में कोई टोकन रिकॉर्ड नहीं मिला।</td></tr>';
+}
+
+function csv(){
+if(!report)return msg('पहले रिपोर्ट देखें।',true);
+
+const rows=[
+[
+'तारीख',
+'टोकन',
+'ग्राहक',
+'मोबाइल नंबर',
+'स्थिति',
+'जारी समय',
+'बुलाने का समय',
+'पूरा समय'
+],
+...(report.tokens||[]).map(r=>[
+r.queue_date,
+r.token_code||r.token_number,
+r.customer_name,
+r.customer_phone||'',
+status(r.status),
+r.created_at||'',
+r.called_at||'',
+r.completed_at||''
+])
+];
+
+const csv='\ufeff'+rows.map(r=>
+r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')
+).join('\r\n');
+
+const a=document.createElement('a');
+const url=URL.createObjectURL(
+new Blob([csv],{type:'text/csv;charset=utf-8;'})
+);
+
+a.href=url;
+a.download='rp-token-report-'+$('fromDate').value+
+'-to-'+$('toDate').value+'.csv';
+
+a.click();
+URL.revokeObjectURL(url);
+}
+
+$('loadBtn').addEventListener('click',()=>load().catch(e=>msg(e.message,true)));
+
+$('shopSelect').addEventListener('change',()=>load().catch(e=>msg(e.message,true)));
+
+$('csvBtn').addEventListener('click',csv);
+
+$('pdfBtn').addEventListener('click',()=>window.print());
+
+init().catch(e=>msg(e.message||'रिपोर्ट पेज लोड नहीं हुआ।',true));
+
+})();
+</script>
+</body>
+</html>
