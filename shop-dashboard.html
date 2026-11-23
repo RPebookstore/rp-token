@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f5f7fc">
+<title>RP TOKEN | Shop Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,'Noto Sans Devanagari',Arial,sans-serif;background:#f5f7fc;color:#172033;min-height:100vh}
+.top{height:66px;background:white;border-bottom:1px solid #e7ebf3;display:flex;align-items:center;justify-content:space-between;padding:0 max(15px,calc((100% - 1100px)/2))}
+.brand{font-size:19px;font-weight:900;color:#172554}.brand span{color:#0284c7}
+.back{border:0;background:#eff6ff;color:#1d4ed8;padding:9px 12px;border-radius:8px;font-size:11px;font-weight:800;text-decoration:none}
+.wrap{max-width:1100px;margin:auto;padding:25px 18px}
+.hero{background:linear-gradient(115deg,#172554,#2563eb 60%,#7c3aed);color:white;border-radius:17px;padding:24px}
+.kicker{font-size:10px;letter-spacing:1.5px;color:#bfdbfe;font-weight:800}
+.hero h1{font-size:25px;margin-top:8px;overflow-wrap:anywhere}
+.hero p{font-size:11px;color:#dbeafe;margin-top:7px;line-height:1.7}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.chip{background:#ffffff20;border:1px solid #ffffff35;padding:7px 10px;border-radius:20px;font-size:10px}
+.head{margin:24px 0 12px}
+.head h2{font-size:16px;font-weight:900}
+.head p{font-size:10px;color:#718096;margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.tile{min-height:95px;border:1px solid transparent;border-radius:13px;padding:13px;display:flex;align-items:center;gap:11px;text-decoration:none;color:#172033;box-shadow:0 3px 12px #0f172a08}
+.ico{width:40px;height:40px;flex:0 0 40px;border-radius:11px;background:#ffffffb8;display:grid;place-items:center;font-size:19px}
+.name{font-size:12px;font-weight:900}
+.desc{font-size:9px;color:#64748b;margin-top:4px}
+.a{background:#eaf2ff;border-color:#dbeafe}.a .ico{color:#2563eb}
+.b{background:#f2edff;border-color:#e9ddff}.b .ico{color:#7c3aed}
+.c{background:#e5f8fa;border-color:#c9f0f3}.c .ico{color:#0e7490}
+.d{background:#fff3e8;border-color:#ffead5}.d .ico{color:#c2410c}
+.e{background:#fff0f5;border-color:#fce0eb}.e .ico{color:#be185d}
+.f{background:#eff0ff;border-color:#e0e7ff}.f .ico{color:#4338ca}
+.note{margin-top:17px;padding:13px 14px;background:white;border:1px solid #e7ebf3;border-radius:11px;color:#64748b;font-size:10px;line-height:1.7}
+.msg{margin-top:14px;padding:12px;background:#fff1f2;border:1px solid #fecdd3;color:#be123c;border-radius:9px;font-size:11px;display:none}
+@media(max-width:600px){
+ .wrap{padding:16px 12px}
+ .hero{padding:20px 17px}
+ .hero h1{font-size:21px}
+ .grid{gap:8px}
+ .tile{min-height:80px;padding:9px 7px;flex-direction:column;justify-content:center;text-align:center;gap:6px}
+ .ico{width:32px;height:32px;flex-basis:32px;font-size:16px}
+ .name{font-size:10px}
+ .desc{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+ <div class="brand">RP <span>TOKEN</span></div>
+ <a class="back" href="dashboard.html">← सभी दुकानें</a>
+</header>
+
+<main class="wrap">
+ <section class="hero">
+  <div class="kicker">BUSINESS WORKSPACE</div>
+  <h1 id="shopName">दुकान लोड हो रही है...</h1>
+  <p>यह चुनी गई दुकान का Workspace है। नीचे दिए गए फीचर्स खोलें।</p>
+  <div class="meta">
+   <span class="chip" id="shopType">Business</span>
+   <span class="chip" id="shopCity">Location</span>
+   <span class="chip" id="shopSlug">Shop URL</span>
+  </div>
+ </section>
+
+ <div class="msg" id="errorBox"></div>
+
+ <div class="head">
+  <h2>Shop Management</h2>
+  <p>इस दुकान से संबंधित सुविधाएँ।</p>
+ </div>
+
+ <section class="grid">
+  <a class="tile a" id="tokensLink" href="manage-queue.html"><span class="ico">▤</span><span><span class="name">Tokens</span><span class="desc">Queue management</span></span></a>
+  <a class="tile b" id="reportsLink" href="reports.html"><span class="ico">▥</span><span><span class="name">Reports</span><span class="desc">Token reports</span></span></a>
+  <a class="tile c" id="servicesLink" href="services.html"><span class="ico">✂</span><span><span class="name">Services</span><span class="desc">Manage services</span></span></a>
+  <a class="tile d" id="qrLink" href="qr-code.html"><span class="ico">▦</span><span><span class="name">QR Code</span><span class="desc">Customer QR</span></span></a>
+  <a class="tile e" id="settingsLink" href="shop-settings.html"><span class="ico">⚙</span><span><span class="name">Settings</span><span class="desc">Shop settings</span></span></a>
+  <a class="tile f" href="dashboard.html#myShops"><span class="ico">🏪</span><span><span class="name">My Shops</span><span class="desc">Switch business</span></span></a>
+ </section>
+
+ <div class="note">
+  नोट: यह पेज चुनी गई दुकान का ID फीचर पेजों के URL में भेजता है। उन फीचर पेजों को भी इस ID को पढ़कर उसी दुकान का डेटा दिखाने के लिए कॉन्फ़िगर होना चाहिए।
+ </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/config.js"></script>
+<script>
+(async()=>{
+ "use strict";
+ const db=window.supabaseClient;
+ const params=new URLSearchParams(location.search);
+ const shopId=params.get("shop");
+ const errorBox=document.getElementById("errorBox");
+
+ function fail(text){
+  errorBox.textContent=text;
+  errorBox.style.display="block";
+ }
+
+ if(!db){
+  fail("Supabase कनेक्शन नहीं मिला। config.js जाँचें।");
+  return;
+ }
+
+ const {data:sessionData,error:sessionError}=await db.auth.getSession();
+
+ if(sessionError||!sessionData.session){
+  location.href="index.html";
+  return;
+ }
+
+ if(!shopId){
+  fail("Shop ID नहीं मिला। My Shops से दुकान दोबारा खोलें।");
+  return;
+ }
+
+ const {data:shop,error}=await db.from("shops")
+  .select("id,name,slug,business_type,city,is_active")
+  .eq("id",shopId)
+  .maybeSingle();
+
+ if(error||!shop){
+  fail("दुकान नहीं मिली या आपको इसे देखने की अनुमति नहीं है। "+(error?.message||""));
+  return;
+ }
+
+ document.getElementById("shopName").textContent=shop.name||"Business Dashboard";
+ document.getElementById("shopType").textContent=shop.business_type||"अन्य व्यवसाय";
+ document.getElementById("shopCity").textContent=shop.city||"शहर उपलब्ध नहीं";
+ document.getElementById("shopSlug").textContent=shop.slug||"";
+
+ if(shop.is_active===false){
+  fail("यह दुकान निष्क्रिय है। Owner Dashboard से इसे फिर सक्रिय करें।");
+ }
+
+ const files=[
+  ["tokensLink","manage-queue.html"],
+  ["reportsLink","reports.html"],
+  ["servicesLink","services.html"],
+  ["qrLink","qr-code.html"],
+  ["settingsLink","shop-settings.html"]
+ ];
+
+ const query="?shop="+encodeURIComponent(shop.id);
+
+ files.forEach(([id,file])=>{
+  document.getElementById(id).href=file+query;
+ });
+})();
+</script>
+</body>
+</html>
