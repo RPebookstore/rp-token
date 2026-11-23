@@ -4,16 +4,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RP TOKEN - Shop Settings</title>
+<title>RP TOKEN - Business Settings</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f2f5fa;font-family:Arial,sans-serif;color:#172033}
 .container{max-width:850px;margin:25px auto;padding:15px}
-.header{background:#123b73;color:white;padding:23px;border-radius:15px;margin-bottom:18px}
+.header{background:linear-gradient(120deg,#123b73,#2563eb);color:white;padding:23px;border-radius:15px;margin-bottom:18px}
 .header h1{margin:0 0 8px;font-size:25px}
 .header p{margin:0;color:#e2eafa}
+.back-dashboard{display:inline-flex;margin-top:12px;padding:9px 13px;border-radius:9px;background:#ffffff1c;border:1px solid #ffffff45;color:white;text-decoration:none;font-size:13px;font-weight:700}
 .card{background:#fff;border-radius:14px;padding:20px;margin-bottom:17px;box-shadow:0 4px 18px #0000000b}
 h2{font-size:19px;margin:0 0 16px}
 label{display:block;font-size:14px;font-weight:700;margin-bottom:7px}
@@ -32,11 +34,17 @@ input,select{width:100%;padding:12px;border:1px solid #ccd5e2;border-radius:9px;
 .closed input{width:18px;height:18px}
 button{border:0;border-radius:10px;padding:14px 18px;font-size:15px;font-weight:700;cursor:pointer}
 .save{width:100%;background:#1456a0;color:white}
+.save:disabled{opacity:.5;cursor:not-allowed}
 .secondary{background:#e8eef8;color:#17345b}
-#message{padding:13px;border-radius:9px;margin:12px 0;display:none;line-height:1.5}
+#message{padding:13px;border-radius:9px;margin:12px 0;display:none;line-height:1.5;overflow-wrap:anywhere}
 .success{display:block!important;background:#e7f7ed;color:#176b38}
 .error{display:block!important;background:#ffeded;color:#a12626}
 .info{background:#eef4ff;padding:12px;border-radius:9px;font-size:13px;color:#345078;line-height:1.5}
+.subscription-box{padding:16px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;margin-top:14px}
+.subscription-status{font-weight:900;font-size:13px;margin-bottom:10px}
+.subscription-line{font-size:13px;color:#475569;margin-top:7px;line-height:1.5}
+.renewal{display:inline-block;margin-top:13px;background:#1456a0;color:white;text-decoration:none;padding:11px 15px;border-radius:9px;font-size:13px;font-weight:700}
+.locked{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:15px;border-radius:10px;line-height:1.7;font-size:13px}
 @media(max-width:600px){
  .container{margin:8px auto;padding:10px}
  .row{grid-template-columns:1fr}
@@ -46,320 +54,516 @@ button{border:0;border-radius:10px;padding:14px 18px;font-size:15px;font-weight:
  .closed{font-size:11px}
  .card{padding:15px}
 }
-
-.back-dashboard{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:9px 13px;border-radius:9px;background:#ffffff1c;border:1px solid #ffffff45;color:white;text-decoration:none;font-size:13px;font-weight:700}
-.back-dashboard:hover{background:#ffffff30}
 </style>
 </head>
+
 <body>
 <div class="container">
 
 <div class="header">
 <h1>RP TOKEN</h1>
-<p>दुकान की सेटिंग और समय-सारणी</p>
-<a class="back-dashboard" href="dashboard.html">← वापस Dashboard पर जाएँ</a>
+<p>Business Settings & Operating Schedule</p>
+<a class="back-dashboard" href="dashboard.html">← Back to Dashboard</a>
 </div>
 
 <div class="card">
-<h2>दुकान चुनें</h2>
+<h2>Select Business</h2>
 <div class="field">
-<label>आपकी दुकान</label>
+<label for="shopSelect">Your Business</label>
 <select id="shopSelect">
-<option value="">दुकान लोड हो रही है...</option>
+<option value="">Loading businesses...</option>
 </select>
 </div>
 <div id="message"></div>
 </div>
 
+<div class="card" id="subscriptionCard" style="display:none">
+<h2>Subscription Information</h2>
+<div id="subscriptionInfo"></div>
+</div>
+
+<div id="lockedArea" style="display:none" class="card">
+<div class="locked">
+<strong>Business Operations Temporarily Unavailable</strong>
+<p id="lockedText" style="margin-top:8px"></p>
+<p style="margin-top:8px">Please contact Support to activate or renew your Subscription and continue using all business management features.</p>
+<a class="renewal" href="contact.html">Contact Support</a>
+</div>
+</div>
+
 <div id="settingsArea" style="display:none">
 
 <div class="card">
-<h2>दुकान और बुकिंग नियंत्रण</h2>
+<h2>Business & Booking Controls</h2>
 
 <div class="toggle-row">
-<div>
-<strong>दुकान चालू रखें</strong>
-<small>बंद करने पर ग्राहक नया टोकन नहीं बना पाएँगे।</small>
-</div>
+<div><strong>Keep Business Open</strong><small>When closed, customers cannot create new tokens.</small></div>
 <input type="checkbox" id="isOpen">
 </div>
 
 <div class="toggle-row">
-<div>
-<strong>ऑनलाइन टोकन बुकिंग</strong>
-<small>इसे बंद करने पर ग्राहक वेबसाइट से टोकन नहीं ले सकेंगे।</small>
-</div>
+<div><strong>Online Token Booking</strong><small>Turn off to stop customers booking tokens online.</small></div>
 <input type="checkbox" id="bookingEnabled">
 </div>
 
 <div class="toggle-row">
-<div>
-<strong>ग्राहकों को सेवा की कीमत दिखाएँ</strong>
-<small>बंद करने पर ग्राहक को कीमत नहीं दिखेगी।</small>
-</div>
+<div><strong>Show Service Prices</strong><small>Turn off to hide prices from customers.</small></div>
 <input type="checkbox" id="showPrices">
 </div>
 
 <div class="row" style="margin-top:18px">
 <div class="field">
-<label>प्रतिदिन अधिकतम टोकन</label>
-<input type="number" id="dailyLimit" min="1" placeholder="खाली छोड़ें = कोई सीमा नहीं">
+<label for="dailyLimit">Maximum Daily Tokens</label>
+<input type="number" id="dailyLimit" min="1" placeholder="Blank = no limit">
 </div>
 <div class="field">
-<label>टोकन Prefix</label>
+<label for="tokenPrefix">Token Prefix</label>
 <input type="text" id="tokenPrefix" maxlength="5" placeholder="T">
 </div>
 </div>
-<div class="info">उदाहरण: Prefix T रखने पर T001, T002 और Prefix A रखने पर A001, A002 बनेगा। अधिकतम टोकन खाली छोड़ने पर कोई दैनिक सीमा नहीं होगी।</div>
+
+<div class="info">Example: Prefix T creates T001, T002. Leave the daily limit blank for no daily limit.</div>
 </div>
 
 <div class="card">
-<h2>साप्ताहिक समय-सारणी</h2>
-<p style="font-size:13px;color:#68778c;line-height:1.5">दुकान के खुलने और बंद होने का समय चुनें। छुट्टी वाले दिन “बंद” चुनें। समय दुकान के स्थानीय समय के अनुसार माना जाएगा।</p>
+<h2>Weekly Operating Schedule</h2>
+<p style="font-size:13px;color:#68778c;line-height:1.5">Choose opening and closing times for each day. Select Closed for holidays.</p>
 <div id="days"></div>
 </div>
 
-<button class="save" id="saveBtn">सभी सेटिंग सेव करें</button>
-<p class="info" style="margin-top:12px">सेटिंग सेव करने के बाद ग्राहक की अगली बुकिंग पर ये नियम लागू होंगे।</p>
+<button class="save" id="saveBtn">Save All Settings</button>
+<p class="info" style="margin-top:12px">Your settings will apply to new customer bookings after saving.</p>
 
 </div>
 </div>
 
 <script>
 (() => {
+"use strict";
+
 const db = window.supabaseClient;
 const $ = id => document.getElementById(id);
 
 const dayNames = [
-  'रविवार','सोमवार','मंगलवार','बुधवार',
-  'गुरुवार','शुक्रवार','शनिवार'
+ "Sunday","Monday","Tuesday","Wednesday",
+ "Thursday","Friday","Saturday"
 ];
 
 let shops = [];
+let subscriptionRows = [];
 let currentShop = null;
+let subscriptionVerified = false;
+let canOperate = false;
 
-function showMessage(message, type='success') {
-  const box = $('message');
-  box.textContent = message;
-  box.className = type;
-  box.style.display = 'block';
-  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+function showMessage(text,type="success") {
+ const box = $("message");
+ box.textContent = text;
+ box.className = type;
+ box.style.display = "block";
 }
 
 function clearMessage() {
-  $('message').style.display = 'none';
-  $('message').textContent = '';
+ $("message").textContent = "";
+ $("message").className = "";
+ $("message").style.display = "none";
+}
+
+function formatDate(value) {
+ if (!value) return "Not available";
+ const d = new Date(value);
+ if (Number.isNaN(d.getTime())) return "Not available";
+ return d.toLocaleDateString("en-IN",{
+  day:"2-digit",month:"long",year:"numeric"
+ });
+}
+
+function getStatus(row) {
+ if (!row || !row.subscription_status ||
+     row.subscription_status === "not_subscribed") {
+  return {key:"not_subscribed",label:"Not Subscribed",active:false};
+ }
+
+ const now = Date.now();
+ const start = row.start_date ? new Date(row.start_date).getTime() : null;
+ const expiry = row.expiry_date ? new Date(row.expiry_date).getTime() : null;
+
+ if (row.subscription_status === "inactive") {
+  return {key:"inactive",label:"Inactive",active:false};
+ }
+
+ if (row.subscription_status === "expired" || (expiry && expiry <= now)) {
+  return {key:"expired",label:"Expired",active:false};
+ }
+
+ if (start && start > now) {
+  return {key:"upcoming",label:"Upcoming",active:false};
+ }
+
+ if (row.subscription_status === "active" &&
+     start && expiry && start <= now && expiry > now) {
+  return {key:"active",label:"Active",active:true};
+ }
+
+ return {key:"inactive",label:"Inactive",active:false};
 }
 
 function createDayRows() {
-  $('days').innerHTML = dayNames.map((name, day) => {
-    const closed = day === 0;
-    return `
-      <div class="day" data-day="${day}">
-        <div class="day-name">${name}</div>
-        <input type="time" class="openTime" value="09:00" aria-label="${name} खुलने का समय">
-        <input type="time" class="closeTime" value="18:00" aria-label="${name} बंद होने का समय">
-        <label class="closed">
-          <input type="checkbox" class="isClosed" ${closed?'checked':''}>
-          बंद
-        </label>
-      </div>`;
-  }).join('');
+ $("days").innerHTML = dayNames.map((name,day) => `
+  <div class="day" data-day="${day}">
+   <div class="day-name">${name}</div>
+   <input type="time" class="openTime" value="09:00" aria-label="${name} opening time">
+   <input type="time" class="closeTime" value="18:00" aria-label="${name} closing time">
+   <label class="closed">
+    <input type="checkbox" class="isClosed" ${day===0?"checked":""}>
+    Closed
+   </label>
+  </div>
+ `).join("");
 
-  document.querySelectorAll('.day').forEach(row => {
-    const checkbox = row.querySelector('.isClosed');
-    const times = row.querySelectorAll('input[type=time]');
-    function update() {
-      times.forEach(input => input.disabled = checkbox.checked);
-    }
-    checkbox.addEventListener('change', update);
-    update();
-  });
+ document.querySelectorAll(".day").forEach(row => {
+  const checkbox = row.querySelector(".isClosed");
+  const times = row.querySelectorAll('input[type="time"]');
+
+  function update() {
+   times.forEach(input => input.disabled = checkbox.checked);
+  }
+
+  checkbox.addEventListener("change",update);
+  update();
+ });
+}
+
+function renderSubscription(row, status, businessActive) {
+ $("subscriptionCard").style.display = "block";
+
+ const panel = $("subscriptionInfo");
+ panel.replaceChildren();
+
+ const box = document.createElement("div");
+ box.className = "subscription-box";
+
+ const color = status.active ? "#166534" :
+  status.key === "expired" ? "#b91c1c" : "#92400e";
+
+ const badge = document.createElement("div");
+ badge.className = "subscription-status";
+ badge.style.color = color;
+ badge.textContent = "SUBSCRIPTION STATUS: " + status.label.toUpperCase();
+ box.appendChild(badge);
+
+ function line(text) {
+  const el = document.createElement("div");
+  el.className = "subscription-line";
+  el.textContent = text;
+  box.appendChild(el);
+ }
+
+ line("Business: " + (currentShop.name || "Business"));
+ line("Plan: " + (row?.plan_name || "Not specified"));
+ line("Start Date: " + formatDate(row?.start_date));
+ line("Expiry Date: " + formatDate(row?.expiry_date));
+
+ if (businessActive === false) {
+  line("Business Status: Inactive");
+ } else {
+  line("Business Status: Active");
+ }
+
+ if (!status.active || businessActive === false) {
+  const note = document.createElement("div");
+  note.className = "locked";
+  note.style.marginTop = "13px";
+  note.textContent = "इस व्यवसाय के लिए कोई सक्रिय Subscription उपलब्ध नहीं है। Subscription सक्रिय होने तक व्यवसाय प्रबंधन एवं संचालन की सुविधाएँ अस्थायी रूप से उपलब्ध नहीं रहेंगी।";
+  box.appendChild(note);
+
+  const link = document.createElement("a");
+  link.href = "contact.html";
+  link.className = "renewal";
+  link.textContent = "Contact Support for Renewal";
+  box.appendChild(link);
+ }
+
+ panel.appendChild(box);
 }
 
 async function loadShops() {
-  if (!db) {
-    showMessage('Supabase client नहीं मिला। config.js की जाँच करें।','error');
-    return;
-  }
+ if (!db) {
+  showMessage("Supabase client not found. Please check config.js.","error");
+  return;
+ }
 
-  const {data:{user},error:userError} = await db.auth.getUser();
-  if (userError || !user) {
-    showMessage('पहले अपने RP TOKEN अकाउंट में लॉगिन करें।','error');
-    return;
-  }
+ const {data:{user},error:userError} = await db.auth.getUser();
 
-  const {data,error} = await db
-    .from('shops')
-    .select('id,name,slug')
-    .order('created_at',{ascending:false});
+ if (userError || !user) {
+  showMessage("Please log in to your RP TOKEN account.","error");
+  return;
+ }
 
-  if (error) {
-    showMessage('दुकान लोड नहीं हुई: '+error.message,'error');
-    return;
-  }
+ const {data,error} = await db.from("shops")
+  .select("id,name,slug,is_active")
+  .order("created_at",{ascending:false});
 
-  shops = data || [];
-  $('shopSelect').innerHTML = '<option value="">दुकान चुनें</option>';
+ if (error) {
+  showMessage("Unable to load businesses: " + error.message,"error");
+  return;
+ }
 
-  shops.forEach(shop => {
-    const option = document.createElement('option');
-    option.value = shop.id;
-    option.textContent = shop.name;
-    $('shopSelect').appendChild(option);
-  });
+ shops = data || [];
+ $("shopSelect").replaceChildren();
 
-  if (!shops.length) {
-    showMessage('आपके अकाउंट में कोई दुकान नहीं मिली।','error');
-    return;
-  }
+ const first = document.createElement("option");
+ first.value = "";
+ first.textContent = "Select a Business";
+ $("shopSelect").appendChild(first);
 
-  $('shopSelect').value = shops[0].id;
-  await loadSelectedShop();
+ shops.forEach(shop => {
+  const option = document.createElement("option");
+  option.value = shop.id;
+  option.textContent = shop.name;
+  $("shopSelect").appendChild(option);
+ });
+
+ if (!shops.length) {
+  $("settingsArea").style.display = "none";
+  showMessage("No businesses were found in your account.","error");
+  return;
+ }
+
+ const params = new URLSearchParams(window.location.search);
+ const requestedShop = params.get("shop");
+ const selected = shops.some(s => s.id === requestedShop)
+  ? requestedShop : shops[0].id;
+
+ $("shopSelect").value = selected;
+ await loadSelectedShop();
 }
 
 async function loadSelectedShop() {
-  clearMessage();
-  const shopId = $('shopSelect').value;
-  currentShop = shops.find(s => s.id === shopId);
+ clearMessage();
 
-  if (!currentShop) {
-    $('settingsArea').style.display = 'none';
-    return;
+ const shopId = $("shopSelect").value;
+ currentShop = shops.find(s => s.id === shopId);
+
+ $("settingsArea").style.display = "none";
+ $("lockedArea").style.display = "none";
+ $("subscriptionCard").style.display = "none";
+ $("saveBtn").disabled = true;
+
+ if (!currentShop) return;
+
+ // Verify subscription status before reading or editing settings.
+ const {data,error} = await db.rpc("owner_get_my_business_subscriptions");
+
+ if (error) {
+  subscriptionVerified = false;
+  canOperate = false;
+  $("lockedArea").style.display = "block";
+  $("lockedText").textContent =
+   "Subscription status could not be verified. Business settings are locked for safety. Please contact Support.";
+  showMessage("Unable to verify Subscription: " + error.message,"error");
+  return;
+ }
+
+ subscriptionRows = data || [];
+ const row = subscriptionRows.find(r => r.shop_id === currentShop.id);
+
+ if (!row) {
+  subscriptionVerified = true;
+  canOperate = false;
+  renderSubscription(null,{key:"not_subscribed",label:"Not Subscribed",active:false},currentShop.is_active);
+  $("lockedArea").style.display = "block";
+  $("lockedText").textContent =
+   "इस व्यवसाय के लिए कोई Subscription रिकॉर्ड नहीं मिला है। संचालन सुविधाओं का उपयोग करने के लिए Support से संपर्क करें।";
+  return;
+ }
+
+ const status = getStatus(row);
+ renderSubscription(row,status,currentShop.is_active);
+
+ subscriptionVerified = true;
+ canOperate = status.active && currentShop.is_active !== false;
+
+ if (!canOperate) {
+  $("lockedArea").style.display = "block";
+  $("lockedText").textContent =
+   currentShop.is_active === false
+   ? "This business has been deactivated. Please contact Support for assistance."
+   : "इस व्यवसाय का Subscription वर्तमान में सक्रिय नहीं है। Subscription सक्रिय होने तक व्यवसाय की Settings और संचालन सुविधाएँ उपलब्ध नहीं रहेंगी।";
+  return;
+ }
+
+ await loadSettings(currentShop.id);
+}
+
+async function loadSettings(shopId) {
+ const [settingsResult,hoursResult] = await Promise.all([
+  db.from("shop_settings")
+   .select("*")
+   .eq("shop_id",shopId)
+   .maybeSingle(),
+
+  db.from("shop_hours")
+   .select("*")
+   .eq("shop_id",shopId)
+ ]);
+
+ if (settingsResult.error) {
+  showMessage("Unable to load settings: " + settingsResult.error.message,"error");
+  return;
+ }
+
+ if (hoursResult.error) {
+  showMessage("Unable to load operating hours: " + hoursResult.error.message,"error");
+  return;
+ }
+
+ const settings = settingsResult.data || {};
+
+ $("isOpen").checked = settings.is_open ?? true;
+ $("bookingEnabled").checked = settings.booking_enabled ?? true;
+ $("showPrices").checked = settings.show_prices_to_customers ?? false;
+ $("dailyLimit").value = settings.daily_token_limit ?? "";
+ $("tokenPrefix").value = settings.token_prefix ?? "T";
+
+ createDayRows();
+
+ (hoursResult.data || []).forEach(hour => {
+  const row = document.querySelector(
+   `.day[data-day="${hour.day_of_week}"]`
+  );
+  if (!row) return;
+
+  row.querySelector(".isClosed").checked = hour.is_closed;
+
+  if (hour.open_time) {
+   row.querySelector(".openTime").value = hour.open_time.slice(0,5);
   }
 
-  $('settingsArea').style.display = 'block';
-
-  const [settingsResult,hoursResult] = await Promise.all([
-    db.from('shop_settings')
-      .select('*')
-      .eq('shop_id',shopId)
-      .maybeSingle(),
-
-    db.from('shop_hours')
-      .select('*')
-      .eq('shop_id',shopId)
-  ]);
-
-  if (settingsResult.error) {
-    showMessage('सेटिंग लोड करने में समस्या: '+settingsResult.error.message,'error');
-    return;
+  if (hour.close_time) {
+   row.querySelector(".closeTime").value = hour.close_time.slice(0,5);
   }
 
-  if (hoursResult.error) {
-    showMessage('दुकान का समय लोड नहीं हुआ: '+hoursResult.error.message,'error');
-    return;
-  }
+  row.querySelector(".isClosed").dispatchEvent(new Event("change"));
+ });
 
-  const settings = settingsResult.data || {};
+ if (!subscriptionVerified || !canOperate) {
+  showMessage("Subscription is not active. Settings cannot be edited.","error");
+  return;
+ }
 
-  $('isOpen').checked = settings.is_open ?? true;
-  $('bookingEnabled').checked = settings.booking_enabled ?? true;
-  $('showPrices').checked = settings.show_prices_to_customers ?? false;
-  $('dailyLimit').value = settings.daily_token_limit ?? '';
-  $('tokenPrefix').value = settings.token_prefix ?? 'T';
-
-  createDayRows();
-
-  (hoursResult.data || []).forEach(hour => {
-    const row = document.querySelector(`.day[data-day="${hour.day_of_week}"]`);
-    if (!row) return;
-
-    row.querySelector('.isClosed').checked = hour.is_closed;
-    if (hour.open_time) {
-      row.querySelector('.openTime').value = hour.open_time.slice(0,5);
-    }
-    if (hour.close_time) {
-      row.querySelector('.closeTime').value = hour.close_time.slice(0,5);
-    }
-    row.querySelector('.isClosed').dispatchEvent(new Event('change'));
-  });
-
-  showMessage('दुकान की सेटिंग लोड हो गई।');
+ $("settingsArea").style.display = "block";
+ $("saveBtn").disabled = false;
+ showMessage("Business settings loaded successfully.");
 }
 
 async function saveSettings() {
-  clearMessage();
+ clearMessage();
 
-  if (!currentShop) {
-    showMessage('पहले दुकान चुनें।','error');
-    return;
-  }
+ if (!currentShop || !subscriptionVerified || !canOperate) {
+  showMessage("An active Subscription is required to save business settings.","error");
+  return;
+ }
 
-  const limitValue = $('dailyLimit').value.trim();
-  const limit = limitValue === '' ? null : Number(limitValue);
-  const prefix = $('tokenPrefix').value.trim().toUpperCase() || 'T';
+ // Verify again before saving.
+ const {data:verifyData,error:verifyError} =
+  await db.rpc("owner_get_my_business_subscriptions");
 
-  if (limit !== null && (!Number.isInteger(limit) || limit < 1)) {
-    showMessage('दैनिक टोकन सीमा 1 या उससे अधिक पूर्ण संख्या होनी चाहिए।','error');
-    return;
-  }
+ if (verifyError) {
+  showMessage("Subscription verification failed. Settings were not saved.","error");
+  return;
+ }
 
-  if (!/^[A-Z0-9]{1,5}$/.test(prefix)) {
-    showMessage('टोकन Prefix में केवल 1 से 5 अंग्रेजी अक्षर या अंक रखें।','error');
-    return;
-  }
+ const latest = (verifyData || []).find(r => r.shop_id === currentShop.id);
+ const latestStatus = getStatus(latest);
 
-  const button = $('saveBtn');
-  button.disabled = true;
-  button.textContent = 'सेव हो रहा है...';
+ if (!latest || !latestStatus.active || currentShop.is_active === false) {
+  canOperate = false;
+  $("settingsArea").style.display = "none";
+  $("lockedArea").style.display = "block";
+  $("lockedText").textContent =
+   "Subscription is no longer active. Please contact Support to renew.";
+  renderSubscription(latest,latestStatus,currentShop.is_active);
+  return;
+ }
 
-  try {
-    const settingsPayload = {
-      shop_id: currentShop.id,
-      is_open: $('isOpen').checked,
-      booking_enabled: $('bookingEnabled').checked,
-      show_prices_to_customers: $('showPrices').checked,
-      daily_token_limit: limit,
-      token_prefix: prefix
-    };
+ const limitValue = $("dailyLimit").value.trim();
+ const limit = limitValue === "" ? null : Number(limitValue);
+ const prefix = $("tokenPrefix").value.trim().toUpperCase() || "T";
 
-    const {error:settingsError} = await db
-      .from('shop_settings')
-      .upsert(settingsPayload,{onConflict:'shop_id'});
+ if (limit !== null && (!Number.isInteger(limit) || limit < 1)) {
+  showMessage("Daily token limit must be a whole number greater than zero.","error");
+  return;
+ }
 
-    if (settingsError) throw settingsError;
+ if (!/^[A-Z0-9]{1,5}$/.test(prefix)) {
+  showMessage("Token Prefix must contain 1 to 5 English letters or numbers.","error");
+  return;
+ }
 
-    const hourRows = [];
+ const button = $("saveBtn");
+ button.disabled = true;
+ button.textContent = "Saving...";
 
-    document.querySelectorAll('.day').forEach(row => {
-      const day = Number(row.dataset.day);
-      const isClosed = row.querySelector('.isClosed').checked;
-      const openTime = row.querySelector('.openTime').value;
-      const closeTime = row.querySelector('.closeTime').value;
+ try {
+  const settingsPayload = {
+   shop_id:currentShop.id,
+   is_open:$("isOpen").checked,
+   booking_enabled:$("bookingEnabled").checked,
+   show_prices_to_customers:$("showPrices").checked,
+   daily_token_limit:limit,
+   token_prefix:prefix
+  };
 
-      if (!isClosed) {
-        if (!openTime || !closeTime || openTime >= closeTime) {
-          throw new Error(dayNames[day] + ': खुलने और बंद होने का सही समय चुनें।');
-        }
-      }
+  const {error:settingsError} = await db.from("shop_settings")
+   .upsert(settingsPayload,{onConflict:"shop_id"});
 
-      hourRows.push({
-        shop_id: currentShop.id,
-        day_of_week: day,
-        is_closed: isClosed,
-        open_time: isClosed ? null : openTime,
-        close_time: isClosed ? null : closeTime
-      });
-    });
+  if (settingsError) throw settingsError;
 
-    const {error:hoursError} = await db
-      .from('shop_hours')
-      .upsert(hourRows,{onConflict:'shop_id,day_of_week'});
+  const hourRows = [];
 
-    if (hoursError) throw hoursError;
+  document.querySelectorAll(".day").forEach(row => {
+   const day = Number(row.dataset.day);
+   const isClosed = row.querySelector(".isClosed").checked;
+   const openTime = row.querySelector(".openTime").value;
+   const closeTime = row.querySelector(".closeTime").value;
 
-    showMessage('सफलता! दुकान की सभी सेटिंग सेव हो गई हैं।');
-  } catch(error) {
-    showMessage('सेटिंग सेव नहीं हुई: '+(error.message || 'अज्ञात त्रुटि'),'error');
-  } finally {
-    button.disabled = false;
-    button.textContent = 'सभी सेटिंग सेव करें';
-  }
+   if (!isClosed && (!openTime || !closeTime || openTime >= closeTime)) {
+    throw new Error(dayNames[day] + ": Please select valid opening and closing times.");
+   }
+
+   hourRows.push({
+    shop_id:currentShop.id,
+    day_of_week:day,
+    is_closed:isClosed,
+    open_time:isClosed ? null : openTime,
+    close_time:isClosed ? null : closeTime
+   });
+  });
+
+  const {error:hoursError} = await db.from("shop_hours")
+   .upsert(hourRows,{onConflict:"shop_id,day_of_week"});
+
+  if (hoursError) throw hoursError;
+
+  showMessage("Success! All business settings have been saved.");
+ } catch(error) {
+  showMessage("Unable to save settings: " + (error.message || "Unknown error"),"error");
+ } finally {
+  button.disabled = false;
+  button.textContent = "Save All Settings";
+ }
 }
 
-$('shopSelect').addEventListener('change',loadSelectedShop);
-$('saveBtn').addEventListener('click',saveSettings);
+$("shopSelect").addEventListener("change",async()=>{
+ const id = $("shopSelect").value;
+ const url = new URL(window.location.href);
+ if (id) url.searchParams.set("shop",id);
+ else url.searchParams.delete("shop");
+ window.history.replaceState({}, "", url);
+ await loadSelectedShop();
+});
+
+$("saveBtn").addEventListener("click",saveSettings);
 
 loadShops();
 })();
