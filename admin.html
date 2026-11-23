@@ -1,315 +1,1008 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101827">
-<title>RP TOKEN | Platform Admin</title>
+<title>RP TOKEN | Admin Dashboard</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap');
-:root{--navy:#101827;--blue:#2563eb;--purple:#6d5ce8;--ink:#182230;--muted:#667085;--line:#e8edf4;--bg:#f5f7fb;--green:#079455;--red:#d92d20}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,'Noto Sans Devanagari',Arial,sans-serif}
-button,input{font:inherit}.layout{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:248px;background:linear-gradient(180deg,#101827,#172554);color:#fff;padding:25px 18px;display:flex;flex-direction:column;z-index:5}
-.brand{display:flex;align-items:center;gap:11px;padding:2px 7px 30px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#06b6d4,#2563eb);display:grid;place-items:center;font-weight:900;font-size:21px}.brand b{font-size:19px;letter-spacing:.4px}.brand b span{color:#38bdf8}.brand small{display:block;color:#9fb2d8;font-size:9px;letter-spacing:1.7px;margin-top:3px}
-.nav-label{font-size:9px;color:#8394b8;letter-spacing:1.8px;font-weight:800;padding:0 11px 10px}.nav-item{display:flex;align-items:center;gap:11px;padding:12px 13px;border-radius:11px;color:#c6d2e8;font-size:12px;font-weight:700;margin-bottom:5px}.nav-item.active{background:#ffffff16;color:#fff}.nav-item .ico{width:19px;text-align:center;font-size:15px}.sidebar-bottom{margin-top:auto;border-top:1px solid #ffffff20;padding:18px 8px 0;color:#9fb0cf;font-size:10px;line-height:1.8}
-.main{margin-left:248px;min-height:100vh}.topbar{height:76px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 34px;position:sticky;top:0;z-index:3}.top-title{font-weight:800;font-size:17px}.top-sub{font-size:10px;color:var(--muted);margin-top:4px}.admin-chip{display:flex;align-items:center;gap:10px}.avatar{width:35px;height:35px;border-radius:12px;background:#e0e7ff;color:#3730a3;display:grid;place-items:center;font-weight:900}.admin-email{font-size:11px;font-weight:700;max-width:220px;overflow:hidden;text-overflow:ellipsis}.logout{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:800;color:#475467;cursor:pointer}
-.content{padding:30px 34px;max-width:1500px;margin:auto}.welcome{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px}.eyebrow{font-size:9px;font-weight:900;letter-spacing:2px;color:#4f46e5}.welcome h1{font-size:25px;letter-spacing:-.8px;margin:8px 0 5px}.welcome p{font-size:11px;color:var(--muted);margin:0}.refresh{border:0;border-radius:10px;background:#eef2ff;color:#3730a3;padding:11px 15px;font-size:11px;font-weight:800;cursor:pointer}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:25px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:19px 18px;box-shadow:0 3px 12px #10182805}.stat-head{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;font-weight:700}.stat-icon{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:15px}.stat strong{display:block;font-size:27px;letter-spacing:-1px;margin-top:13px}.stat small{font-size:9px;color:#98a2b3}
-.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 3px 12px #10182805;overflow:hidden}.panel-head{padding:19px 21px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}.panel-head h2{font-size:14px;margin:0}.panel-head p{font-size:10px;color:var(--muted);margin:5px 0 0}.tools{display:flex;gap:9px;align-items:center}.search{height:37px;width:230px;border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:11px;outline:none}.search:focus{border-color:#93a5ff}.filter{height:37px;border:1px solid var(--line);border-radius:9px;background:#fff;padding:0 10px;font-size:10px;color:#475467}
-.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:850px}th{text-align:left;background:#fbfcfe;color:#667085;font-size:9px;letter-spacing:.6px;padding:13px 17px;font-weight:900;white-space:nowrap}td{padding:15px 17px;border-top:1px solid #f0f2f6;font-size:10px;vertical-align:middle}td b{font-size:11px}td small{display:block;color:#98a2b3;margin-top:4px;font-size:9px}.shop-name{display:flex;align-items:center;gap:10px}.shop-icon{width:34px;height:34px;border-radius:11px;background:#eef2ff;color:#4338ca;display:grid;place-items:center;font-weight:900}.status{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 8px;font-size:9px;font-weight:800}.status.active{background:#ecfdf3;color:#027a48}.status.off{background:#fff1f0;color:#b42318}.status:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}.action{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 10px;font-size:9px;font-weight:800;cursor:pointer}.action.offbtn{color:#b42318}.action.onbtn{color:#027a48}.empty,.loading{padding:45px 20px;text-align:center;color:#98a2b3;font-size:11px}.message{display:none;padding:12px 14px;border-radius:10px;margin-bottom:16px;font-size:11px;line-height:1.6}.message.error{display:block;background:#fef3f2;color:#b42318}.message.success{display:block;background:#ecfdf3;color:#067647}
+
+:root{
+ --navy:#101827;--navy2:#172554;--blue:#2563eb;
+ --purple:#6d5ce8;--ink:#182230;--muted:#667085;
+ --line:#e8edf4;--bg:#f5f7fb;--green:#079455;
+ --red:#d92d20;--orange:#dc6803;--white:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,'Noto Sans Devanagari',Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.layout{min-height:100vh}
+.sidebar{
+ position:fixed;inset:0 auto 0 0;width:250px;
+ background:linear-gradient(180deg,var(--navy),var(--navy2));
+ color:#fff;padding:24px 17px;display:flex;
+ flex-direction:column;z-index:10;overflow-y:auto
+}
+.brand{display:flex;align-items:center;gap:11px;padding:3px 7px 28px}
+.logo{width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,#06b6d4,#2563eb);display:grid;place-items:center;font-size:22px;font-weight:900}
+.brand b{font-size:19px;letter-spacing:.4px}
+.brand b span{color:#38bdf8}
+.brand small{display:block;color:#9fb2d8;font-size:9px;letter-spacing:1.7px;margin-top:3px}
+.nav-label{font-size:9px;color:#8394b8;letter-spacing:1.8px;font-weight:900;padding:12px 11px 9px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:11px;color:#c6d2e8;font-size:12px;font-weight:700;margin-bottom:5px;text-decoration:none;border:0;background:transparent;width:100%;text-align:left}
+.nav-item:hover,.nav-item.active{background:#ffffff18;color:#fff}
+.nav-item .ico{width:20px;text-align:center;font-size:15px}
+.sidebar-bottom{margin-top:auto;border-top:1px solid #ffffff20;padding:18px 8px 0;color:#9fb0cf;font-size:10px;line-height:1.8}
+.main{margin-left:250px;min-height:100vh}
+.topbar{height:75px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:5}
+.top-title{font-weight:900;font-size:17px}
+.top-sub{font-size:10px;color:var(--muted);margin-top:4px}
+.admin-chip{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:12px;background:#e0e7ff;color:#3730a3;display:grid;place-items:center;font-weight:900}
+.admin-email{font-size:11px;font-weight:700;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.logout{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:800;color:#475467}
+.content{padding:28px 30px;max-width:1600px;margin:auto}
+.page{display:none}
+.page.active{display:block}
+.welcome{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:22px}
+.eyebrow{font-size:9px;font-weight:900;letter-spacing:2px;color:#4f46e5}
+.welcome h1{font-size:25px;letter-spacing:-.8px;margin:8px 0 5px}
+.welcome p{font-size:11px;color:var(--muted);margin:0;line-height:1.6}
+.refresh,.primary{border:0;border-radius:10px;background:#2563eb;color:white;padding:11px 15px;font-size:11px;font-weight:800}
+.secondary{border:1px solid var(--line);background:#fff;color:#475467;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:800}
+.danger{border:1px solid #fecdca;background:#fff;color:#b42318;border-radius:9px;padding:8px 11px;font-size:10px;font-weight:800}
+.success-btn{border:1px solid #abefc6;background:#fff;color:#027a48;border-radius:9px;padding:8px 11px;font-size:10px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:22px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 3px 12px #10182805;min-width:0}
+.stat-head{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;font-weight:700}
+.stat-icon{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-size:15px}
+.stat strong{display:block;font-size:26px;letter-spacing:-1px;margin-top:12px}
+.stat small{font-size:9px;color:#98a2b3}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 3px 12px #10182805;overflow:hidden;margin-bottom:20px}
+.panel-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:14px}
+.panel-head h2{font-size:14px;margin:0}
+.panel-head p{font-size:10px;color:var(--muted);margin:5px 0 0;line-height:1.5}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.search{height:37px;width:230px;border:1px solid var(--line);border-radius:9px;padding:0 11px;font-size:11px;outline:none}
+.search:focus,.field input:focus,.field textarea:focus{border-color:#93a5ff;box-shadow:0 0 0 3px #eef2ff}
+.filter{height:37px;border:1px solid var(--line);border-radius:9px;background:#fff;padding:0 10px;font-size:10px;color:#475467}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th{text-align:left;background:#fbfcfe;color:#667085;font-size:9px;letter-spacing:.6px;padding:13px 14px;font-weight:900;white-space:nowrap}
+td{padding:13px 14px;border-top:1px solid #f0f2f6;font-size:10px;vertical-align:middle}
+td b{font-size:11px}
+td small{display:block;color:#98a2b3;margin-top:4px;font-size:9px;line-height:1.5}
+.shop-name{display:flex;align-items:center;gap:9px;min-width:150px}
+.shop-icon{width:34px;height:34px;border-radius:11px;background:#eef2ff;color:#4338ca;display:grid;place-items:center;font-weight:900;flex-shrink:0}
+.status{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 8px;font-size:9px;font-weight:800;white-space:nowrap}
+.status:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.status.active{background:#ecfdf3;color:#027a48}
+.status.off,.status.inactive{background:#fff1f0;color:#b42318}
+.status.expired{background:#fff6ed;color:#c4320a}
+.status.upcoming{background:#eff8ff;color:#175cd3}
+.status.not_subscribed{background:#f2f4f7;color:#475467}
+.row-actions{display:flex;gap:5px;flex-wrap:wrap;min-width:130px}
+.action{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 9px;font-size:9px;font-weight:800;white-space:nowrap}
+.action:hover,.secondary:hover{background:#f8fafc}
+.action.blue{color:#2563eb}
+.action.red{color:#b42318}
+.action.green{color:#027a48}
+.empty,.loading{padding:40px 20px;text-align:center;color:#98a2b3;font-size:11px}
+.message{display:none;padding:12px 14px;border-radius:10px;margin-bottom:15px;font-size:11px;line-height:1.6}
+.message.error{display:block;background:#fef3f2;color:#b42318}
+.message.success{display:block;background:#ecfdf3;color:#067647}
+.message.info{display:block;background:#eff8ff;color:#175cd3}
 .footer{text-align:center;padding:25px;color:#98a2b3;font-size:9px}
-@media(max-width:1000px){.sidebar{width:210px}.main{margin-left:210px}.stats{grid-template-columns:repeat(2,1fr)}.content{padding:25px 20px}.topbar{padding:0 20px}}
-@media(max-width:680px){.sidebar{position:static;width:auto;height:auto;padding:13px 16px;display:block}.brand{padding:0}.sidebar .nav-label,.sidebar .nav-item,.sidebar-bottom{display:none}.main{margin-left:0}.topbar{height:64px;padding:0 16px}.admin-email{display:none}.content{padding:22px 14px}.welcome{align-items:flex-start;gap:12px}.welcome h1{font-size:21px}.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:23px}.stat-head{font-size:9px}.panel-head{align-items:flex-start;flex-direction:column}.tools{width:100%}.search{width:100%;flex:1}.filter{min-width:95px}}
-
-.modal-backdrop{display:none;position:fixed;inset:0;background:#10182899;z-index:20;padding:22px;overflow:auto;align-items:flex-start;justify-content:center}
-.modal-backdrop.open{display:flex}.modal{background:#fff;width:min(900px,100%);border-radius:18px;box-shadow:0 20px 70px #0003;margin:auto;overflow:hidden}.modal-head{padding:19px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.modal-head h2{margin:0;font-size:16px}.modal-close{border:0;background:#f2f4f7;border-radius:9px;width:34px;height:34px;font-size:20px;cursor:pointer}.modal-body{padding:22px}.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.detail-card{border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}.detail-card h3{font-size:11px;margin:0 0 10px;color:#344054}.detail-card p,.detail-card li{font-size:10px;line-height:1.7;color:#475467;overflow-wrap:anywhere;margin:3px 0}.detail-card pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;color:#475467;margin:0;max-height:260px;overflow:auto}.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:10px;font-weight:800;color:#475467}.field input,.field textarea{width:100%;border:1px solid #d0d5dd;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;outline:none}.field textarea{min-height:78px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}.btn-primary{border:0;background:#2563eb;color:#fff;border-radius:9px;padding:10px 15px;font-size:11px;font-weight:800;cursor:pointer}.btn-secondary{border:1px solid var(--line);background:#fff;color:#475467;border-radius:9px;padding:10px 15px;font-size:11px;font-weight:800;cursor:pointer}.row-actions{display:flex;gap:6px;flex-wrap:wrap}.action.details{color:#344054}.action.edit{color:#4338ca}.section-label{font-size:9px;letter-spacing:1px;font-weight:900;color:#667085;margin:18px 0 9px}
-@media(max-width:650px){.modal-backdrop{padding:8px}.modal-body{padding:14px}.detail-grid,.edit-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.modal-head{padding:15px}}
-
+.section-label{font-size:9px;letter-spacing:1px;font-weight:900;color:#667085;margin:18px 0 9px}
+.modal-backdrop{display:none;position:fixed;inset:0;background:#10182899;z-index:30;padding:18px;overflow:auto;align-items:center;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal{background:#fff;width:min(720px,100%);border-radius:17px;box-shadow:0 20px 70px #0003;margin:auto;overflow:hidden}
+.modal-head{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-head h2{margin:0;font-size:15px}
+.modal-close{border:0;background:#f2f4f7;border-radius:9px;width:34px;height:34px;font-size:20px}
+.modal-body{padding:20px}
+.detail-grid,.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.detail-card{border:1px solid var(--line);border-radius:12px;padding:13px;min-width:0}
+.detail-card h3{font-size:11px;margin:0 0 9px;color:#344054}
+.detail-card p,.detail-card li{font-size:10px;line-height:1.7;color:#475467;overflow-wrap:anywhere;margin:3px 0}
+.detail-card pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:10px;color:#475467;margin:0;max-height:250px;overflow:auto}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:10px;font-weight:800;color:#475467}
+.field input,.field textarea,.field select{width:100%;border:1px solid #d0d5dd;border-radius:9px;padding:10px 11px;font:inherit;font-size:12px;outline:none}
+.field textarea{min-height:78px;resize:vertical}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px;flex-wrap:wrap}
+.edit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.record-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:15px}
+.record-box{border:1px solid var(--line);border-radius:11px;padding:12px}
+.record-box small{display:block;color:var(--muted);font-size:9px}
+.record-box b{display:block;margin-top:6px;font-size:16px}
+.mini-note{font-size:10px;color:var(--muted);line-height:1.7}
+@media(max-width:1100px){
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .content{padding:23px 19px}
+}
+@media(max-width:700px){
+ .sidebar{position:static;width:100%;height:auto;padding:12px 14px;display:block}
+ .brand{padding:0}
+ .sidebar .nav-label,.sidebar-bottom{display:none}
+ .sidebar nav{display:flex;gap:5px;overflow-x:auto;margin-top:12px;padding-bottom:2px}
+ .nav-item{width:auto;min-width:max-content;margin:0;padding:9px 11px;font-size:10px}
+ .main{margin-left:0}
+ .topbar{height:62px;padding:0 13px}
+ .admin-email{display:none}
+ .content{padding:18px 12px}
+ .welcome{align-items:flex-start;flex-direction:column}
+ .welcome h1{font-size:21px}
+ .stats{gap:8px}
+ .stat{padding:12px}
+ .stat strong{font-size:22px}
+ .stat-head{font-size:9px}
+ .panel-head{align-items:flex-start;flex-direction:column;padding:15px}
+ .tools{width:100%}
+ .search{width:100%;flex:1}
+ .filter{flex:1;min-width:90px}
+ .modal-backdrop{padding:7px}
+ .modal-body{padding:14px}
+ .detail-grid,.edit-grid{grid-template-columns:1fr}
+ .field.full{grid-column:auto}
+ .modal-head{padding:14px}
+ .record-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .modal-actions button{flex:1}
+}
+@media print{
+ .sidebar,.topbar,.welcome,.tools,.modal-backdrop,.footer,.no-print{display:none!important}
+ .main{margin:0}
+ .content{padding:0}
+ .page{display:none!important}
+ #reportsPage{display:block!important}
+ .panel{box-shadow:none;break-inside:avoid}
+ body{background:#fff}
+}
 </style>
 </head>
+
 <body>
 <div class="layout">
-  <aside class="sidebar">
-    <div class="brand"><div class="logo">R</div><div><b>RP <span>TOKEN</span></b><small>PLATFORM CONTROL</small></div></div>
-    <div class="nav-label">ADMINISTRATION</div>
-    <div class="nav-item active"><span class="ico">▦</span> Overview</div>
-    <div class="nav-item"><span class="ico">▣</span> Registered Shops</div>
-    <div class="sidebar-bottom">🔒 Secure Admin Area<br>केवल अधिकृत Platform Admin के लिए</div>
-  </aside>
-  <main class="main">
-    <header class="topbar">
-      <div><div class="top-title">Platform Overview</div><div class="top-sub">RP TOKEN · Smart Queue Management</div></div>
-      <div class="admin-chip"><div class="avatar">A</div><div class="admin-email" id="adminEmail">Admin</div><button class="logout" id="logoutBtn">LOG OUT ↗</button></div>
-    </header>
-    <section class="content">
-      <div class="welcome">
-        <div><div class="eyebrow">CONTROL CENTER</div><h1>नमस्ते, Admin 👋</h1><p>अपने पूरे प्लेटफॉर्म की स्थिति यहाँ देखें और दुकानों को नियंत्रित करें।</p></div>
-        <button class="refresh" id="refreshBtn">↻ Refresh Data</button>
-      </div>
-      <div id="message" class="message" role="status" aria-live="polite"></div>
-      <div class="stats">
-        <div class="stat"><div class="stat-head">कुल दुकानें <span class="stat-icon">▣</span></div><strong id="totalShops">—</strong><small>Registered businesses</small></div>
-        <div class="stat"><div class="stat-head">Active दुकानें <span class="stat-icon">✓</span></div><strong id="activeShops">—</strong><small>Currently enabled</small></div>
-        <div class="stat"><div class="stat-head">Inactive दुकानें <span class="stat-icon">Ⅱ</span></div><strong id="inactiveShops">—</strong><small>Currently disabled</small></div>
-        <div class="stat"><div class="stat-head">कुल यूजर <span class="stat-icon">♙</span></div><strong id="totalUsers">—</strong><small>Registered accounts</small></div>
-      </div>
-      <section class="panel">
-        <div class="panel-head">
-          <div><h2>Registered Shops</h2><p>सभी रजिस्टर्ड दुकानों की जानकारी और Active / Deactivate नियंत्रण</p></div>
-          <div class="tools"><input id="searchInput" class="search" type="search" placeholder="दुकान, मालिक, ईमेल या शहर खोजें…"><select id="statusFilter" class="filter"><option value="all">सभी दुकानें</option><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
-        </div>
-        <div class="table-wrap">
-          <table><thead><tr><th>BUSINESS</th><th>OWNER DETAILS</th><th>LOCATION</th><th>REGISTERED</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="shopsBody"><tr><td colspan="6" class="loading">डेटा लोड हो रहा है…</td></tr></tbody></table>
-        </div>
-      </section>
-      <section class="panel" style="margin-top:22px">
-        <div class="panel-head"><div><h2>Token Reports</h2><p>सभी दुकानों या किसी एक दुकान के ऐतिहासिक टोकन रिकॉर्ड</p></div></div>
-        <div style="padding:18px 21px">
-          <div class="tools" style="flex-wrap:wrap;margin-bottom:14px">
-            <select id="reportShop" class="filter" style="min-width:210px"><option value="">सभी दुकानें</option></select>
-            <input id="reportFrom" type="date" class="filter" aria-label="शुरुआती तारीख">
-            <input id="reportTo" type="date" class="filter" aria-label="अंतिम तारीख">
-            <button class="refresh" id="reportLoad">रिपोर्ट देखें</button>
-            <button class="action" id="reportCsv">Excel / CSV</button>
-            <button class="action" id="reportPdf">PDF / Print</button>
-          </div>
-          <div class="stats" style="margin-bottom:15px">
-            <div class="stat"><div class="stat-head">जारी टोकन</div><strong id="rIssued">0</strong></div>
-            <div class="stat"><div class="stat-head">पूरे</div><strong id="rCompleted">0</strong></div>
-            <div class="stat"><div class="stat-head">रद्द</div><strong id="rCancelled">0</strong></div>
-            <div class="stat"><div class="stat-head">छोड़े गए</div><strong id="rSkipped">0</strong></div>
-            <div class="stat"><div class="stat-head">प्रतीक्षा</div><strong id="rWaiting">0</strong></div>
-            <div class="stat"><div class="stat-head">बुलाए गए</div><strong id="rCalled">0</strong></div>
-            <div class="stat"><div class="stat-head">सेवा जारी</div><strong id="rServing">0</strong></div>
-          </div>
-          <div class="table-wrap"><table style="min-width:780px"><thead><tr><th>दुकान</th><th>तारीख</th><th>जारी</th><th>पूरे</th><th>रद्द</th><th>छोड़े</th><th>प्रतीक्षा</th><th>बुलाए</th><th>सेवा जारी</th></tr></thead><tbody id="reportDaily"><tr><td colspan="9" class="empty">रिपोर्ट देखने के लिए तारीख चुनें।</td></tr></tbody></table></div>
-          <div class="section-label">वर्तमान सक्रिय टोकन (बुलाए गए / सेवा जारी)</div><div id="reportLive" class="top-sub" style="margin:8px 0 15px">रिपोर्ट लोड होने पर यहाँ दिखेगा।</div>
-          <div class="section-label">TOKEN DETAILS</div>
-          <div class="table-wrap"><table style="min-width:850px"><thead><tr><th>दुकान</th><th>तारीख</th><th>टोकन</th><th>ग्राहक</th><th>स्थिति</th><th>जारी समय</th></tr></thead><tbody id="reportTokens"><tr><td colspan="6" class="empty">कोई रिकॉर्ड नहीं।</td></tr></tbody></table></div>
-          <p class="top-sub" style="margin-top:10px">सुरक्षा: रिपोर्ट केवल Platform Admin RPC से प्राप्त होती है। अधिकतम 366 दिन और 10,000 टोकन विवरण।</p>
-        </div>
-      </section>
-      
-<div class="modal-backdrop" id="detailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
- <div class="modal"><div class="modal-head"><h2 id="detailsTitle">Shop Details</h2><button class="modal-close" data-close="detailsModal" aria-label="Close">×</button></div><div class="modal-body" id="detailsContent"><div class="loading">जानकारी लोड हो रही है…</div></div></div>
-</div>
-<div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
- <div class="modal"><div class="modal-head"><h2 id="editTitle">दुकान की जानकारी Edit करें</h2><button class="modal-close" data-close="editModal" aria-label="Close">×</button></div>
- <form class="modal-body" id="editForm"><input type="hidden" id="editShopId">
-  <div class="edit-grid">
-   <div class="field"><label for="editName">दुकान का नाम *</label><input id="editName" maxlength="120" required></div>
-   <div class="field"><label for="editSlug">Shop URL / Slug *</label><input id="editSlug" maxlength="40" pattern="[a-z0-9-]{3,40}" required><small>केवल छोटे English अक्षर, अंक और hyphen</small></div>
-   <div class="field"><label for="editPhone">फोन</label><input id="editPhone" maxlength="30"></div>
-   <div class="field"><label for="editCity">शहर</label><input id="editCity" maxlength="100"></div>
-   <div class="field"><label for="editState">राज्य</label><input id="editState" maxlength="100"></div>
-   <div class="field full"><label for="editAddress">पूरा पता</label><textarea id="editAddress" maxlength="1000"></textarea></div>
-   <div class="field full"><label for="editDescription">दुकान का विवरण</label><textarea id="editDescription" maxlength="2000"></textarea></div>
+
+<aside class="sidebar">
+ <div class="brand">
+  <div class="logo">R</div>
+  <div><b>RP <span>TOKEN</span></b><small>PLATFORM CONTROL</small></div>
+ </div>
+
+ <div class="nav-label">ADMINISTRATION</div>
+ <nav>
+  <button class="nav-item active" data-page="overviewPage"><span class="ico">▦</span> Overview</button>
+  <button class="nav-item" data-page="shopsPage"><span class="ico">▣</span> Shops</button>
+  <button class="nav-item" data-page="subscriptionsPage"><span class="ico">◈</span> Subscriptions</button>
+  <button class="nav-item" data-page="reportsPage"><span class="ico">▤</span> Token Reports</button>
+ </nav>
+
+ <div class="sidebar-bottom">🔒 Secure Admin Area<br>केवल अधिकृत Platform Admin के लिए<br><br>RP TOKEN · Platform Control</div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+ <div>
+  <div class="top-title">Platform Administration</div>
+  <div class="top-sub">RP TOKEN · Smart Queue Management</div>
+ </div>
+ <div class="admin-chip">
+  <div class="avatar">A</div>
+  <div class="admin-email" id="adminEmail">Admin</div>
+  <button class="logout" id="logoutBtn">LOG OUT ↗</button>
+ </div>
+</header>
+
+<section class="content">
+
+<div id="message" class="message" role="status" aria-live="polite"></div>
+
+<!-- OVERVIEW -->
+<section class="page active" id="overviewPage">
+ <div class="welcome">
+  <div>
+   <div class="eyebrow">CONTROL CENTER</div>
+   <h1>नमस्ते, Admin 👋</h1>
+   <p>अपने पूरे प्लेटफॉर्म, दुकानों और Subscription की स्थिति देखें।</p>
   </div>
-  <div class="modal-actions"><button type="button" class="btn-secondary" data-close="editModal">रद्द करें</button><button type="submit" class="btn-primary" id="saveShopBtn">परिवर्तन Save करें</button></div>
- </form></div>
+  <button class="refresh" id="refreshBtn">↻ Refresh Data</button>
+ </div>
+
+ <div class="stats">
+  <div class="stat"><div class="stat-head">कुल दुकानें <span class="stat-icon">▣</span></div><strong id="totalShops">—</strong><small>Registered businesses</small></div>
+  <div class="stat"><div class="stat-head">Active दुकानें <span class="stat-icon">✓</span></div><strong id="activeShops">—</strong><small>Shop enabled</small></div>
+  <div class="stat"><div class="stat-head">Inactive दुकानें <span class="stat-icon">Ⅱ</span></div><strong id="inactiveShops">—</strong><small>Shop disabled</small></div>
+  <div class="stat"><div class="stat-head">कुल यूजर <span class="stat-icon">♙</span></div><strong id="totalUsers">—</strong><small>Registered accounts</small></div>
+  <div class="stat"><div class="stat-head">Active Subscription <span class="stat-icon">✓</span></div><strong id="activeSubscriptions">—</strong><small>Currently valid</small></div>
+  <div class="stat"><div class="stat-head">Expired Subscription <span class="stat-icon">⌛</span></div><strong id="expiredSubscriptions">—</strong><small>Expiry passed</small></div>
+  <div class="stat"><div class="stat-head">Inactive Subscription <span class="stat-icon">Ⅱ</span></div><strong id="inactiveSubscriptions">—</strong><small>Inactive / not activated</small></div>
+ </div>
+
+ <div class="panel">
+  <div class="panel-head">
+   <div><h2>Recent Shops</h2><p>हाल ही में रजिस्टर्ड दुकानें</p></div>
+   <button class="secondary" data-goto="shopsPage">सभी दुकानें देखें →</button>
+  </div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>BUSINESS</th><th>OWNER</th><th>SHOP STATUS</th><th>SUBSCRIPTION</th><th>EXPIRY</th></tr></thead>
+    <tbody id="recentShops"><tr><td colspan="5" class="loading">डेटा लोड हो रहा है…</td></tr></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<!-- SHOPS -->
+<section class="page" id="shopsPage">
+ <div class="welcome">
+  <div><div class="eyebrow">BUSINESS MANAGEMENT</div><h1>Registered Shops</h1><p>दुकानों की जानकारी, Shop Status और Subscription नियंत्रित करें।</p></div>
+  <button class="refresh" id="shopsRefresh">↻ Refresh</button>
+ </div>
+
+ <div class="panel">
+  <div class="panel-head">
+   <div><h2>All Registered Shops</h2><p>हर दुकान का अलग-अलग नियंत्रण</p></div>
+   <div class="tools">
+    <input id="searchInput" class="search" type="search" placeholder="दुकान, मालिक, ईमेल या शहर खोजें…">
+    <select id="statusFilter" class="filter">
+     <option value="all">सभी दुकानें</option>
+     <option value="active">Shop Active</option>
+     <option value="inactive">Shop Inactive</option>
+    </select>
+   </div>
+  </div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>BUSINESS</th><th>OWNER DETAILS</th><th>LOCATION</th><th>REGISTERED</th><th>SHOP STATUS</th><th>SUBSCRIPTION</th><th>ACTIONS</th></tr></thead>
+    <tbody id="shopsBody"><tr><td colspan="7" class="loading">डेटा लोड हो रहा है…</td></tr></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<!-- SUBSCRIPTIONS -->
+<section class="page" id="subscriptionsPage">
+ <div class="welcome">
+  <div><div class="eyebrow">PAYMENT & MEMBERSHIP</div><h1>Subscription Management</h1><p>सभी दुकानों के भुगतान, अवधि और सदस्यता रिकॉर्ड यहाँ देखें।</p></div>
+  <button class="refresh" id="subscriptionRefresh">↻ Refresh</button>
+ </div>
+
+ <div class="record-summary">
+  <div class="record-box"><small>Active</small><b id="subActiveCount">0</b></div>
+  <div class="record-box"><small>Expired</small><b id="subExpiredCount">0</b></div>
+  <div class="record-box"><small>Inactive / Not Subscribed</small><b id="subInactiveCount">0</b></div>
+ </div>
+
+ <div class="panel">
+  <div class="panel-head">
+   <div><h2>Subscription Records</h2><p>दुकानवार सदस्यता और भुगतान की जानकारी</p></div>
+   <div class="tools">
+    <input id="subSearch" class="search" type="search" placeholder="दुकान या Payment Note खोजें">
+    <select id="subFilter" class="filter">
+     <option value="all">सभी Subscription</option>
+     <option value="active">Active</option>
+     <option value="expired">Expired</option>
+     <option value="inactive">Inactive</option>
+     <option value="not_subscribed">Not Subscribed</option>
+     <option value="upcoming">Upcoming</option>
+    </select>
+   </div>
+  </div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>SHOP</th><th>SUBSCRIPTION</th><th>PLAN</th><th>AMOUNT</th><th>START DATE</th><th>EXPIRY DATE</th><th>PAYMENT DATE</th><th>PAYMENT NOTE</th><th>ACTIONS</th></tr></thead>
+    <tbody id="subscriptionsBody"><tr><td colspan="9" class="loading">रिकॉर्ड लोड हो रहे हैं…</td></tr></tbody>
+   </table>
+  </div>
+ </div>
+ <p class="mini-note">नोट: यह पैनल Supabase में उपलब्ध वर्तमान Subscription Record दिखाता है। पुराने Renewals का अलग ऐतिहासिक Ledger अभी इस Database Schema में मौजूद नहीं है।</p>
+</section>
+
+<!-- REPORTS -->
+<section class="page" id="reportsPage">
+ <div class="welcome">
+  <div><div class="eyebrow">ANALYTICS & REPORTS</div><h1>Token Reports</h1><p>सभी दुकानों या किसी एक दुकान के ऐतिहासिक टोकन रिकॉर्ड।</p></div>
+ </div>
+
+ <div class="panel">
+  <div class="panel-head"><div><h2>Report Filters</h2><p>दुकान और तारीख के अनुसार रिपोर्ट</p></div></div>
+  <div style="padding:17px">
+   <div class="tools" style="margin-bottom:14px">
+    <select id="reportShop" class="filter" style="min-width:190px"><option value="">सभी दुकानें</option></select>
+    <input id="reportFrom" type="date" class="filter" aria-label="शुरुआती तारीख">
+    <input id="reportTo" type="date" class="filter" aria-label="अंतिम तारीख">
+    <button class="refresh" id="reportLoad">रिपोर्ट देखें</button>
+    <button class="secondary" id="reportCsv">Excel / CSV</button>
+    <button class="secondary" id="reportPdf">PDF / Print</button>
+   </div>
+
+   <div class="stats" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr));margin-bottom:15px">
+    <div class="stat"><div class="stat-head">जारी टोकन</div><strong id="rIssued">0</strong></div>
+    <div class="stat"><div class="stat-head">पूरे</div><strong id="rCompleted">0</strong></div>
+    <div class="stat"><div class="stat-head">रद्द</div><strong id="rCancelled">0</strong></div>
+    <div class="stat"><div class="stat-head">छोड़े गए</div><strong id="rSkipped">0</strong></div>
+    <div class="stat"><div class="stat-head">प्रतीक्षा</div><strong id="rWaiting">0</strong></div>
+    <div class="stat"><div class="stat-head">बुलाए गए</div><strong id="rCalled">0</strong></div>
+    <div class="stat"><div class="stat-head">सेवा जारी</div><strong id="rServing">0</strong></div>
+   </div>
+
+   <div class="section-label">DAILY REPORT</div>
+   <div class="table-wrap">
+    <table style="min-width:780px">
+     <thead><tr><th>दुकान</th><th>तारीख</th><th>जारी</th><th>पूरे</th><th>रद्द</th><th>छोड़े</th><th>प्रतीक्षा</th><th>बुलाए</th><th>सेवा जारी</th></tr></thead>
+     <tbody id="reportDaily"><tr><td colspan="9" class="empty">रिपोर्ट देखने के लिए तारीख चुनें।</td></tr></tbody>
+    </table>
+   </div>
+
+   <div class="section-label">LIVE TOKENS</div>
+   <div id="reportLive" class="top-sub" style="margin:8px 0 15px">रिपोर्ट लोड होने पर यहाँ दिखेगा।</div>
+
+   <div class="section-label">TOKEN DETAILS</div>
+   <div class="table-wrap">
+    <table style="min-width:850px">
+     <thead><tr><th>दुकान</th><th>तारीख</th><th>टोकन</th><th>ग्राहक</th><th>स्थिति</th><th>जारी समय</th></tr></thead>
+     <tbody id="reportTokens"><tr><td colspan="6" class="empty">कोई रिकॉर्ड नहीं।</td></tr></tbody>
+    </table>
+   </div>
+   <p class="mini-note" style="margin-top:10px">सुरक्षा: रिपोर्ट केवल Platform Admin RPC से प्राप्त होती है। अधिकतम 366 दिन और 10,000 टोकन विवरण।</p>
+  </div>
+ </div>
+</section>
+
+<div class="footer">RP TOKEN · Platform Administration · Secure Access Only</div>
+</section>
+</main>
 </div>
 
-      <div class="footer">RP TOKEN · Platform Administration · Secure access only</div>
-    </section>
-  </main>
+<!-- SUBSCRIPTION MODAL -->
+<div class="modal-backdrop" id="subscriptionModal" role="dialog" aria-modal="true">
+ <div class="modal" style="max-width:530px">
+  <div class="modal-head"><h2 id="subscriptionTitle">Activate / Renew Subscription</h2><button class="modal-close" data-close="subscriptionModal">×</button></div>
+  <form class="modal-body" id="subscriptionForm">
+   <input type="hidden" id="subscriptionShopId">
+   <div class="detail-card" style="margin-bottom:14px">
+    <h3>Shop Information</h3>
+    <p id="subscriptionShopName">—</p>
+    <p id="subscriptionCurrentStatus">Current Status: —</p>
+    <p id="subscriptionCurrentExpiry">Expiry: —</p>
+   </div>
+   <div class="edit-grid">
+    <div class="field">
+     <label for="subscriptionMonths">अवधि (महीने) *</label>
+     <input type="number" id="subscriptionMonths" min="1" max="120" step="1" value="1" required>
+    </div>
+    <div class="field">
+     <label for="subscriptionAmount">प्राप्त भुगतान (₹) *</label>
+     <input type="number" id="subscriptionAmount" min="0" step="0.01" value="0" required>
+    </div>
+    <div class="field full">
+     <label for="subscriptionNote">Payment Note / UTR / Reference</label>
+     <textarea id="subscriptionNote" maxlength="500" placeholder="UPI Reference / UTR / Payment details"></textarea>
+    </div>
+   </div>
+   <p class="mini-note" style="margin-top:12px">भुगतान की पुष्टि के बाद ही सदस्यता Activate करें। भविष्य में Expiry Date होने पर नई अवधि उसके बाद से शुरू होगी।</p>
+   <div class="modal-actions">
+    <button type="button" class="secondary" data-close="subscriptionModal">Cancel</button>
+    <button type="submit" class="primary" id="saveSubscriptionBtn">Activate / Renew</button>
+   </div>
+  </form>
+ </div>
 </div>
+
+<!-- EDIT SHOP MODAL -->
+<div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true">
+ <div class="modal">
+  <div class="modal-head"><h2>दुकान की जानकारी Edit करें</h2><button class="modal-close" data-close="editModal">×</button></div>
+  <form class="modal-body" id="editForm">
+   <input type="hidden" id="editShopId">
+   <div class="edit-grid">
+    <div class="field"><label>दुकान का नाम *</label><input id="editName" maxlength="120" required></div>
+    <div class="field"><label>Shop URL / Slug *</label><input id="editSlug" maxlength="40" pattern="[a-z0-9-]{3,40}" required></div>
+    <div class="field"><label>फोन</label><input id="editPhone" maxlength="30"></div>
+    <div class="field"><label>शहर</label><input id="editCity" maxlength="100"></div>
+    <div class="field"><label>राज्य</label><input id="editState" maxlength="100"></div>
+    <div class="field full"><label>पूरा पता</label><textarea id="editAddress" maxlength="1000"></textarea></div>
+    <div class="field full"><label>दुकान का विवरण</label><textarea id="editDescription" maxlength="2000"></textarea></div>
+   </div>
+   <div class="modal-actions">
+    <button type="button" class="secondary" data-close="editModal">रद्द करें</button>
+    <button type="submit" class="primary" id="saveShopBtn">परिवर्तन Save करें</button>
+   </div>
+  </form>
+ </div>
+</div>
+
+<!-- DETAILS MODAL -->
+<div class="modal-backdrop" id="detailsModal" role="dialog" aria-modal="true">
+ <div class="modal">
+  <div class="modal-head"><h2 id="detailsTitle">Shop Details</h2><button class="modal-close" data-close="detailsModal">×</button></div>
+  <div class="modal-body" id="detailsContent"><div class="loading">जानकारी लोड हो रही है…</div></div>
+ </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="assets/js/config.js"></script>
+
 <script>
 (() => {
-  "use strict";
-  const db = window.supabaseClient;
-  const $ = (id) => document.getElementById(id);
-  let allShops = [];
+"use strict";
 
-  function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  }
-  function showMessage(text, type) {
-    $("message").textContent = text;
-    $("message").className = "message " + type;
-  }
-  function formatDate(value) {
-    if (!value) return "—";
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return "—";
-    return date.toLocaleDateString("en-IN", {day:"2-digit", month:"short", year:"numeric"});
-  }
-  function renderShops() {
-    const query = $("searchInput").value.trim().toLowerCase();
-    const filter = $("statusFilter").value;
-    const rows = allShops.filter(shop => {
-      const isActive = shop.is_active === true;
-      if (filter === "active" && !isActive) return false;
-      if (filter === "inactive" && isActive) return false;
-      const haystack = [shop.name, shop.slug, shop.owner_name, shop.owner_email, shop.owner_phone, shop.city, shop.state, shop.business_type].join(" ").toLowerCase();
-      return haystack.includes(query);
-    });
-    if (!rows.length) {
-      $("shopsBody").innerHTML = '<tr><td colspan="6" class="empty">कोई दुकान नहीं मिली।</td></tr>';
-      return;
-    }
-    $("shopsBody").innerHTML = rows.map(shop => {
-      const active = shop.is_active === true;
-      const owner = [shop.owner_name, shop.owner_email, shop.owner_phone].filter(Boolean).map(escapeHTML);
-      const location = [shop.city, shop.state].filter(Boolean).map(escapeHTML).join(", ") || "—";
-      return `<tr>
-        <td><div class="shop-name"><div class="shop-icon">${escapeHTML((shop.name || "S").trim().charAt(0).toUpperCase())}</div><div><b>${escapeHTML(shop.name || "Unnamed shop")}</b><small>/${escapeHTML(shop.slug || "")} · ${escapeHTML(shop.business_type || "other")}</small></div></div></td>
-        <td><b>${owner[0] || "Owner details unavailable"}</b><small>${owner[1] || ""}${owner[2] ? " · " + owner[2] : ""}</small></td>
-        <td>${location}<small>${escapeHTML(shop.address || "")}</small></td>
-        <td>${formatDate(shop.created_at)}</td>
-        <td><span class="status ${active ? "active" : "off"}">${active ? "Active" : "Inactive"}</span></td>
-        <td><div class="row-actions"><button class="action details" data-action="details" data-shop-id="${escapeHTML(shop.id)}">Details</button><button class="action edit" data-action="edit" data-shop-id="${escapeHTML(shop.id)}">Edit</button><button class="action ${active ? "offbtn" : "onbtn"}" data-action="active" data-shop-id="${escapeHTML(shop.id)}" data-next="${active ? "false" : "true"}">${active ? "Deactivate" : "Activate"}</button></div></td>
-      </tr>`;
-    }).join("");
-  }
-  let tokenReport = null;
-  function localToday(){return new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}
-  function reportStatus(s){return ({waiting:"प्रतीक्षा में",called:"बुलाया गया",serving:"सेवा जारी",completed:"पूरा हुआ",cancelled:"रद्द",skipped:"छोड़ा गया"})[s]||s||"—";}
-  function reportTime(v){return v?new Date(v).toLocaleTimeString("hi-IN",{hour:"2-digit",minute:"2-digit"}):"—";}
-  function renderTokenReport(){
-    const rows=tokenReport?.daily||[],tokens=tokenReport?.tokens||[];
-    const sum=rows.reduce((a,r)=>{for(const k of ["issued","completed","cancelled","skipped","waiting","called","serving"])a[k]+=Number(r[k]||0);return a;},{issued:0,completed:0,cancelled:0,skipped:0,waiting:0,called:0,serving:0});
-    for(const [k,id] of Object.entries({issued:"rIssued",completed:"rCompleted",cancelled:"rCancelled",skipped:"rSkipped",waiting:"rWaiting",called:"rCalled",serving:"rServing"}))$(id).textContent=sum[k].toLocaleString("en-IN");
-    $("reportDaily").innerHTML=rows.length?rows.map(r=>`<tr><td>${escapeHTML(r.shop_name||"—")}</td><td>${escapeHTML(r.queue_date)}</td><td>${r.issued}</td><td>${r.completed}</td><td>${r.cancelled}</td><td>${r.skipped}</td><td>${r.waiting}</td><td>${r.called}</td><td>${r.serving}</td></tr>`).join(""):'<tr><td colspan="9" class="empty">कोई रिकॉर्ड नहीं मिला।</td></tr>';
-    const live=tokens.filter(r=>["called","serving"].includes(r.status));
-    $("reportLive").innerHTML=live.length?live.slice(0,20).map(r=>`<span class="status active" style="margin:3px">${escapeHTML(r.shop_name||"")} · ${escapeHTML(r.token_code||r.token_number)} · ${escapeHTML(reportStatus(r.status))}</span>`).join(""):"इस अवधि में कोई बुलाया गया / सेवा जारी टोकन नहीं है।";
-    $("reportTokens").innerHTML=tokens.length?tokens.map(r=>`<tr><td>${escapeHTML(r.shop_name||"—")}</td><td>${escapeHTML(r.queue_date)}</td><td><b>${escapeHTML(r.token_code||r.token_number)}</b></td><td>${escapeHTML(r.customer_name||"—")}</td><td>${escapeHTML(reportStatus(r.status))}</td><td>${escapeHTML(reportTime(r.created_at))}</td></tr>`).join(""):'<tr><td colspan="6" class="empty">कोई टोकन रिकॉर्ड नहीं मिला।</td></tr>';
-  }
-  async function loadTokenReport(){
-    const from=$("reportFrom").value,to=$("reportTo").value,shopId=$("reportShop").value||null;
-    if(!from||!to||to<from)throw new Error("सही शुरुआती और अंतिम तारीख चुनें।");
-    if((new Date(to+"T00:00:00")-new Date(from+"T00:00:00"))/86400000>365)throw new Error("अधिकतम 366 दिन चुनें।");
-    $("reportLoad").disabled=true;
-    try{const {data,error}=await db.rpc("admin_get_token_report",{p_shop_id:shopId,p_from_date:from,p_to_date:to});if(error)throw error;tokenReport=data;renderTokenReport();showMessage("Token Report अपडेट हो गई।","success");}
-    finally{$("reportLoad").disabled=false;}
-  }
-  function exportTokenCsv(){if(!tokenReport){showMessage("पहले Token Report देखें।","error");return;}const rows=[["Shop","Date","Token","Customer","Status","Created At","Called At","Completed At"],...(tokenReport.tokens||[]).map(r=>[r.shop_name,r.queue_date,r.token_code||r.token_number,r.customer_name,reportStatus(r.status),r.created_at||"",r.called_at||"",r.completed_at||""])];const csv="\ufeff"+rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");const a=document.createElement("a"),url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"}));a.href=url;a.download=`rp-token-admin-report-${$("reportFrom").value}-to-${$("reportTo").value}.csv`;a.click();URL.revokeObjectURL(url);}
-  function fillReportShops(){const sel=$("reportShop"),v=sel.value;sel.innerHTML='<option value="">सभी दुकानें</option>'+allShops.map(s=>`<option value="${escapeHTML(s.id)}">${escapeHTML(s.name||"Unnamed")}</option>`).join("");sel.value=v;}
-  $("reportFrom").value=localToday();$("reportTo").value=localToday();
-  $("reportLoad").addEventListener("click",()=>loadTokenReport().catch(e=>showMessage(e.message||"रिपोर्ट लोड नहीं हुई।","error")));
-  $("reportShop").addEventListener("change",()=>loadTokenReport().catch(e=>showMessage(e.message||"रिपोर्ट लोड नहीं हुई।","error")));
-  $("reportCsv").addEventListener("click",exportTokenCsv);$("reportPdf").addEventListener("click",()=>window.print());
+const db = window.supabaseClient;
+const $ = id => document.getElementById(id);
 
-  async function requireAdmin() {
-    if (!db) throw new Error("Supabase config load नहीं हुआ। assets/js/config.js का path जाँचें।");
-    const {data, error} = await db.auth.getSession();
-    if (error) throw error;
-    if (!data.session) {
-      window.location.replace("admin-login.html");
-      return false;
-    }
-    $("adminEmail").textContent = data.session.user.email || "Platform Admin";
-    const {data: allowed, error: adminError} = await db.rpc("is_platform_admin");
-    if (adminError) throw adminError;
-    if (allowed !== true) {
-      await db.auth.signOut();
-      window.location.replace("admin-login.html");
-      return false;
-    }
-    return true;
-  }
-  async function loadDashboard() {
-    $("shopsBody").innerHTML = '<tr><td colspan="6" class="loading">डेटा लोड हो रहा है…</td></tr>';
-    const {data, error} = await db.rpc("get_platform_admin_dashboard");
-    if (error) throw error;
-    const stats = data && data.stats ? data.stats : {};
-    allShops = Array.isArray(data && data.shops) ? data.shops : [];
-    $("totalShops").textContent = Number(stats.total_shops || 0).toLocaleString("en-IN");
-    $("activeShops").textContent = Number(stats.active_shops || 0).toLocaleString("en-IN");
-    $("inactiveShops").textContent = Number(stats.inactive_shops || 0).toLocaleString("en-IN");
-    $("totalUsers").textContent = Number(stats.total_users || 0).toLocaleString("en-IN");
-    renderShops();
-    fillReportShops();
-  }
-  $("shopsBody").addEventListener("click", async (event) => {
-    const button = event.target.closest("button[data-shop-id]");
-    if (!button) return;
-    const shop = allShops.find(item => String(item.id) === button.dataset.shopId);
-    if (!shop) return;
-    const action = button.dataset.action || "active";
-    if (action === "details") { await openShopDetails(shop); return; }
-    if (action === "edit") { openEditShop(shop); return; }
-    const next = button.dataset.next === "true";
-    const actionName = next ? "Activate" : "Deactivate";
-    if (!window.confirm(`${shop.name || "इस दुकान"} को ${next ? "Active" : "Inactive"} करना चाहते हैं?`)) return;
-    button.disabled = true;
-    try {
-      const {error} = await db.rpc("platform_admin_set_shop_active", {p_shop_id: shop.id, p_is_active: next});
-      if (error) throw error;
-      showMessage(`दुकान "${shop.name}" अब ${next ? "Active" : "Inactive"} है।`, "success");
-      await loadDashboard();
-    } catch (error) {
-      showMessage(error.message || `${actionName} नहीं हो पाया।`, "error");
-      button.disabled = false;
-    }
+let allShops = [];
+let tokenReport = null;
+
+function escapeHTML(value) {
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function showMessage(text,type="info") {
+ $("message").textContent=text;
+ $("message").className="message "+type;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function formatDate(value) {
+ if(!value) return "—";
+ const d=new Date(value);
+ if(Number.isNaN(d.getTime())) return "—";
+ return d.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
+}
+
+function formatAmount(value) {
+ return Number(value||0).toLocaleString("en-IN",{minimumFractionDigits:0,maximumFractionDigits:2});
+}
+
+function subscriptionLabel(status) {
+ return ({
+  active:"Active",inactive:"Inactive",expired:"Expired",
+  upcoming:"Upcoming",not_subscribed:"Not Subscribed"
+ })[status] || status || "Not Subscribed";
+}
+
+function subscriptionClass(status) {
+ return status==="active"?"active":
+  status==="expired"?"expired":
+  status==="upcoming"?"upcoming":
+  status==="inactive"?"inactive":"not_subscribed";
+}
+
+function openModal(id) {
+ $(id).classList.add("open");
+ document.body.style.overflow="hidden";
+}
+function closeModal(id) {
+ $(id).classList.remove("open");
+ document.body.style.overflow="";
+}
+
+document.querySelectorAll("[data-close]").forEach(btn=>{
+ btn.addEventListener("click",()=>closeModal(btn.dataset.close));
+});
+document.querySelectorAll(".modal-backdrop").forEach(backdrop=>{
+ backdrop.addEventListener("click",e=>{
+  if(e.target===backdrop) closeModal(backdrop.id);
+ });
+});
+
+function showPage(pageId) {
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ $(pageId).classList.add("active");
+ document.querySelectorAll(".nav-item").forEach(b=>{
+  b.classList.toggle("active",b.dataset.page===pageId);
+ });
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.querySelectorAll(".nav-item").forEach(btn=>{
+ btn.addEventListener("click",()=>showPage(btn.dataset.page));
+});
+document.querySelectorAll("[data-goto]").forEach(btn=>{
+ btn.addEventListener("click",()=>showPage(btn.dataset.goto));
+});
+
+async function requireAdmin() {
+ if(!db) throw new Error("Supabase config load नहीं हुआ। assets/js/config.js का path जाँचें।");
+
+ const {data,error}=await db.auth.getSession();
+ if(error) throw error;
+
+ if(!data.session) {
+  window.location.replace("admin-login.html");
+  return false;
+ }
+
+ $("adminEmail").textContent=data.session.user.email||"Platform Admin";
+
+ const {data:allowed,error:adminError}=await db.rpc("is_platform_admin");
+ if(adminError) throw adminError;
+
+ if(allowed!==true) {
+  await db.auth.signOut();
+  window.location.replace("admin-login.html");
+  return false;
+ }
+ return true;
+}
+
+function updateStats(stats) {
+ $("totalShops").textContent=Number(stats.total_shops||0).toLocaleString("en-IN");
+ $("activeShops").textContent=Number(stats.active_shops||0).toLocaleString("en-IN");
+ $("inactiveShops").textContent=Number(stats.inactive_shops||0).toLocaleString("en-IN");
+ $("totalUsers").textContent=Number(stats.total_users||0).toLocaleString("en-IN");
+
+ $("activeSubscriptions").textContent=Number(stats.active_subscriptions||0).toLocaleString("en-IN");
+ $("expiredSubscriptions").textContent=Number(stats.expired_subscriptions||0).toLocaleString("en-IN");
+ $("inactiveSubscriptions").textContent=Number(stats.inactive_subscriptions||0).toLocaleString("en-IN");
+
+ $("subActiveCount").textContent=Number(stats.active_subscriptions||0).toLocaleString("en-IN");
+ $("subExpiredCount").textContent=Number(stats.expired_subscriptions||0).toLocaleString("en-IN");
+ $("subInactiveCount").textContent=Number(stats.inactive_subscriptions||0).toLocaleString("en-IN");
+}
+
+function shopSearchMatch(shop,q) {
+ return [
+  shop.name,shop.slug,shop.owner_name,shop.owner_email,shop.owner_phone,
+  shop.city,shop.state,shop.business_type,shop.subscription_payment_note
+ ].join(" ").toLowerCase().includes(q);
+}
+
+function renderShops() {
+ const query=$("searchInput").value.trim().toLowerCase();
+ const filter=$("statusFilter").value;
+
+ const rows=allShops.filter(shop=>{
+  if(filter==="active"&&shop.is_active!==true) return false;
+  if(filter==="inactive"&&shop.is_active===true) return false;
+  return shopSearchMatch(shop,query);
+ });
+
+ if(!rows.length) {
+  $("shopsBody").innerHTML='<tr><td colspan="7" class="empty">कोई दुकान नहीं मिली।</td></tr>';
+  return;
+ }
+
+ $("shopsBody").innerHTML=rows.map(shop=>{
+  const active=shop.is_active===true;
+  const sub=shop.subscription_status||"not_subscribed";
+  const owner=[shop.owner_name,shop.owner_email,shop.owner_phone].filter(Boolean).map(escapeHTML);
+  const location=[shop.city,shop.state].filter(Boolean).map(escapeHTML).join(", ")||"—";
+  const canDeactivate=sub==="active"||sub==="upcoming";
+
+  return `<tr>
+   <td><div class="shop-name"><div class="shop-icon">${escapeHTML((shop.name||"S").trim().charAt(0).toUpperCase())}</div><div><b>${escapeHTML(shop.name||"Unnamed shop")}</b><small>/${escapeHTML(shop.slug||"")} · ${escapeHTML(shop.business_type||"other")}</small></div></div></td>
+   <td><b>${owner[0]||"Owner details unavailable"}</b><small>${owner[1]||""}${owner[2]?" · "+owner[2]:""}</small></td>
+   <td>${location}<small>${escapeHTML(shop.address||"")}</small></td>
+   <td>${formatDate(shop.created_at)}</td>
+   <td><span class="status ${active?"active":"off"}">${active?"Active":"Inactive"}</span></td>
+   <td>
+    <span class="status ${subscriptionClass(sub)}">${escapeHTML(subscriptionLabel(sub))}</span>
+    <small>₹${formatAmount(shop.subscription_amount)} · ${escapeHTML(shop.subscription_plan||"No plan")}</small>
+    <small>Expiry: ${formatDate(shop.subscription_expiry_date)}</small>
+    <div class="row-actions" style="margin-top:6px">
+     <button class="action blue" data-action="subscription" data-shop-id="${escapeHTML(shop.id)}">${sub==="active"||sub==="upcoming"?"Renew":"Activate"}</button>
+     ${canDeactivate?`<button class="action red" data-action="deactivate-subscription" data-shop-id="${escapeHTML(shop.id)}">Sub. Off</button>`:""}
+    </div>
+   </td>
+   <td><div class="row-actions">
+    <button class="action" data-action="details" data-shop-id="${escapeHTML(shop.id)}">Details</button>
+    <button class="action blue" data-action="edit" data-shop-id="${escapeHTML(shop.id)}">Edit</button>
+    <button class="action ${active?"red":"green"}" data-action="shop-active" data-shop-id="${escapeHTML(shop.id)}" data-next="${active?"false":"true"}">${active?"Shop Off":"Shop On"}</button>
+   </div></td>
+  </tr>`;
+ }).join("");
+}
+
+function renderRecentShops() {
+ const rows=allShops.slice(0,6);
+ $("recentShops").innerHTML=rows.length?rows.map(s=>{
+  const sub=s.subscription_status||"not_subscribed";
+  return `<tr>
+   <td><b>${escapeHTML(s.name||"Unnamed")}</b><small>/${escapeHTML(s.slug||"")}</small></td>
+   <td>${escapeHTML(s.owner_name||"—")}<small>${escapeHTML(s.owner_email||"")}</small></td>
+   <td><span class="status ${s.is_active?"active":"off"}">${s.is_active?"Active":"Inactive"}</span></td>
+   <td><span class="status ${subscriptionClass(sub)}">${escapeHTML(subscriptionLabel(sub))}</span></td>
+   <td>${formatDate(s.subscription_expiry_date)}</td>
+  </tr>`;
+ }).join(""):'<tr><td colspan="5" class="empty">अभी कोई दुकान उपलब्ध नहीं है।</td></tr>';
+}
+
+function renderSubscriptions() {
+ const q=$("subSearch").value.trim().toLowerCase();
+ const filter=$("subFilter").value;
+
+ const rows=allShops.filter(s=>{
+  const status=s.subscription_status||"not_subscribed";
+  if(filter!=="all"&&status!==filter) return false;
+  return shopSearchMatch(s,q);
+ });
+
+ $("subscriptionsBody").innerHTML=rows.length?rows.map(s=>{
+  const status=s.subscription_status||"not_subscribed";
+  return `<tr>
+   <td><b>${escapeHTML(s.name||"Unnamed")}</b><small>${escapeHTML(s.owner_name||"")}</small></td>
+   <td><span class="status ${subscriptionClass(status)}">${escapeHTML(subscriptionLabel(status))}</span></td>
+   <td>${escapeHTML(s.subscription_plan||"—")}</td>
+   <td><b>₹${formatAmount(s.subscription_amount)}</b></td>
+   <td>${formatDate(s.subscription_start_date)}</td>
+   <td>${formatDate(s.subscription_expiry_date)}</td>
+   <td>${formatDate(s.subscription_payment_date)}</td>
+   <td>${escapeHTML(s.subscription_payment_note||"—")}</td>
+   <td><div class="row-actions">
+    <button class="action blue" data-action="subscription" data-shop-id="${escapeHTML(s.id)}">Activate / Renew</button>
+    ${(status==="active"||status==="upcoming")?`<button class="action red" data-action="deactivate-subscription" data-shop-id="${escapeHTML(s.id)}">Deactivate</button>`:""}
+   </div></td>
+  </tr>`;
+ }).join(""):'<tr><td colspan="9" class="empty">कोई Subscription Record नहीं मिला।</td></tr>';
+}
+
+async function loadDashboard() {
+ $("shopsBody").innerHTML='<tr><td colspan="7" class="loading">दुकानें लोड हो रही हैं…</td></tr>';
+ $("subscriptionsBody").innerHTML='<tr><td colspan="9" class="loading">रिकॉर्ड लोड हो रहे हैं…</td></tr>';
+
+ const {data,error}=await db.rpc("get_platform_admin_dashboard");
+ if(error) throw error;
+
+ const stats=data?.stats||{};
+ allShops=Array.isArray(data?.shops)?data.shops:[];
+
+ updateStats(stats);
+ renderShops();
+ renderRecentShops();
+ renderSubscriptions();
+ fillReportShops();
+}
+
+function openSubscriptionModal(shop) {
+ $("subscriptionShopId").value=shop.id;
+ $("subscriptionShopName").textContent=shop.name||"Unnamed shop";
+ $("subscriptionCurrentStatus").textContent="Current Status: "+subscriptionLabel(shop.subscription_status);
+ $("subscriptionCurrentExpiry").textContent="Expiry: "+formatDate(shop.subscription_expiry_date);
+ $("subscriptionMonths").value=1;
+ $("subscriptionAmount").value=Number(shop.subscription_amount||0);
+ $("subscriptionNote").value="";
+ $("subscriptionTitle").textContent=shop.subscription_status==="active"?"Renew Subscription":"Activate Subscription";
+ openModal("subscriptionModal");
+}
+
+$("subscriptionForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+
+ const btn=$("saveSubscriptionBtn");
+ const shopId=$("subscriptionShopId").value;
+ const months=Number($("subscriptionMonths").value);
+ const amount=Number($("subscriptionAmount").value);
+ const note=$("subscriptionNote").value.trim();
+
+ if(!Number.isInteger(months)||months<1||months>120) {
+  showMessage("Subscription अवधि 1 से 120 महीने के बीच रखें।","error");
+  return;
+ }
+ if(!Number.isFinite(amount)||amount<0) {
+  showMessage("सही भुगतान राशि दर्ज करें।","error");
+  return;
+ }
+
+ btn.disabled=true;
+ btn.textContent="Processing…";
+
+ try {
+  const shop=allShops.find(s=>String(s.id)===String(shopId));
+  const {error}=await db.rpc("platform_admin_set_shop_subscription",{
+   p_shop_id:shopId,
+   p_months:months,
+   p_amount:amount,
+   p_payment_note:note||null
   });
-  function openModal(id) { $(id).classList.add("open"); document.body.style.overflow="hidden"; }
-  function closeModal(id) { $(id).classList.remove("open"); document.body.style.overflow=""; }
-  document.querySelectorAll("[data-close]").forEach(btn => btn.addEventListener("click", () => closeModal(btn.dataset.close)));
-  document.querySelectorAll(".modal-backdrop").forEach(backdrop => backdrop.addEventListener("click", e => { if(e.target===backdrop) closeModal(backdrop.id); }));
-  function detailBlock(title, value) {
-    const safe = value == null || value === "" ? "—" : (typeof value === "string" ? escapeHTML(value) : `<pre>${escapeHTML(JSON.stringify(value,null,2))}</pre>`);
-    return `<div class="detail-card"><h3>${escapeHTML(title)}</h3>${typeof value === "string" || value == null ? `<p>${safe}</p>` : safe}</div>`;
-  }
-  async function openShopDetails(shop) {
-    $("detailsTitle").textContent = `${shop.name || "Shop"} · Details`;
-    $("detailsContent").innerHTML = '<div class="loading">दुकान की पूरी जानकारी लोड हो रही है…</div>';
-    openModal("detailsModal");
-    try {
-      const {data,error}=await db.rpc("platform_admin_get_shop_details",{p_shop_id:shop.id});
-      if(error) throw error;
-      const d=data||{}; const owner=d.owner||{};
-      const tokens=Array.isArray(d.recent_tokens)?d.recent_tokens:[];
-      const tokenRows=tokens.length ? `<ul>${tokens.map(t=>`<li>${escapeHTML(t.token_number ?? t.token_no ?? t.id ?? "Token")} · ${escapeHTML(t.status ?? "Status unavailable")} · ${escapeHTML(t.created_at ?? "")}</li>`).join("")}</ul>` : '<p>अभी कोई Token record उपलब्ध नहीं है।</p>';
-      $("detailsContent").innerHTML = `<div class="detail-grid">
-       ${detailBlock("दुकान",d.shop||shop)}${detailBlock("मालिक",owner)}
-       ${detailBlock("Services",d.services||[])}${detailBlock("Opening Hours",d.opening_hours||[])}
-       ${detailBlock("Shop Settings",d.settings||{})}
-       <div class="detail-card"><h3>Token स्थिति · हाल के रिकॉर्ड</h3>${tokenRows}<p>कुल उपलब्ध रिकॉर्ड: ${Number(d.token_count||0).toLocaleString("en-IN")}</p></div>
-      </div>`;
-    } catch(error) { $("detailsContent").innerHTML=`<div class="message error" style="display:block">${escapeHTML(error.message||"दुकान की जानकारी नहीं मिली।")}<p>SQL setup पूरा होने के बाद दोबारा प्रयास करें।</p></div>`; }
-  }
-  function openEditShop(shop) {
-    $("editShopId").value=shop.id; $("editName").value=shop.name||""; $("editSlug").value=shop.slug||"";
-    $("editPhone").value=shop.phone||""; $("editCity").value=shop.city||""; $("editState").value=shop.state||"";
-    $("editAddress").value=shop.address||""; $("editDescription").value=shop.description||"";
-    openModal("editModal");
-  }
-  $("editForm").addEventListener("submit",async e=>{
-    e.preventDefault(); const btn=$("saveShopBtn"); btn.disabled=true; btn.textContent="Saving…";
-    try {
-      const {data,error}=await db.rpc("platform_admin_update_shop",{
-        p_shop_id:$("editShopId").value,p_name:$("editName").value.trim(),p_slug:$("editSlug").value.trim(),
-        p_phone:$("editPhone").value.trim()||null,p_address:$("editAddress").value.trim()||null,
-        p_city:$("editCity").value.trim()||null,p_state:$("editState").value.trim()||null,
-        p_description:$("editDescription").value.trim()||null
-      });
-      if(error) throw error;
-      closeModal("editModal"); showMessage("दुकान की जानकारी सफलतापूर्वक अपडेट हो गई।","success"); await loadDashboard();
-    } catch(error) { showMessage(error.message||"दुकान अपडेट नहीं हुई।","error"); }
-    finally { btn.disabled=false; btn.textContent="परिवर्तन Save करें"; }
+  if(error) throw error;
+
+  closeModal("subscriptionModal");
+  await loadDashboard();
+  showMessage(`"${shop?.name||"दुकान"}" की Subscription अपडेट हो गई।`,"success");
+ } catch(error) {
+  showMessage(error.message||"Subscription अपडेट नहीं हुई।","error");
+ } finally {
+  btn.disabled=false;
+  btn.textContent="Activate / Renew";
+ }
+});
+
+async function deactivateSubscription(shop) {
+ if(!confirm(`"${shop.name}" की Subscription Deactivate करना चाहते हैं?`)) return;
+
+ try {
+  const {error}=await db.rpc("platform_admin_deactivate_shop_subscription",{p_shop_id:shop.id});
+  if(error) throw error;
+  await loadDashboard();
+  showMessage("Subscription Deactivate हो गई।","success");
+ } catch(error) {
+  showMessage(error.message||"Subscription Deactivate नहीं हुई।","error");
+ }
+}
+
+function detailBlock(title,value) {
+ const safe=value==null||value===""?"—":
+  typeof value==="string"?escapeHTML(value):`<pre>${escapeHTML(JSON.stringify(value,null,2))}</pre>`;
+ return `<div class="detail-card"><h3>${escapeHTML(title)}</h3>${typeof value==="string"||value==null?`<p>${safe}</p>`:safe}</div>`;
+}
+
+async function openShopDetails(shop) {
+ $("detailsTitle").textContent=(shop.name||"Shop")+" · Details";
+ $("detailsContent").innerHTML='<div class="loading">जानकारी लोड हो रही है…</div>';
+ openModal("detailsModal");
+
+ try {
+  const {data,error}=await db.rpc("platform_admin_get_shop_details",{p_shop_id:shop.id});
+  if(error) throw error;
+  const d=data||{};
+  const tokens=Array.isArray(d.recent_tokens)?d.recent_tokens:[];
+  const tokenRows=tokens.length?`<ul>${tokens.map(t=>`<li>${escapeHTML(t.token_number??t.token_no??t.id??"Token")} · ${escapeHTML(t.status??"")} · ${escapeHTML(t.created_at??"")}</li>`).join("")}</ul>`:"<p>अभी कोई Token record उपलब्ध नहीं है।</p>";
+
+  $("detailsContent").innerHTML=`<div class="detail-grid">
+   ${detailBlock("दुकान",d.shop||shop)}
+   ${detailBlock("मालिक",d.owner||{})}
+   ${detailBlock("Services",d.services||[])}
+   ${detailBlock("Opening Hours",d.opening_hours||[])}
+   ${detailBlock("Shop Settings",d.settings||{})}
+   <div class="detail-card"><h3>Token स्थिति · हाल के रिकॉर्ड</h3>${tokenRows}<p>कुल उपलब्ध रिकॉर्ड: ${Number(d.token_count||0).toLocaleString("en-IN")}</p></div>
+   <div class="detail-card"><h3>Subscription</h3>
+    <p>Status: ${escapeHTML(subscriptionLabel(shop.subscription_status))}</p>
+    <p>Plan: ${escapeHTML(shop.subscription_plan||"—")}</p>
+    <p>Amount: ₹${formatAmount(shop.subscription_amount)}</p>
+    <p>Start: ${formatDate(shop.subscription_start_date)}</p>
+    <p>Expiry: ${formatDate(shop.subscription_expiry_date)}</p>
+    <p>Payment Note: ${escapeHTML(shop.subscription_payment_note||"—")}</p>
+   </div>
+  </div>`;
+ } catch(error) {
+  $("detailsContent").innerHTML=`<div class="message error" style="display:block">${escapeHTML(error.message||"दुकान की जानकारी नहीं मिली।")}</div>`;
+ }
+}
+
+function openEditShop(shop) {
+ $("editShopId").value=shop.id;
+ $("editName").value=shop.name||"";
+ $("editSlug").value=shop.slug||"";
+ $("editPhone").value=shop.phone||"";
+ $("editCity").value=shop.city||"";
+ $("editState").value=shop.state||"";
+ $("editAddress").value=shop.address||"";
+ $("editDescription").value=shop.description||"";
+ openModal("editModal");
+}
+
+$("editForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const btn=$("saveShopBtn");
+ btn.disabled=true;
+ btn.textContent="Saving…";
+
+ try {
+  const {error}=await db.rpc("platform_admin_update_shop",{
+   p_shop_id:$("editShopId").value,
+   p_name:$("editName").value.trim(),
+   p_slug:$("editSlug").value.trim(),
+   p_phone:$("editPhone").value.trim()||null,
+   p_address:$("editAddress").value.trim()||null,
+   p_city:$("editCity").value.trim()||null,
+   p_state:$("editState").value.trim()||null,
+   p_description:$("editDescription").value.trim()||null
   });
-  $("searchInput").addEventListener("input", renderShops);
-  $("statusFilter").addEventListener("change", renderShops);
-  $("refreshBtn").addEventListener("click", async () => {
-    try { await loadDashboard(); showMessage("डेटा अपडेट हो गया।", "success"); }
-    catch (error) { showMessage(error.message || "डेटा लोड नहीं हुआ।", "error"); }
+  if(error) throw error;
+  closeModal("editModal");
+  await loadDashboard();
+  showMessage("दुकान की जानकारी अपडेट हो गई।","success");
+ } catch(error) {
+  showMessage(error.message||"दुकान अपडेट नहीं हुई।","error");
+ } finally {
+  btn.disabled=false;
+  btn.textContent="परिवर्तन Save करें";
+ }
+});
+
+$("shopsBody").addEventListener("click",async event=>{
+ const button=event.target.closest("button[data-shop-id]");
+ if(!button) return;
+
+ const shop=allShops.find(s=>String(s.id)===button.dataset.shopId);
+ if(!shop) return;
+
+ const action=button.dataset.action;
+
+ if(action==="subscription") return openSubscriptionModal(shop);
+ if(action==="deactivate-subscription") return deactivateSubscription(shop);
+ if(action==="details") return openShopDetails(shop);
+ if(action==="edit") return openEditShop(shop);
+
+ if(action==="shop-active") {
+  const next=button.dataset.next==="true";
+  if(!confirm(`"${shop.name}" को ${next?"Active":"Inactive"} करना चाहते हैं?`)) return;
+
+  button.disabled=true;
+  try {
+   const {error}=await db.rpc("platform_admin_set_shop_active",{
+    p_shop_id:shop.id,p_is_active:next
+   });
+   if(error) throw error;
+   await loadDashboard();
+   showMessage(`Shop ${next?"Active":"Inactive"} हो गई।`,"success");
+  } catch(error) {
+   showMessage(error.message||"Shop Status बदल नहीं पाया।","error");
+   button.disabled=false;
+  }
+ }
+});
+
+$("subscriptionsBody").addEventListener("click",event=>{
+ const button=event.target.closest("button[data-shop-id]");
+ if(!button) return;
+ const shop=allShops.find(s=>String(s.id)===button.dataset.shopId);
+ if(!shop) return;
+ if(button.dataset.action==="subscription") openSubscriptionModal(shop);
+ if(button.dataset.action==="deactivate-subscription") deactivateSubscription(shop);
+});
+
+function fillReportShops() {
+ const sel=$("reportShop");
+ const old=sel.value;
+ sel.innerHTML='<option value="">सभी दुकानें</option>'+
+  allShops.map(s=>`<option value="${escapeHTML(s.id)}">${escapeHTML(s.name||"Unnamed")}</option>`).join("");
+ sel.value=old;
+}
+
+function localToday() {
+ return new Intl.DateTimeFormat("en-CA",{
+  timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"
+ }).format(new Date());
+}
+
+function reportStatus(s) {
+ return ({
+  waiting:"प्रतीक्षा में",called:"बुलाया गया",serving:"सेवा जारी",
+  completed:"पूरा हुआ",cancelled:"रद्द",skipped:"छोड़ा गया"
+ })[s]||s||"—";
+}
+
+function reportTime(v) {
+ return v?new Date(v).toLocaleTimeString("hi-IN",{hour:"2-digit",minute:"2-digit"}):"—";
+}
+
+function renderTokenReport() {
+ const rows=tokenReport?.daily||[];
+ const tokens=tokenReport?.tokens||[];
+
+ const sum=rows.reduce((a,r)=>{
+  for(const k of ["issued","completed","cancelled","skipped","waiting","called","serving"]) a[k]+=Number(r[k]||0);
+  return a;
+ },{issued:0,completed:0,cancelled:0,skipped:0,waiting:0,called:0,serving:0});
+
+ for(const [k,id] of Object.entries({
+  issued:"rIssued",completed:"rCompleted",cancelled:"rCancelled",
+  skipped:"rSkipped",waiting:"rWaiting",called:"rCalled",serving:"rServing"
+ })) $(id).textContent=sum[k].toLocaleString("en-IN");
+
+ $("reportDaily").innerHTML=rows.length?rows.map(r=>`<tr>
+  <td>${escapeHTML(r.shop_name||"—")}</td><td>${escapeHTML(r.queue_date)}</td>
+  <td>${r.issued}</td><td>${r.completed}</td><td>${r.cancelled}</td>
+  <td>${r.skipped}</td><td>${r.waiting}</td><td>${r.called}</td><td>${r.serving}</td>
+ </tr>`).join(""):'<tr><td colspan="9" class="empty">कोई रिकॉर्ड नहीं मिला।</td></tr>';
+
+ const live=tokens.filter(r=>["called","serving"].includes(r.status));
+ $("reportLive").innerHTML=live.length?live.slice(0,20).map(r=>
+  `<span class="status active" style="margin:3px">${escapeHTML(r.shop_name||"")} · ${escapeHTML(r.token_code||r.token_number)} · ${escapeHTML(reportStatus(r.status))}</span>`
+ ).join(""):"इस अवधि में कोई बुलाया गया / सेवा जारी टोकन नहीं है।";
+
+ $("reportTokens").innerHTML=tokens.length?tokens.map(r=>`<tr>
+  <td>${escapeHTML(r.shop_name||"—")}</td><td>${escapeHTML(r.queue_date)}</td>
+  <td><b>${escapeHTML(r.token_code||r.token_number)}</b></td>
+  <td>${escapeHTML(r.customer_name||"—")}</td><td>${escapeHTML(reportStatus(r.status))}</td>
+  <td>${escapeHTML(reportTime(r.created_at))}</td>
+ </tr>`).join(""):'<tr><td colspan="6" class="empty">कोई टोकन रिकॉर्ड नहीं मिला।</td></tr>';
+}
+
+async function loadTokenReport() {
+ const from=$("reportFrom").value;
+ const to=$("reportTo").value;
+ const shopId=$("reportShop").value||null;
+
+ if(!from||!to||to<from) throw new Error("सही शुरुआती और अंतिम तारीख चुनें।");
+ if((new Date(to+"T00:00:00")-new Date(from+"T00:00:00"))/86400000>365)
+  throw new Error("अधिकतम 366 दिन चुनें।");
+
+ $("reportLoad").disabled=true;
+ try {
+  const {data,error}=await db.rpc("admin_get_token_report",{
+   p_shop_id:shopId,p_from_date:from,p_to_date:to
   });
-  $("logoutBtn").addEventListener("click", async () => {
-    if (!window.confirm("क्या आप Admin Panel से Logout करना चाहते हैं?")) return;
-    await db.auth.signOut();
-    window.location.replace("admin-login.html");
-  });
-  (async () => {
-    try {
-      const allowed = await requireAdmin();
-      if (allowed) { await loadDashboard(); await loadTokenReport(); }
-    } catch (error) {
-      showMessage(error.message || "Admin Dashboard लोड नहीं हो पाया।", "error");
-      $("shopsBody").innerHTML = '<tr><td colspan="6" class="empty">डेटा उपलब्ध नहीं है। Supabase SQL setup जाँचें।</td></tr>';
-    }
-  })();
+  if(error) throw error;
+  tokenReport=data;
+  renderTokenReport();
+  showMessage("Token Report अपडेट हो गई।","success");
+ } finally {
+  $("reportLoad").disabled=false;
+ }
+}
+
+function exportTokenCsv() {
+ if(!tokenReport) {
+  showMessage("पहले Token Report देखें।","error");
+  return;
+ }
+ const rows=[
+  ["Shop","Date","Token","Customer","Status","Created At","Called At","Completed At"],
+  ...(tokenReport.tokens||[]).map(r=>[
+   r.shop_name,r.queue_date,r.token_code||r.token_number,
+   r.customer_name,reportStatus(r.status),r.created_at||"",
+   r.called_at||"",r.completed_at||""
+  ])
+ ];
+ const csv="\ufeff"+rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");
+ const a=document.createElement("a");
+ const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"}));
+ a.href=url;
+ a.download=`rp-token-report-${$("reportFrom").value}-to-${$("reportTo").value}.csv`;
+ a.click();
+ URL.revokeObjectURL(url);
+}
+
+$("reportFrom").value=localToday();
+$("reportTo").value=localToday();
+
+$("reportLoad").addEventListener("click",()=>loadTokenReport().catch(e=>showMessage(e.message||"रिपोर्ट लोड नहीं हुई।","error")));
+$("reportShop").addEventListener("change",()=>loadTokenReport().catch(e=>showMessage(e.message||"रिपोर्ट लोड नहीं हुई।","error")));
+$("reportCsv").addEventListener("click",exportTokenCsv);
+$("reportPdf").addEventListener("click",()=>window.print());
+
+$("searchInput").addEventListener("input",renderShops);
+$("statusFilter").addEventListener("change",renderShops);
+$("subSearch").addEventListener("input",renderSubscriptions);
+$("subFilter").addEventListener("change",renderSubscriptions);
+
+$("refreshBtn").addEventListener("click",async()=>{
+ try {
+  await loadDashboard();
+  showMessage("Dashboard अपडेट हो गया।","success");
+ } catch(e) { showMessage(e.message||"डेटा लोड नहीं हुआ।","error"); }
+});
+
+$("shopsRefresh").addEventListener("click",async()=>{
+ try { await loadDashboard();showMessage("दुकानों की सूची अपडेट हो गई।","success"); }
+ catch(e) { showMessage(e.message||"डेटा लोड नहीं हुआ।","error"); }
+});
+
+$("subscriptionRefresh").addEventListener("click",async()=>{
+ try { await loadDashboard();showMessage("Subscription Records अपडेट हो गए।","success"); }
+ catch(e) { showMessage(e.message||"डेटा लोड नहीं हुआ।","error"); }
+});
+
+$("logoutBtn").addEventListener("click",async()=>{
+ if(!confirm("क्या आप Admin Panel से Logout करना चाहते हैं?")) return;
+ await db.auth.signOut();
+ window.location.replace("admin-login.html");
+});
+
+(async()=>{
+ try {
+  const allowed=await requireAdmin();
+  if(allowed) {
+   await loadDashboard();
+   await loadTokenReport();
+  }
+ } catch(error) {
+  showMessage(error.message||"Admin Dashboard लोड नहीं हो पाया।","error");
+  $("shopsBody").innerHTML='<tr><td colspan="7" class="empty">डेटा उपलब्ध नहीं है। Supabase SQL setup जाँचें।</td></tr>';
+ }
+})();
+
 })();
 </script>
 </body>
